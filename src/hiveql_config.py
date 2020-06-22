@@ -331,6 +331,7 @@ class Keywords:
         'AFTER',
         'ALTER COLUMN',
         'ALTER TABLE',
+        'CROSS JOIN',
         'DELETE FROM',
         'EXCEPT',
         'FETCH FIRST',
@@ -338,23 +339,43 @@ class Keywords:
         'GROUP BY',
         'GO',
         'HAVING',
+        'INNER JOIN',
         'INSERT INTO',
         'INSERT',
+        'INTERSECT', 
+        'INTERSECT ALL',
+        'JOIN',
+        'LEFT JOIN',
+        'LEFT OUTER JOIN',
         'LIMIT',
+        'MINUS',
         'MODIFY',
         'ORDER BY',
+        'OUTER JOIN',
+        'RIGHT JOIN',
+        'RIGHT OUTER JOIN',
         'SELECT',
         'SET CURRENT SCHEMA',
         'SET SCHEMA',
         'SET',
+        'UNION', 
+        'UNION ALL',
         'UPDATE',
         'VALUES',
         'WHERE'
     ]
 
     TOP_LEVEL_KEYWORDS_NO_INDENT = [
+        'CROSS JOIN',
+        'JOIN',
+        'LEFT JOIN',
+        'LEFT OUTER JOIN',
+        'INNER JOIN',
         'INTERSECT', 
-        'INTERSECT ALL', 
+        'INTERSECT ALL',
+        'OUTER JOIN',
+        'RIGHT JOIN',
+        'RIGHT OUTER JOIN',
         'MINUS', 
         'UNION', 
         'UNION ALL'
@@ -369,6 +390,7 @@ class Keywords:
         'JOIN',
         'LEFT JOIN',
         'LEFT OUTER JOIN',
+        'ON',
         'OR',
         'OUTER APPLY',
         'OUTER JOIN',
@@ -585,5 +607,22 @@ class Functions:
         'stack',
         'json_tuple',
         'parse_url_tuple'
+    ]
+
+    # https://cwiki.apache.org/confluence/display/Hive/LanguageManual+WindowingAndAnalytics#LanguageManualWindowingAndAnalytics-EnhancementstoHiveQL
+    WINDOWING_FUNCTIONS = [
+        'LEAD',
+        'LAG',
+        'FIRST_VALUE',
+        'LAST_VALUE'
+    ]
+
+    ANALYTICS_FUNCTIONS = [
+        'RANK',
+        'ROW_NUMBER',
+        'DENSE_RANK',
+        'CUME_DIST',
+        'PERCENT_RANK',
+        'NTILE'
     ]
 

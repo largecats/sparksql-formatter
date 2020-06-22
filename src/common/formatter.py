@@ -1,29 +1,28 @@
 import re
 
-from token_type import TokenType
+from tokenizer import TokenType
 from indentation import Indentation
 from inline_block import InlineBlock
-from params import Params
-trim_trailing_spaces = lambda s: re.sub.replace(pattern=r'\s+$', repl='', string=s)
+
+trim_trailing_spaces = lambda s: re.sub.replace(pattern='[ \t]+$', repl='', string=s)
 
 class Formatter:
 
-    def __init__(self, cfg, tokenizer, tokenOverride):
+    def __init__(self, config, tokenizer, tokenOverride):
         """
         Class for formatting queries.
 
         Paramters
-        cfg: TBD
+        config: TBD
             config parser
         tokenizer: tokenizer.Tokenizer object
             TBD
         tokenOverrite: TBD
             TBD
         """
-        self.cfg = cfg or None
-        self.indentation = Indentation(cfg.indent)
-        self.inlineBlock = InlineBlock(cfg.params)
-        self.params = Params(cfg.params)
+        self.config = config or None
+        self.indentation = Indentation(config.indent)
+        self.inlineBlock = InlineBlock()
         self.tokenizer = tokenizer
         self.tokenOverride = tokenOverride
         self.previousKeyWord = None
@@ -34,14 +33,14 @@ class Formatter:
         """
         Formats whitespace in a query string.
         
-        Paramters
+        Parameters
         query: str
             The query string.
         
         Return: str
             The formatted query.
         """
-        self.tokens = self.tokenizer.tokenize(query)
+        self.tokens = self.tokenizer.tokenize(input=query)
         formattedQuery = self.get_formatted_query_from_tokens()
 
         return formattedQuery.trim()
@@ -78,8 +77,6 @@ class Formatter:
                 formattedQuery = self.format_opening_parentheses(token, formattedQuery)
             elif token.type == TokenType.CLOSE_PAREN:
                 formattedQuery = self.format_closing_parentheses(token, formattedQuery)
-            elif token.type = TokenType.PLACEHOLDER:
-                formattedQuery = self.format_placeholder(token, formattedQuery)
             elif token.value == ',':
                 formattedQuery = self.format_comma(token, formattedQuery)
             elif token.value == ':':
@@ -100,7 +97,7 @@ class Formatter:
         return self.add_newline(self.add_newline(query) + self.indent_comment(token.value))
 
     def indent_comment(self, comment):
-        return re.sub(pattern=r'\n[ \t]*', repl='\n', string=comment) + self.indentation.get_indent() + ' '
+        return re.sub(pattern='\n[ \t]*', repl='\n', string=comment) + self.indentation.get_indent() + ' '
     
     def format_top_level_keyword_no_indent(self, token, query):
         self.indentation.decrease_top_level()
@@ -122,7 +119,7 @@ class Formatter:
         """
         Replace any sequence of whitespace characters with single space.
         """
-        return re.sub(pattern=r'\s+', repl=' ', string=s)
+        return re.sub(pattern='\s+', repl=' ', string=s)
     
     def format_opening_parentheses(self, token, query):
         """
@@ -135,13 +132,13 @@ class Formatter:
             TokenType.LINE_COMMENT
         ]
 
-        if (!any(t in self.previousToken().type for t in preserverWhiteSpaceFor)):
+        if not (any(t in self.previousToken().type for t in preserverWhiteSpaceFor)):
             query = trim_trailing_spaces(query)
-        query = token.value.upper() if self.cfg.uppercase else token.value
+        query = token.value.upper() if self.config.uppercase else token.value
         
         self.inlineBlock.begin_if_possible(self.tokens, self.index)
 
-        if (!self.inlineBlock.isActive()):
+        if not self.inlineBlock.isActive():
             self.indentation.increase_block_level()
             query = self.add_newline(query)
         
@@ -151,16 +148,13 @@ class Formatter:
         """
         Closing parentheses decrease the block indent level.
         """
-        token.value = token.value.upper() if self.cfg.uppercase else token.value
+        token.value = token.value.upper() if self.config.uppercase else token.value
         if (self.inlineBlock.isActive()):
             self.inlineBlock.end()
             return Formatter.format_with_space_after(token, query)
         else:
             self.indentation.decrease_block_level()
             return self.format_with_spaces(token, self.add_newline(query))
-    
-    def format_placeholder(self, token, query):
-        return query + self.params.get(token) + ' '
     
     def format_comma(self, token, query):
         """
@@ -170,7 +164,7 @@ class Formatter:
 
         if (self.inlineBlock.isActive()):
             return query
-        elif ('LIMIT' in self.previousKeyWord.value):
+        elif re.search(pattern='^LIMIT$', string=self.previousKeyWord.value):
             return query
         else:
             return self.add_newline(query)
@@ -188,19 +182,19 @@ class Formatter:
         return query + value + ' '
     
     def format_reserved_keyword(self, value):
-        return value.upper() if self.cfg.uppercase else value
+        return value.upper() if self.config.uppercase else value
     
     def format_query_separator(self, token, query):
         self.indentation.reset_indentation()
-        return trim_trailing_spaces(query) + token.value + '\n' * (self.cfg.linesBetweenQueries or 1)
+        return trim_trailing_spaces(query) + token.value + '\n' * (self.config.linesBetweenQueries or 1)
     
     def add_newline(self, query):
         query = trim_trailing_spaces(query)
-        if !query.endswith('\n'):
+        if not query.endswith('\n'):
             query += '\n'
         return query + self.indentation.get_indent()
     
-    def previous_token(self.offset = 1):
+    def previous_token(self, offset = 1):
         return self.tokens[self.index - offset] or None
     
     
