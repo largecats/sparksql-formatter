@@ -30,7 +30,7 @@ class Tokenizer:
         self.NUMBER_REGEX = '((-\s*)?[0-9]+(\.[0-9]+)?|0x[0-9a-fA-F]+|0b[01]+)\b'
         self.OPERATOR_REGEX = '^(!=|<>|==|<=|>=|!<|!>|\|\||::|->>|->|~~\*|~~|!~~\*|!~~|~\*|!~\*|!~|:=|.)0'
 
-        self.BLOCK_COMMENT_REGEX = '^(\/\*[^]*?(?:\*\/|$))'
+        self.BLOCK_COMMENT_REGEX = '^(\/\*[.\\n]*?(?:\*\/|$))'
         self.LINE_COMMENT_REGEX = Tokenizer.create_line_comment_regex(config.lineCommentTypes)
 
         self.TOP_LEVEL_KEYWORD_REGEX = Tokenizer.create_keyword_regex(config.topLevelKeywords)
@@ -47,25 +47,26 @@ class Tokenizer:
     @staticmethod
     def create_line_comment_regex(lineCommentTypes):
         lineCommentTypesString = ('|').join(list(map(lambda c: re.escape(c), lineCommentTypes)))
-        regexString = '^((?:{{lineCommentTypesString}}).*?(?:\r\n|\r|\n|$))'.format(lineCommentTypesString=lineCommentTypesString)
+        regexString = '^((?:{lineCommentTypesString}).*?(?:\r\n|\r|\n|$))'.format(lineCommentTypesString=lineCommentTypesString)
         return regexString
     
     @staticmethod
     def create_keyword_regex(keywords):
         keywordsString = ('|').join(keywords)
         keywordsPattern = re.sub(pattern=' ', repl='\\s+', string=keywordsString)
-        regexString = '^({{keywordsPattern}})\\b'.format(keywordsPattern=keywordsPattern)
+        regexString = '^({keywordsPattern})\\b'.format(keywordsPattern=keywordsPattern)
         return regexString
     
     @staticmethod
     def create_word_regex(specialChars=[]):
         specialCharsString = ('|').join(specialChars)
-        regexString = '^([\\w{{specialCharsString}}]+)'.format(specialCharsString=specialCharsString)
+        regexString = '^([\\w{specialCharsString}]+)'.format(specialCharsString=specialCharsString)
         return regexString
     
     @staticmethod
     def create_string_regex(stringTypes):
         regexString = '^(' + Tokenizer.create_string_pattern(stringTypes) + ')'
+        return regexString
 
     @staticmethod
     def create_string_pattern(stringTypes):
