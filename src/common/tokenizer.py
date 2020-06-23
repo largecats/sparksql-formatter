@@ -27,7 +27,7 @@ class Tokenizer:
 
     def __init__(self, config):
         self.WHITESPACE_REGEX = '^(\s+)'
-        self.NUMBER_REGEX = '((-\s*)?[0-9]+(\.[0-9]+)?|0x[0-9a-fA-F]+|0b[01]+)\b'
+        self.NUMBER_REGEX = r'^((-\s*)?[0-9]+(\.[0-9]+)?|0x[0-9a-fA-F]+|0b[01]+)\b'
         self.OPERATOR_REGEX = '^(!=|<>|==|<=|>=|!<|!>|\|\||::|->>|->|~~\*|~~|!~~\*|!~~|~\*|!~\*|!~|:=|.)'
 
         self.BLOCK_COMMENT_REGEX = '^(\/\*[.\\n]*?(?:\*\/|$))'
@@ -53,7 +53,7 @@ class Tokenizer:
     @staticmethod
     def create_keyword_regex(keywords):
         keywordsString = ('|').join(keywords)
-        keywordsPattern = re.sub(pattern=' ', repl='\\s+', string=keywordsString)
+        keywordsPattern = re.sub(pattern=' ', repl='\\\s+', string=keywordsString) # https://stackoverflow.com/questions/58328587/python-3-7-4-re-error-bad-escape-s-at-position-0
         regexString = '^({keywordsPattern})\\b'.format(keywordsPattern=keywordsPattern)
         return regexString
     
@@ -109,13 +109,13 @@ class Tokenizer:
         tokens = []
         token = None
         while len(input):
-            print 'input = ' + input
+            print('input = ' + input)
             # Keep processing the string until it is empty
             token = self.get_next_token(input, token) # get next token
-            print 'token.type = ' + token.type
-            print 'token.value = ' + token.value
+            print('token.type = ' + token.type)
+            print('token.value = ' + token.value)
             start = 0 if token is None else len(token.value)
-            print 'start = ' + str(start)
+            print('start = ' + str(start))
             input = input[start::] # advance thte string
             tokens.append(token)
         

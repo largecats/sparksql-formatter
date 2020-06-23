@@ -1,8 +1,11 @@
+import sys
+import os
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 import re
 
-from tokenizer import TokenType
-from indentation import Indentation
-from inline_block import InlineBlock
+from src.common.tokenizer import TokenType
+from src.common.indentation import Indentation
+from src.common.inline_block import InlineBlock
 
 trim_trailing_spaces = lambda s: re.sub(pattern='[ \t]+$', repl='', string=s)
 
@@ -49,6 +52,8 @@ class Formatter:
         formattedQuery = ''
 
         for i in range(len(self.tokens)):
+            # print('formattedQuery = \n')
+            # print(formattedQuery)
             token = self.tokens[i]
             self.index = i
 
@@ -62,17 +67,20 @@ class Formatter:
                 formattedQuery = self.format_line_comment(token, formattedQuery)
             elif token.type == TokenType.BLOCK_COMMENT:
                 formattedQuery == self.format_block_comment(token, formattedQuery)
-            elif token.type == TokenType.TOP_LEVEL_KEYWORD:
-                formattedQuery = self.format_top_level_keyword(token, formattedQuery)
-                self.previousKeyWord = token
             elif token.type == TokenType.TOP_LEVEL_KEYWORD_NO_INDENT:
                 formattedQuery = self.format_top_level_keyword_no_indent(token ,formattedQuery)
+                self.previousKeyWord = token
+            elif token.type == TokenType.TOP_LEVEL_KEYWORD:
+                formattedQuery = self.format_top_level_keyword(token, formattedQuery)
                 self.previousKeyWord = token
             elif token.type == TokenType.NEWLINE_KEYWORD:
                 formattedQuery = self.format_newline_keyword(token, formattedQuery)
                 self.previousKeyWord = token
             elif token.type == TokenType.RESERVED_KEYWORD:
-                formattedQuery = self.format_reserved_keyword(token, formattedQuery)
+                formattedQuery = self.format_with_spaces(token, formattedQuery)
+                self.previousKeyWord = token
+            elif token.type == TokenType.KEYWORD:
+                formattedQuery = self.format_with_spaces(token, formattedQuery)
                 self.previousKeyWord = token
             elif token.type == TokenType.OPEN_PAREN:
                 formattedQuery = self.format_opening_parentheses(token, formattedQuery)
@@ -127,15 +135,15 @@ class Formatter:
         Opening parentheses increase the block indent level and start a new line.
         Take out the preceding space unless there was whitespace there in the original query or another opening parens or line comment.
         """
-        preserverWhiteSpaceFor = [
+        preserveWhiteSpaceFor = [
             TokenType.WHITESPACE,
             TokenType.OPEN_PAREN,
             TokenType.LINE_COMMENT
         ]
 
-        if not (any(t in self.previous_token().type for t in preserverWhiteSpaceFor)):
+        if not (any(t == self.previous_token().type for t in preserveWhiteSpaceFor)):
             query = trim_trailing_spaces(query)
-        query = token.value.upper() if self.config.keywordUppercase else token.value
+        query += token.value.upper() if self.config.keywordUppercase else token.value
         
         self.inlineBlock.begin_if_possible(self.tokens, self.index)
 
@@ -179,10 +187,18 @@ class Formatter:
         return trim_trailing_spaces(query) + token.value
 
     def format_with_spaces(self, token, query):
-        value = self.format_reserved_keyword(token.value) if token.type == TokenType.RESERVED_KEYWORD else token.value
+        if token.type == TokenType.RESERVED_KEYWORD:
+            value = self.format_reserved_keyword(token.value) 
+        elif token.type == TokenType.KEYWORD:
+            value = self.format_keyword(token.value)
+        else:
+            value = token.value
         return query + value + ' '
     
     def format_reserved_keyword(self, value):
+        return value.upper() if self.config.keywordUppercase else value
+
+    def format_keyword(self, value):
         return value.upper() if self.config.keywordUppercase else value
     
     def format_query_separator(self, token, query):

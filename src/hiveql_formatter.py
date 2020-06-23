@@ -1,7 +1,10 @@
-import hiveql_config as hc
-from common.tokenizer import Tokenizer
-from common.formatter import Formatter
-from common.config import Config
+import sys
+import os
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from src import hiveql_config as hc
+from src.common.tokenizer import Tokenizer
+from src.common.formatter import Formatter
+from src.common.config import Config
 
 class HiveQlFormatter:
 
@@ -22,10 +25,11 @@ class HiveQlFormatter:
                     hc.Functions.WINDOWING_FUNCTIONS +
                     hc.Functions.ANALYTICS_FUNCTIONS
                 ),
+                reservedKeywords=hc.Keywords.RESERVED_KEYWORDS,
                 topLevelKeywords=hc.Keywords.TOP_LEVEL_KEYWORDS,
                 newlineKeywords=hc.Keywords.NEWLINE_KEYWORDS,
                 topLevelKeywordsNoIndent=hc.Keywords.TOP_LEVEL_KEYWORDS_NO_INDENT,
-                stringTypes=[`""`, "N''", "''", '[]'],
+                stringTypes=['""', "N''", "''", '[]'],
                 openParens=['(', 'CASE'],
                 closeParens=[')', 'END'],
                 lineCommentTypes=['--'],

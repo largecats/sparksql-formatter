@@ -2,7 +2,8 @@ class Config:
 
     def __init__(
         self, 
-        keywords, 
+        keywords,
+        reservedKeywords,
         topLevelKeywords,
         newlineKeywords,
         topLevelKeywordsNoIndent,
@@ -16,6 +17,7 @@ class Config:
         indent
     ):
         self.keywords = keywords
+        self.reservedKeywords = reservedKeywords
         self.topLevelKeywords = topLevelKeywords
         self.newlineKeywords = newlineKeywords
         self.topLevelKeywordsNoIndent = topLevelKeywordsNoIndent
