@@ -29,10 +29,10 @@ class HiveQlFormatter:
                 openParens=['(', 'CASE'],
                 closeParens=[')', 'END'],
                 lineCommentTypes=['--'],
-                keyWordUppercase=True,
+                keywordUppercase=True,
                 linesBetweenQueries=1,
                 specialWordChars=[],
-                indent=4
+                indent='    '
             )
     
     def format(self, query):

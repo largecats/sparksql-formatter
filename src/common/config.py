@@ -10,7 +10,7 @@ class Config:
         openParens,
         closeParens,
         lineCommentTypes,
-        keyWordUppercase,
+        keywordUppercase,
         linesBetweenQueries,
         specialWordChars,
         indent
@@ -23,7 +23,7 @@ class Config:
         self.openParens = openParens
         self.closeParens = closeParens
         self.lineCommentTypes = lineCommentTypes
-        self.keyWordUppercase = keyWordUppercase
+        self.keywordUppercase = keywordUppercase
         self.linesBetweenQueries = linesBetweenQueries
         self.specialWordChars = specialWordChars
         self.indent = indent

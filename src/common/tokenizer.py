@@ -28,7 +28,7 @@ class Tokenizer:
     def __init__(self, config):
         self.WHITESPACE_REGEX = '^(\s+)'
         self.NUMBER_REGEX = '((-\s*)?[0-9]+(\.[0-9]+)?|0x[0-9a-fA-F]+|0b[01]+)\b'
-        self.OPERATOR_REGEX = '^(!=|<>|==|<=|>=|!<|!>|\|\||::|->>|->|~~\*|~~|!~~\*|!~~|~\*|!~\*|!~|:=|.)0'
+        self.OPERATOR_REGEX = '^(!=|<>|==|<=|>=|!<|!>|\|\||::|->>|->|~~\*|~~|!~~\*|!~~|~\*|!~\*|!~|:=|.)'
 
         self.BLOCK_COMMENT_REGEX = '^(\/\*[.\\n]*?(?:\*\/|$))'
         self.LINE_COMMENT_REGEX = Tokenizer.create_line_comment_regex(config.lineCommentTypes)
@@ -60,7 +60,7 @@ class Tokenizer:
     @staticmethod
     def create_word_regex(specialChars=[]):
         specialCharsString = ('|').join(specialChars)
-        regexString = '^([\\w{specialCharsString}]+)'.format(specialCharsString=specialCharsString)
+        regexString = u'^([\\w{specialCharsString}]+)'.format(specialCharsString=specialCharsString)
         return regexString
     
     @staticmethod
@@ -108,10 +108,15 @@ class Tokenizer:
         
         tokens = []
         token = None
-        while (len(input)):
+        while len(input):
+            print 'input = ' + input
             # Keep processing the string until it is empty
-            token = self.get_next_token(input, token)
-            input = input[::len(token.value)]
+            token = self.get_next_token(input, token) # get next token
+            print 'token.type = ' + token.type
+            print 'token.value = ' + token.value
+            start = 0 if token is None else len(token.value)
+            print 'start = ' + str(start)
+            input = input[start::] # advance thte string
             tokens.append(token)
         
         return tokens
@@ -239,8 +244,6 @@ class Tokenizer:
 
     @staticmethod
     def get_token_on_first_match(input, type, regex):
-        print regex
-        print input
         matches = re.search(pattern=regex, string=input)
         if matches:
             return Token(type=type, value=matches.group(0))

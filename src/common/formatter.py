@@ -4,7 +4,7 @@ from tokenizer import TokenType
 from indentation import Indentation
 from inline_block import InlineBlock
 
-trim_trailing_spaces = lambda s: re.sub.replace(pattern='[ \t]+$', repl='', string=s)
+trim_trailing_spaces = lambda s: re.sub(pattern='[ \t]+$', repl='', string=s)
 
 class Formatter:
 
@@ -43,13 +43,14 @@ class Formatter:
         self.tokens = self.tokenizer.tokenize(input=query)
         formattedQuery = self.get_formatted_query_from_tokens()
 
-        return formattedQuery.trim()
+        return formattedQuery.strip()
 
     def get_formatted_query_from_tokens(self):
         formattedQuery = ''
 
-        for token, index in self.tokens.items():
-            self.index = index
+        for i in range(len(self.tokens)):
+            token = self.tokens[i]
+            self.index = i
 
             if self.tokenOverride:
                 token = self.tokenOverride(token, self.previousKeyWord) or token
@@ -108,11 +109,11 @@ class Formatter:
         self.indentation.decrease_top_level()
         query = self.add_newline(query)
         self.indentation.increase_top_level()
-        query += Formatter.equalize_white_space(self.format_reserved_word(token.value))
+        query += Formatter.equalize_white_space(self.format_reserved_keyword(token.value))
         return self.add_newline(query)
     
     def format_newline_keyword(self, token, query):
-        return self.add_newline(query) + Formatter.equalize_white_space(self.format_reserved_word(token.value)) + ' '
+        return self.add_newline(query) + Formatter.equalize_white_space(self.format_reserved_keyword(token.value)) + ' '
     
     @staticmethod
     def equalize_white_space(s):
@@ -182,7 +183,7 @@ class Formatter:
         return query + value + ' '
     
     def format_reserved_keyword(self, value):
-        return value.upper() if self.config.uppercase else value
+        return value.upper() if self.config.keywordUppercase else value
     
     def format_query_separator(self, token, query):
         self.indentation.reset_indentation()

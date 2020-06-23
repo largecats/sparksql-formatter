@@ -30,8 +30,9 @@ class Indentation:
         Decreases indentation by one top-level indent.
         Does nothing if the previous indent is not top-level.
         """
-        if (self.indentTypes[-1] == INDENT_TYPE_TOP_LEVEL):
-            self.indentTypes.pop()
+        if len(self.indentTypes) > 0:
+            if (self.indentTypes[-1] == INDENT_TYPE_TOP_LEVEL):
+                self.indentTypes.pop()
     
     def decrease_block_level(self):
         """
