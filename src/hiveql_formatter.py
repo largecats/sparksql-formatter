@@ -10,17 +10,17 @@ class HiveQlFormatter:
             Config(
                 keywords=(
                     hc.Keywords.RESERVED_KEYWORDS + hc.Keywords.NON_RESERVED_KEYWORDS + 
-                    list(map(lambda s: s.upper(), hc.Functions.MATHEMATICAL_FUNCTIONS)) +
-                    list(map(lambda s: s.upper(), hc.Functions.COLLECTION_FUNCTIONS)) +
-                    list(map(lambda s: s.upper(), hc.Functions.TYPE_CONVERSION_FUNCTIONS)) + 
-                    list(map(lambda s: s.upper(), hc.Functions.DATE_FUNCTIONS)) + 
-                    list(map(lambda s: s.upper(), hc.Functions.CONDITIONAL_FUNCTIONS)) + 
-                    list(map(lambda s: s.upper(), hc.Functions.STRING_FUNCTIONS)) +
-                    list(map(lambda s: s.upper(), hc.Functions.DATA_MASKING_FUNCTIONS)) +
-                    list(map(lambda s: s.upper(), hc.Functions.MISC_FUNCTIONS)) +
-                    list(map(lambda s: s.upper(), hc.Functions.AGGREGATE_FUNCTIONS)) +
-                    list(map(lambda s: s.upper(), hc.Functions.WINDOWING_FUNCTIONS)) +
-                    list(map(lambda s: s.upper(), hc.Functions.ANALYTICS_FUNCTIONS))
+                    hc.Functions.MATHEMATICAL_FUNCTIONS +
+                    hc.Functions.COLLECTION_FUNCTIONS +
+                    hc.Functions.TYPE_CONVERSION_FUNCTIONS + 
+                    hc.Functions.DATE_FUNCTIONS + 
+                    hc.Functions.CONDITIONAL_FUNCTIONS + 
+                    hc.Functions.STRING_FUNCTIONS +
+                    hc.Functions.DATA_MASKING_FUNCTIONS +
+                    hc.Functions.MISC_FUNCTIONS +
+                    hc.Functions.AGGREGATE_FUNCTIONS +
+                    hc.Functions.WINDOWING_FUNCTIONS +
+                    hc.Functions.ANALYTICS_FUNCTIONS
                 ),
                 topLevelKeywords=hc.Keywords.TOP_LEVEL_KEYWORDS,
                 newlineKeywords=hc.Keywords.NEWLINE_KEYWORDS,

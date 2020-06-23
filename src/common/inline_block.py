@@ -49,7 +49,7 @@ class InlineBlock:
         length = 0
         level = 0
 
-        for i in range(index, tokens.length):
+        for i in range(index, len(tokens)):
             token = tokens[i]
             length += len(token.value)
 
@@ -63,7 +63,7 @@ class InlineBlock:
                 if level == 0:
                     return True
         
-            if is_forbidden_token(token):
+            if InlineBlock.is_forbidden_token(token):
                 return False
         
         return False

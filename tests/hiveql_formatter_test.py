@@ -8,26 +8,27 @@ class Test:
     def __init__(self):
         self.formatter = HiveQlFormatter()
         self.testQueries = [
-            'SELECT a.c1 FROM a WHERE a.c2 IS NULL'
+            'CREATE TABLE items (a INT PRIMARY KEY, b STRING)'
         ]
         self.keys = [
-'''
-SELECT
-    a.c1
-FROM
-    a
-WHERE
-    a.c2 IS NULL
-'''.lstrip().rstrip()
+            '''
+            CREATE TABLE items (
+                a INT PRIMARY KEY,
+                b STRING
+            )
+            '''.lstrip().rstrip()
         ]
     
     def run(self):
         for i in range(len(self.testQueries)):
             query = self.testQueries[i]
             formattedQuery = self.formatter.format(query)
+            key = self.keys[i]
+            print 'formattedQuery = \n'
             print repr(formattedQuery)
-            print repr(self.keys[i])
-            assert formattedQuery == self.keys[i]
+            print 'key = \n'
+            print repr(key)
+            assert formattedQuery == key
         return True
 
 Test().run()

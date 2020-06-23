@@ -133,13 +133,13 @@ class Formatter:
             TokenType.LINE_COMMENT
         ]
 
-        if not (any(t in self.previousToken().type for t in preserverWhiteSpaceFor)):
+        if not (any(t in self.previous_token().type for t in preserverWhiteSpaceFor)):
             query = trim_trailing_spaces(query)
-        query = token.value.upper() if self.config.uppercase else token.value
+        query = token.value.upper() if self.config.keywordUppercase else token.value
         
         self.inlineBlock.begin_if_possible(self.tokens, self.index)
 
-        if not self.inlineBlock.isActive():
+        if not self.inlineBlock.is_active():
             self.indentation.increase_block_level()
             query = self.add_newline(query)
         
@@ -149,8 +149,8 @@ class Formatter:
         """
         Closing parentheses decrease the block indent level.
         """
-        token.value = token.value.upper() if self.config.uppercase else token.value
-        if (self.inlineBlock.isActive()):
+        token.value = token.value.upper() if self.config.keywordUppercase else token.value
+        if (self.inlineBlock.is_active()):
             self.inlineBlock.end()
             return Formatter.format_with_space_after(token, query)
         else:
@@ -163,7 +163,7 @@ class Formatter:
         """
         query = trim_trailing_spaces(query) + token.value + ' '
 
-        if (self.inlineBlock.isActive()):
+        if (self.inlineBlock.is_active()):
             return query
         elif re.search(pattern='^LIMIT$', string=self.previousKeyWord.value):
             return query
