@@ -19,7 +19,7 @@ class Indentation:
         """
         self.indentTypes.append(INDENT_TYPE_TOP_LEVEL)
     
-    def incrase_block_level(self):
+    def increase_block_level(self):
         """
         Increases indentation by one block-level indent.
         """

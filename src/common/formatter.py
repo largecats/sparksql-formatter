@@ -144,9 +144,7 @@ class Formatter:
         if not (any(t == self.previous_token().type for t in preserveWhiteSpaceFor)):
             query = trim_trailing_spaces(query)
         query += token.value.upper() if self.config.keywordUppercase else token.value
-        
         self.inlineBlock.begin_if_possible(self.tokens, self.index)
-
         if not self.inlineBlock.is_active():
             self.indentation.increase_block_level()
             query = self.add_newline(query)

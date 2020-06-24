@@ -12,8 +12,10 @@ class Test:
         print(msg + '\n')
         formattedQuery = self.formatter.format(testQuery)
         print('formattedQuery = \n')
+        print(formattedQuery)
         print(repr(formattedQuery))
         print('key = \n')
+        print(key)
         print(repr(key))
         assert formattedQuery == key
         return True
@@ -42,6 +44,40 @@ INSERT
     Customers (ID, MoneyBalance, Address, City)
 VALUES
     (12, -123.4, 'Skagen 2111', 'Stv')
+'''.lstrip().rstrip()
+Test().run(msg, testQuery, key)
+
+msg = 'Testing ALTER TABLE ... MODIFY query'
+testQuery = '''ALTER TABLE supplier MODIFY supplier_name char(100) NOT NULL'''
+key = '''
+ALTER TABLE
+    supplier
+MODIFY
+    supplier_name char(100) NOT NULL
+'''.lstrip().rstrip()
+Test().run(msg, testQuery, key)
+
+msg = 'Testing ALTER TABLE ... ALTER COLUMN query'
+testQuery = '''ALTER TABLE supplier ALTER COLUMN supplier_name VARCHAR(100) NOT NULL'''
+key = '''
+ALTER TABLE
+    supplier
+ALTER COLUMN
+    supplier_name VARCHAR(100) NOT NULL
+'''.lstrip().rstrip()
+Test().run(msg, testQuery, key)
+
+msg = 'Testing SELECT query with CROSS JOIN'
+testQuery = '''SELECT a, b FROM t CROSS JOIN t2 ON t.id = t2.id_t'''
+key = '''
+SELECT
+    a,
+    b
+FROM
+    t
+CROSS JOIN
+    t2
+    ON t.id = t2.id_t
 '''.lstrip().rstrip()
 Test().run(msg, testQuery, key)
 

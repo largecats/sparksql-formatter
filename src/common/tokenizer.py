@@ -115,7 +115,6 @@ class Tokenizer:
             print('token.type = ' + token.type)
             print('token.value = ' + token.value)
             start = 0 if token is None else len(token.value)
-            print('start = ' + str(start))
             input = input[start::] # advance thte string
             tokens.append(token)
         
@@ -217,7 +216,7 @@ class Tokenizer:
     def get_newline_keyword_token(self, input):
         return Tokenizer.get_token_on_first_match(
             input=input,
-            type=TokenType.TOP_LEVEL_KEYWORD,
+            type=TokenType.NEWLINE_KEYWORD,
             regex=self.NEWLINE_KEYWORD_REGEX
         )
     

@@ -4,7 +4,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspa
 
 from src.common.tokenizer import TokenType
 
-INLINE_MAX_LENGTH = 120
+INLINE_MAX_LENGTH = 50
 
 class InlineBlock:
 
@@ -57,10 +57,10 @@ class InlineBlock:
             token = tokens[i]
             length += len(token.value)
 
-            if (length > INLINE_MAX_LENGTH):
+            if length > INLINE_MAX_LENGTH:
                 return False
             
-            if (token.type == TokenType.OPEN_PAREN):
+            if token.type == TokenType.OPEN_PAREN:
                 level += 1
             elif token.type == TokenType.CLOSE_PAREN:
                 level -= 1
