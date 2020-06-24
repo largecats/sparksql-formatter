@@ -36,6 +36,7 @@ class Tokenizer:
         self.TOP_LEVEL_KEYWORD_REGEX = Tokenizer.create_keyword_regex(config.topLevelKeywords)
         self.TOP_LEVEL_KEYWORD_NO_INDENT_REGEX = Tokenizer.create_keyword_regex(config.topLevelKeywordsNoIndent)
         self.NEWLINE_KEYWORD_REGEX = Tokenizer.create_keyword_regex(config.newlineKeywords)
+        self.RESERVED_KEYWORD_REGEX = Tokenizer.create_keyword_regex(config.reservedKeywords)
         self.PLAIN_KEYWORD_REGEX = Tokenizer.create_keyword_regex(config.keywords)
 
         self.WORD_REGEX = Tokenizer.create_word_regex(config.specialWordChars)
@@ -60,7 +61,7 @@ class Tokenizer:
     @staticmethod
     def create_word_regex(specialChars=[]):
         specialCharsString = ('|').join(specialChars)
-        regexString = u'^([\\w{specialCharsString}]+)'.format(specialCharsString=specialCharsString)
+        regexString = '^([\\w{specialCharsString}]+)'.format(specialCharsString=specialCharsString)
         return regexString
     
     @staticmethod
@@ -203,7 +204,15 @@ class Tokenizer:
             self.get_top_level_keyword_token(input) or
             self.get_newline_keyword_token(input) or
             self.get_top_level_keyword_token_no_indent(input) or
+            self.get_reserved_keyword_token(input) or
             self.get_plain_keyword_token(input)
+        )
+    
+    def get_reserved_keyword_token(self, input):
+        return Tokenizer.get_token_on_first_match(
+            input=input,
+            type=TokenType.RESERVED_KEYWORD,
+            regex=self.RESERVED_KEYWORD_REGEX
         )
     
     def get_top_level_keyword_token(self, input):
@@ -243,6 +252,17 @@ class Tokenizer:
 
     @staticmethod
     def get_token_on_first_match(input, type, regex):
-        matches = re.search(pattern=regex, string=input)
+        if type in [
+            TokenType.RESERVED_KEYWORD,
+            TokenType.TOP_LEVEL_KEYWORD,
+            TokenType.TOP_LEVEL_KEYWORD_NO_INDENT,
+            TokenType.NEWLINE_KEYWORD,
+            TokenType.KEYWORD,
+            TokenType.OPEN_PAREN,
+            TokenType.CLOSE_PAREN
+            ]:
+            matches = re.search(pattern=regex, string=input, flags=re.IGNORECASE)
+        else:
+            matches = re.search(pattern=regex, string=input)
         if matches:
             return Token(type=type, value=matches.group(0))

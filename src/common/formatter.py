@@ -197,7 +197,8 @@ class Formatter:
         return value.upper() if self.config.keywordUppercase else value
 
     def format_keyword(self, value):
-        return value.upper() if self.config.keywordUppercase else value
+        # return value.upper() if self.config.keywordUppercase else value
+        return value
     
     def format_query_separator(self, token, query):
         self.indentation.reset_indentation()

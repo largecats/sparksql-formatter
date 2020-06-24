@@ -1,14 +1,155 @@
 # https://cwiki.apache.org/confluence/display/Hive/LanguageManual+DDL
 class Keywords:
     RESERVED_KEYWORDS = [
-        'ABORT',            # added in Hive 2.1.0
+        'ALL',
+        'ALTER',
+        'AND',
+        'ARRAY',
+        'AS',
+        'AUTHORIZATION',
+        'BETWEEN',
+        'BIGINT',
+        'BINARY',
+        'BOOLEAN',
+        'BOTH',
+        'BY',
+        'CACHE',
+        'CASE',
+        'CAST',
+        'CHAR',
+        'COLUMN',
+        'COMMIT',
+        'CONF',
+        'CONSTRAINT',
+        'CREATE',
+        'CROSS',
+        'CUBE',
+        'CURRENT',
+        'CURRENT_DATE',
+        'CURRENT_TIMESTAMP',
+        'CURSOR',
+        'DATABASE',
+        'DATE',
+        'DAYOFWEEK',
+        'DECIMAL',
+        'DELETE',
+        'DESCRIBE',
+        'DISTINCT',
+        'DOUBLE',
+        'DROP',
+        'ELSE',
+        'END',
+        'EXCHANGE',
+        'EXISTS',
+        'EXTENDED',
+        'EXTERNAL',
+        'EXTRACT',
+        'FALSE',
+        'FETCH',
+        'FLOAT',
+        'FLOOR',
+        'FOLLOWING',
+        'FOR',
+        'FOREIGN',
+        'FROM',
+        'FULL',
+        'FUNCTION',
+        'GRANT',
+        'GROUP',
+        'GROUPING',
+        'HAVING',
+        'IF',
+        'IMPORT',
+        'IN',
+        'INNER',
+        'INSERT',
+        'INT',
+        'INTEGER',
+        'INTERSECT',
+        'INTERVAL',
+        'INTO',
+        'IS',
+        'JOIN',
+        'LATERAL',
+        'LEFT',
+        'LESS',
+        'LIKE',
+        'LOCAL',
+        'MACRO',
+        'MAP',
+        'MORE',
+        'NONE',
+        'NOT',
+        'NULL',
+        'NUMERIC',
+        'OF',
+        'ON',
+        'ONLY',
+        'OR',
+        'ORDER',
+        'OUT',
+        'OUTER',
+        'OVER',
+        'PARTIALSCAN',
+        'PARTITION',
+        'PERCENT',
+        'PRECEDING',
+        'PRECISION',
+        'PRESERVE',
+        'PRIMARY',
+        'PROCEDURE',
+        'RANGE',
+        'READS',
+        'REDUCE',
+        'REFERENCES',
+        # 'REGEXP',
+        'REVOKE',
+        'RIGHT',
+        # 'RLIKE',
+        'ROLLBACK',
+        'ROLLUP',
+        'ROW',
+        'ROWS',
+        'SELECT',
+        'SET',
+        'SMALLINT',
+        'START',
+        'SYNC',
+        'TABLE',
+        'TABLESAMPLE',
+        'THEN',
+        'TIME',
+        'TIMESTAMP',
+        'TO',
+        'TRANSFORM',
+        'TRIGGER',
+        'TRUE',
+        'TRUNCATE',
+        'UNBOUNDED',
+        'UNION',
+        'UNIQUEJOIN',
+        'UPDATE',
+        'USER',
+        'USING',
+        'UTC_TMESTAMP',
+        'VALUES',
+        'VARCHAR',
+        'VIEWS',
+        'WHEN',
+        'WHERE',
+        'WINDOW',
+        'WITH'
+    ]
+
+    NON_RESERVED_KEYWORDS = [
         'ADD',
+        'ABORT',
         'ADMIN',
         'AFTER',
         'ANALYZE',
         'ARCHIVE',
         'ASC',
-        'AUTOCOMMIT',       # added in Hive 2.0.0
+        'AUTOCOMMIT',
         'BEFORE',
         'BUCKET',
         'BUCKETS',
@@ -29,26 +170,26 @@ class Keywords:
         'DATABASES',
         'DATETIME',
         'DAY',
-        'DAYS',             # added in Hive 2.2.0
+        'DAYS',
         'DBPROPERTIES',
         'DEFERRED',
         'DEFINED',
         'DELIMITED',
         'DEPENDENCY',
         'DESC',
-        'DETAIL',           # added in Hive 2.2.0
+        'DETAIL',
         'DIRECTORIES',
         'DIRECTORY',
         'DISABLE',
         'DISTRIBUTE',
-        'DOW',              # added in Hive 2.2.0
+        'DOW',
         'ELEM_TYPE',
         'ENABLE',
         'ESCAPED',
         'EXCLUSIVE',
         'EXPLAIN',
         'EXPORT',
-        'EXPRESSION',       # added in Hive 2.2.0
+        'EXPRESSION',
         'FIELDS',
         'FILE',
         'FILEFORMAT',
@@ -58,7 +199,7 @@ class Keywords:
         'FUNCTIONS',
         'HOLD_DDLTIME',
         'HOUR',
-        'HOURS',            # added in Hive 2.2.0
+        'HOURS',
         'IDXPROPERTIES',
         'IGNORE',
         'INDEX',
@@ -66,14 +207,14 @@ class Keywords:
         'INPATH',
         'INPUTDRIVER',
         'INPUTFORMAT',
-        'ISOLATION',        # added in Hive 2.0.0
+        'ISOLATION',
         'ITEMS',
         'JAR',
-        'LEVEL',            # added in Hive 2.0.0
-        'KEY',              # added in Hive 2.1.0
+        'KEY',
         'KEYS',
         'KEY_TYPE',
-        'LAST',             # added in Hive 2.1.0
+        'LAST',
+        'LEVEL',
         'LIMIT',
         'LINES',
         'LOAD',
@@ -87,17 +228,18 @@ class Keywords:
         'METADATA',
         'MINUS',
         'MINUTE',
-        'MINUTES',          # added in Hive 2.2.0
+        'MINUTES',
         'MONTH',
-        'MONTHS',           # added in Hive 2.2.0
+        'MONTHS',
         'MSCK',
-        'NORELY',           # added in Hive 2.1.0
+        'NORELY',
         'NOSCAN',
-        'NOVALIDATE',       # added in Hive 2.1.0
-        'NULLS',            # added in Hive 2.1.0
+        'NOVALIDATE',
         'NO_DROP',
+        'NULLS',
         'OFFLINE',
-        'OPERATOR',         # added in Hive 2.2.0
+        'OFFSET',
+        'OPERATOR',
         'OPTION',
         'OUTPUTDRIVER',
         'OUTPUTFORMAT',
@@ -110,28 +252,28 @@ class Keywords:
         'PRINCIPALS',
         'PROTECTION',
         'PURGE',
-        'QUARTER',          # added in Hive 2.2.0
+        'QUARTER',
         'READ',
         'READONLY',
         'REBUILD',
         'RECORDREADER',
         'RECORDWRITER',
-        # 'REGEXP',           # removed in Hive 2.0.0
+        'REGEXP',
         'RELOAD',
-        'RELY',             # added in Hive 2.1.0
+        'RELY',
         'RENAME',
         'REPAIR',
         'REPLACE',
         'REPLICATION',
         'RESTRICT',
         'REWRITE',
-        # 'RLIKE',            # removed in Hive 2.0.0
+        'RLIKE',
         'ROLE',
         'ROLES',
         'SCHEMA',
         'SCHEMAS',
         'SECOND',
-        'SECONDS',          # added in Hive 2.2.0
+        'SECONDS',
         'SEMI',
         'SERDE',
         'SERDEPROPERTIES',
@@ -141,7 +283,7 @@ class Keywords:
         'SHOW',
         'SHOW_DATABASE',
         'SKEWED',
-        'SNAPSHOT',         # added in Hive 2.0.0
+        'SNAPSHOT',
         'SORT',
         'SORTED',
         'SSL',
@@ -150,17 +292,16 @@ class Keywords:
         'STREAMTABLE',
         'STRING',
         'STRUCT',
-        'SUMMARY',          # added in Hive 2.2.0
+        'SUMMARY',
         'TABLES',
         'TBLPROPERTIES',
         'TEMPORARY',
         'TERMINATED',
-        'TIMESTAMPTZ',      # added in Hive 3.0.0
+        'TIMESTAMPTZ',
         'TINYINT',
         'TOUCH',
-        'TRANSACTION',      # added in Hive 2.0.0
+        'TRANSACTION',
         'TRANSACTIONS',
-        'OFFSET',           # added in Hive 2.0.0
         'UNARCHIVE',
         'UNDO',
         'UNIONTYPE',
@@ -171,159 +312,18 @@ class Keywords:
         'USE',
         'UTC',
         'UTCTIMESTAMP',
-        'VALIDATE',         # added in Hive 2.1.0
+        'VALIDATE',
         'VALUE_TYPE',
+        'VECTORIZATION',
         'VIEW',
-        'VECTORIZATION',    # added in Hive 2.2.0
-        'WEEK',             # added in Hive 2.2.0
-        'WEEKS',            # added in Hive 2.0.0
+        'WEEK',
+        'WEEKS',
         'WHILE',
-        'WORK',             # added in Hive 2.0.0
-        'WRITE',            # added in Hive 2.0.0
+        'WORK',
+        'WRITE',
         'YEAR',
-        'YEARS',            # added in Hive 2.2.0
-        'ZONE'              # added in Hive 3.3.0
-    ]
-
-    NON_RESERVED_KEYWORDS = [
-        'ALL',
-        'ALTER',
-        'AND',
-        'ARRAY',
-        'AS',
-        'AUTHORIZATION',
-        'BETWEEN',
-        'BIGINT',
-        'BINARY',
-        'BOOLEAN',
-        'BOTH',
-        'BY',
-        'CACHE',            # added in Hive 2.1.0
-        'CASE',
-        'CAST',
-        'CHAR',
-        'COLUMN',
-        'COMMIT',           # added in Hive 2.0.0
-        'CONF',
-        'CONSTRAINT',       # added in Hive 2.1.0
-        'CREATE',
-        'CROSS',
-        'CUBE',
-        'CURRENT',
-        'CURRENT_DATE',
-        'CURRENT_TIMESTAMP',
-        'CURSOR',
-        'DATABASE',
-        'DATE',
-        'DAYOFWEEK',        # added in Hive 2.2.0
-        'DECIMAL',
-        'DELETE',
-        'DESCRIBE',
-        'DISTINCT',
-        'DOUBLE',
-        'DROP',
-        'ELSE',
-        'END',
-        'EXCHANGE',
-        'EXISTS',
-        'EXTENDED',
-        'EXTERNAL',
-        'EXTRACT',          # added in Hive 2.2.0
-        'FALSE',
-        'FETCH',
-        'FLOAT',
-        'FLOOR',            # added in Hive 2.2.0
-        'FOLLOWING',
-        'FOR',
-        'FOREIGN',          # added in Hive 2.1.0
-        'FROM',
-        'FULL',
-        'FUNCTION',
-        'GRANT',
-        'GROUP',
-        'GROUPING',
-        'HAVING',
-        'IF',
-        'IMPORT',
-        'IN',
-        'INNER',
-        'INSERT',
-        'INT',
-        'INTEGER',          # added in Hive 2.2.0
-        'INTERSECT',
-        'INTERVAL',
-        'INTO',
-        'IS',
-        'JOIN',
-        'LATERAL',
-        'LEFT',
-        'LESS',
-        'LIKE',
-        'LOCAL',
-        'MACRO',
-        'MAP',
-        'MORE',
-        'NONE',
-        'NOT',
-        'NULL',
-        'NUMERIC',          # added in Hive 3.0.0
-        'OF',
-        'ON',
-        'ONLY',             # added in Hive 2.0.0
-        'OR',
-        'ORDER',
-        'OUT',
-        'OUTER',
-        'OVER',
-        'PARTIALSCAN',
-        'PARTITION',
-        'PERCENT',
-        'PRECEDING',
-        'PRESERVE',
-        'PRECISION',        # added in Hive 2.2.0
-        'PRIMARY',          # added in Hive 2.1.0
-        'PROCEDURE',
-        'RANGE',
-        'READS',
-        'REDUCE',
-        'REFERENCES',       # added in Hive 2.1.0
-        'REGEXP',           # added in Hive 2.0.0
-        'REVOKE',
-        'RIGHT',
-        'RLIKE',            # added in Hive 2.0.0
-        'ROLLBACK',         # added in Hive 2.0.0
-        'ROLLUP',
-        'ROW',
-        'ROWS',
-        'SELECT',
-        'SET',
-        'SMALLINT',
-        'START',            # added in Hive 2.0.0
-        'SYNC',             # added in Hive 3.0.0
-        'TABLE',
-        'TABLESAMPLE',
-        'THEN',
-        'TIME',             # added in Hive 3.0.0
-        'TIMESTAMP',
-        'TO',
-        'TRANSFORM',
-        'TRIGGER',
-        'TRUE',
-        'TRUNCATE',
-        'UNBOUNDED',
-        'UNION',
-        'UNIQUEJOIN',
-        'UPDATE',
-        'USER',
-        'USING',
-        'UTC_TMESTAMP',
-        'VALUES',
-        'VARCHAR',
-        'VIEWS',            # added in Hive 2.2.0
-        'WHEN',
-        'WHERE',
-        'WINDOW',
-        'WITH'
+        'YEARS',
+        'ZONE'
     ]
 
     TOP_LEVEL_KEYWORDS = [
@@ -331,25 +331,18 @@ class Keywords:
         'AFTER',
         'ALTER COLUMN',
         'ALTER TABLE',
-        'CROSS JOIN',
         'DELETE FROM',
         'EXCEPT',
+        'FETCH FIRST',
         'FROM',
         'GROUP BY',
         'GO',
         'HAVING',
         'INSERT INTO',
         'INSERT',
-        'INNER JOIN',
-        'JOIN',
-        'LEFT JOIN',
-        'LEFT OUTER JOIN',
         'LIMIT',
         'MODIFY',
         'ORDER BY',
-        'OUTER JOIN',
-        'RIGHT JOIN',
-        'RIGHT OUTER JOIN',
         'SELECT',
         'SET CURRENT SCHEMA',
         'SET SCHEMA',
@@ -360,21 +353,29 @@ class Keywords:
     ]
 
     TOP_LEVEL_KEYWORDS_NO_INDENT = [
-        'INTERSECT', 
-        'INTERSECT ALL', 
+        'INTERSECT',
+        'INTERSECT ALL',
         'MINUS',
-        'UNION', 
+        'UNION',
         'UNION ALL'
     ]
 
     NEWLINE_KEYWORDS = [
         'AND',
+        'CROSS JOIN',
         'ELSE',
-        'ON',
+        'INNER JOIN',
+        'JOIN',
+        'LEFT JOIN',
+        'LEFT OUTER JOIN',
         'OR',
+        'OUTER JOIN',
+        'RIGHT JOIN',
+        'RIGHT OUTER JOIN',
         'WHEN',
         'XOR'
     ]
+
 
 # https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF#LanguageManualUDF-MathematicalFunctions
 class Functions:
@@ -419,7 +420,7 @@ class Functions:
         'least',
         'width_bucket'
     ]
-    
+
     COLLECTION_FUNCTIONS = [
         'size',
         'map_keys',
@@ -428,10 +429,7 @@ class Functions:
         'sort_array'
     ]
 
-    TYPE_CONVERSION_FUNCTIONS = [
-        'binary',
-        'cast'
-    ]
+    TYPE_CONVERSION_FUNCTIONS = ['binary', 'cast']
 
     DATE_FUNCTIONS = [
         'from_unixtime',
@@ -586,12 +584,7 @@ class Functions:
     ]
 
     # https://cwiki.apache.org/confluence/display/Hive/LanguageManual+WindowingAndAnalytics#LanguageManualWindowingAndAnalytics-EnhancementstoHiveQL
-    WINDOWING_FUNCTIONS = [
-        'LEAD',
-        'LAG',
-        'FIRST_VALUE',
-        'LAST_VALUE'
-    ]
+    WINDOWING_FUNCTIONS = ['LEAD', 'LAG', 'FIRST_VALUE', 'LAST_VALUE']
 
     ANALYTICS_FUNCTIONS = [
         'RANK',
@@ -601,4 +594,3 @@ class Functions:
         'PERCENT_RANK',
         'NTILE'
     ]
-
