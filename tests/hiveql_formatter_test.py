@@ -256,6 +256,46 @@ ORDER BY
     3
         '''.strip()
         return self.run(msg, testQuery, key)
+
+    
+    def test_complex_query_with_long_table_name(self):
+        msg = 'Testing complex query'
+        testQuery = '''
+select t0.a, t0.b, t1.x, t2.y,
+    t3.c, t3.d
+
+from t0_very_very_very_very_very_very_very_very_very_long_table_name t0
+    left join t1_very_very_very_very_very_very_very_very_very_long_table_name t1 on t0.a = t1.z
+    left join t2 on t0.a = t2.z
+
+    left join t3 on t3.c = t0.a
+
+where t0.a between '{date}' and add_months('{date}', 1)
+and t2.y < 0
+order by 1,2,3
+        '''
+        key = '''
+SELECT
+    t0.a,
+    t0.b,
+    t1.x,
+    t2.y,
+    t3.c,
+    t3.d
+FROM
+    t0_very_very_very_very_very_very_very_very_very_long_table_name t0
+    LEFT JOIN t1_very_very_very_very_very_very_very_very_very_long_table_name t1 ON t0.a = t1.z
+    LEFT JOIN t2 ON t0.a = t2.z
+    LEFT JOIN t3 ON t3.c = t0.a
+WHERE
+    t0.a BETWEEN '{date}' AND add_months('{date}', 1)
+    AND t2.y < 0
+ORDER BY
+    1,
+    2,
+    3
+        '''.strip()
+        return self.run(msg, testQuery, key)
     
     def run_all(self):
         tests = list(filter(lambda m: m.startswith('test_'), dir(self)))
