@@ -121,7 +121,10 @@ class Formatter:
         return self.add_newline(query)
     
     def format_newline_keyword(self, token, query):
-        return self.add_newline(query) + Formatter.equalize_white_space(self.format_reserved_keyword(token.value)) + ' '
+        if token.value.upper() == 'AND' and self.previousKeyWord.value.upper() == 'BETWEEN':
+            return query + Formatter.equalize_white_space(self.format_reserved_keyword(token.value)) + ' '
+        else:
+            return self.add_newline(query) + Formatter.equalize_white_space(self.format_reserved_keyword(token.value)) + ' '
     
     @staticmethod
     def equalize_white_space(s):

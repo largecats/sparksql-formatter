@@ -36,7 +36,7 @@ CREATE TABLE t0 (
     c INT NOT NULL,
     d INT NOT NULL
 )
-        '''.lstrip().rstrip()
+        '''.strip()
         return self.run(msg, testQuery, key)
 
     def test_insert_without_into(self):
@@ -47,7 +47,7 @@ INSERT
     Customers (ID, MoneyBalance, Address, City)
 VALUES
     (12, -123.4, 'Skagen 2111', 'Stv')
-        '''.lstrip().rstrip()
+        '''.strip()
         return self.run(msg, testQuery, key)
     
     def test_alter_table_modify(self):
@@ -58,7 +58,7 @@ ALTER TABLE
     supplier
 MODIFY
     supplier_name STRING(100) NOT NULL
-        '''.lstrip().rstrip()
+        '''.strip()
         return self.run(msg, testQuery, key)
 
     def test_alter_table_alter_column(self):
@@ -69,7 +69,7 @@ ALTER TABLE
     supplier
 ALTER COLUMN
     supplier_name STRING(100) NOT NULL
-        '''.lstrip().rstrip()
+        '''.strip()
         return self.run(msg, testQuery, key)
     
     def test_select_with_cross_join(self):
@@ -82,7 +82,7 @@ SELECT
 FROM
     t
     LEFT JOIN t2 ON t.id = t2.id_t
-        '''.lstrip().rstrip()
+        '''.strip()
         return self.run(msg, testQuery, key)
 
     def test_simple_select(self):
@@ -94,7 +94,7 @@ SELECT
     c2
 FROM
     t0
-        '''.lstrip().rstrip()
+        '''.strip()
         return self.run(msg, testQuery, key)
     
     def test_case_when(self):
@@ -107,7 +107,7 @@ CASE
     WHEN a = 'baz' THEN 3
     ELSE 4
 END
-        '''.lstrip().rstrip()
+        '''.strip()
         return self.run(msg, testQuery, key)
     
     def test_case_when_inside_select(self):
@@ -124,7 +124,7 @@ SELECT
     END AS c4
 FROM
     t0
-        '''.lstrip().rstrip()
+        '''.strip()
         return self.run(msg, testQuery, key)
     
     def test_case_when_with_expression(self):
@@ -136,7 +136,7 @@ CASE
     WHEN toString(getNumber()) = 'two' THEN 2
     ELSE 3
 END
-        '''.lstrip().rstrip()
+        '''.strip()
         return self.run(msg, testQuery, key)
 
     def test_lowercase_case_when(self):
@@ -147,7 +147,114 @@ CASE
     WHEN c1 = 'foo' THEN 1
     ELSE 2
 END
-        '''.lstrip().rstrip()
+        '''.strip()
+        return self.run(msg, testQuery, key)
+    
+    def test_ignore_case_when_in_other_string(self):
+        msg = 'Testing ignore CASE, WHEN in other strings'
+        testQuery = '''SELECT CASEDATE, ENDDATE FROM table1'''
+        key = '''
+SELECT
+    CASEDATE,
+    ENDDATE
+FROM
+    table1
+        '''.strip()
+        return self.run(msg, testQuery, key)
+    
+    def test_line_comment(self):
+        msg = 'Testing line comment'
+        testQuery = '''
+SELECT a,--comment, here
+b FROM t0--comment'''
+        key = '''
+SELECT
+    a,
+    --comment, here
+    b
+FROM
+    t0 --comment
+        '''.strip()
+        return self.run(msg, testQuery, key)
+    
+    def test_line_comment_followed_by_comma(self):
+        msg = 'Testing line comment followed by comma'
+        testQuery = '''
+SELECT a --comment
+, b
+        '''
+        key = '''
+SELECT
+    a --comment
+,
+    b
+        '''.strip()
+        return self.run(msg, testQuery, key)
+    
+    def test_line_comment_followed_by_close_paren(self):
+        msg = 'Testing line comment followed by closing parentheses'
+        testQuery = '''
+SELECT ( a --comment
+ )
+        '''
+        key = '''
+SELECT
+    (
+        a --comment
+    )
+        '''.strip()
+        return self.run(msg, testQuery, key)
+    
+    def test_line_comment_followed_by_open_paren(self):
+        msg = 'Testing line comment followed by opening parentheses'
+        testQuery = '''
+SELECT a --comment
+()
+        '''
+        key = '''
+SELECT
+    a --comment
+    ()
+        '''.strip()
+        return self.run(msg, testQuery, key)
+    
+    def test_complex_query(self):
+        msg = 'Testing complex query'
+        testQuery = '''
+select t0.a, t0.b, t1.x, t2.y,
+    t3.c, t3.d
+
+from t0
+    left join t1 on t0.a = t1.z
+    left join t2 on t0.a = t2.z
+
+    left join t3 on t3.c = t0.a
+
+where t0.a between '{date}' and add_months('{date}', 1)
+and t2.y < 0
+order by 1,2,3
+        '''
+        key = '''
+SELECT
+    t0.a,
+    t0.b,
+    t1.x,
+    t2.y,
+    t3.c,
+    t3.d
+FROM
+    t0
+    LEFT JOIN t1 ON t0.a = t1.z
+    LEFT JOIN t2 ON t0.a = t2.z
+    LEFT JOIN t3 ON t3.c = t0.a
+WHERE
+    t0.a BETWEEN '{date}' AND add_months('{date}', 1)
+    AND t2.y < 0
+ORDER BY
+    1,
+    2,
+    3
+        '''.strip()
         return self.run(msg, testQuery, key)
     
     def run_all(self):
