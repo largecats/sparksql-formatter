@@ -7,5 +7,10 @@ A HiveQL formatter in Python based on [sql-formatter](https://github.com/zerotur
 
 ### Command-line
 ```
-python __init__.py -files <dir_to_file>
+$ hiveql-formatter
+```
+
+### Python library
+```python
+import hqlf
 ```

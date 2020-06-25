@@ -24,6 +24,6 @@ setuptools.setup(
         'Operating System :: OS Independent',
     ],
     entry_points={
-        'console_scripts': ['hiveql-formatter = hiveql-formatter:main'],
-    },
+        'console_scripts': ['hiveql-formatter=hqlf:run_main'],
+    }
 )

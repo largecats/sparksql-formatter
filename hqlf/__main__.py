@@ -25,4 +25,4 @@ Entry point for command-line tool.
 """
 import hqlf
 
-hqlf.main()
+hqlf.run_main()

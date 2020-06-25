@@ -173,7 +173,7 @@ class Formatter:
         ]
         if not (any(t == self.previous_token().type for t in preserveWhiteSpaceFor)):
             query = trim_trailing_spaces(query)
-        query += token.value.upper() if self.config.reservedKeywordUppercase else token.value
+        query += token.value.upper() if self.config.reservedKeywordUppercase else token.value.lower()
         self.inlineBlock.begin_if_possible(self.tokens, self.index)
         if not self.inlineBlock.is_active():
             self.indentation.increase_block_level()
@@ -193,7 +193,7 @@ class Formatter:
         Closing parentheses decrease the block indent level.
         """
 
-        token.value = token.value.upper() if self.config.reservedKeywordUppercase else token.value
+        token.value = token.value.upper() if self.config.reservedKeywordUppercase else token.value.lower()
         if (self.inlineBlock.is_active()):
             self.inlineBlock.end()
             query = Formatter.format_with_space_after(token, query)
@@ -243,10 +243,12 @@ class Formatter:
         return query + value + ' '
     
     def format_reserved_keyword(self, value):
-        return value.upper() if self.config.reservedKeywordUppercase else value
+        # print(value)
+        # print(self.config.reservedKeywordUppercase)
+        return value.upper() if self.config.reservedKeywordUppercase else value.lower()
 
     def format_keyword(self, value):
-        # return value.upper() if self.config.reservedKeywordUppercase else value
+        # return value.upper() if self.config.reservedKeywordUppercase else value.lower()
         return value
     
     def format_query_separator(self, token, query):
