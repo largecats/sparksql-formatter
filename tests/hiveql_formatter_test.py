@@ -1,7 +1,13 @@
 import sys
 import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+import logging
 from src.hiveql_formatter import HiveQlFormatter
+
+logger = logging.getLogger(__name__)
+log_formatter = '[%(asctime)s] %(levelname)s [%(filename)s:%(lineno)s:%(funcName)s] %(message)s'
+logging.basicConfig(stream=sys.stdout, level=logging.INFO, format=log_formatter)
+logger.info('Script loaded...')
 
 class Test:
 
@@ -9,14 +15,14 @@ class Test:
         self.formatter = HiveQlFormatter()
     
     def run(self, msg, testQuery, key):
-        print(msg + '\n')
+        logger.info(msg)
         formattedQuery = self.formatter.format(testQuery)
-        print('formattedQuery = \n')
-        print(formattedQuery)
-        print(repr(formattedQuery))
-        print('key = \n')
-        print(key)
-        print(repr(key))
+        logger.info('formattedQuery =')
+        logger.info(formattedQuery)
+        logger.info(repr(formattedQuery))
+        logger.info('key =')
+        logger.info(key)
+        logger.info(repr(key))
         assert formattedQuery == key
         return True
     
@@ -218,8 +224,8 @@ SELECT
         '''.strip()
         return self.run(msg, testQuery, key)
     
-    def test_complex_query(self):
-        msg = 'Testing complex query'
+    def test_complex_query_with_between_and(self):
+        msg = 'Testing complex query with BETWEEN ... AND'
         testQuery = '''
 select t0.a, t0.b, t1.x, t2.y,
     t3.c, t3.d
@@ -259,7 +265,7 @@ ORDER BY
 
     
     def test_complex_query_with_long_table_name(self):
-        msg = 'Testing complex query'
+        msg = 'Testing complex query with long table name'
         testQuery = '''
 select t0.a, t0.b, t1.x, t2.y,
     t3.c, t3.d
@@ -290,6 +296,47 @@ FROM
 WHERE
     t0.a BETWEEN '{date}' AND add_months('{date}', 1)
     AND t2.y < 0
+ORDER BY
+    1,
+    2,
+    3
+        '''.strip()
+        return self.run(msg, testQuery, key)
+    
+    def test_complex_query_with_unicode_char(self):
+        msg = 'Testing complex query with unicode character'
+        testQuery = '''
+select t0.a, t0.b, t1.x, t2.y,
+    t3.c, t3.d
+
+from t0
+    left join t1 on t0.a = t1.z
+    left join t2 on t0.a = t2.z
+
+    left join t3 on t3.c = t0.a
+
+where t0.a between '{date}' and add_months('{date}', 1)
+and t2.y < 0 and t1.z = '你好' OR t2.z = 'ไหว้'
+order by 1,2,3
+        '''
+        key = '''
+SELECT
+    t0.a,
+    t0.b,
+    t1.x,
+    t2.y,
+    t3.c,
+    t3.d
+FROM
+    t0
+    LEFT JOIN t1 ON t0.a = t1.z
+    LEFT JOIN t2 ON t0.a = t2.z
+    LEFT JOIN t3 ON t3.c = t0.a
+WHERE
+    t0.a BETWEEN '{date}' AND add_months('{date}', 1)
+    AND t2.y < 0
+    AND t1.z = '你好'
+    OR t2.z = 'ไหว้'
 ORDER BY
     1,
     2,
