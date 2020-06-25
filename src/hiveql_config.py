@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # https://cwiki.apache.org/confluence/display/Hive/LanguageManual+DDL
 class Keywords:
     RESERVED_KEYWORDS = [

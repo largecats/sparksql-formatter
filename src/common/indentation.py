@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 INDENT_TYPE_TOP_LEVEL = 'top-level' # increased by open parentheses
 INDENT_TYPE_BLOCK_LEVEL = 'block-level' # increased by TOPLEVEL_KEYWORD tokens
 

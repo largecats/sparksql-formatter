@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from __future__ import print_function # for print() in Python 2
 import re
 
