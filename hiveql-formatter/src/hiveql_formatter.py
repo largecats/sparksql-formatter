@@ -25,10 +25,10 @@ class HiveQlFormatter:
                 ),
                 reservedKeywords=hc.Keywords.RESERVED_KEYWORDS,
                 topLevelKeywords=hc.Keywords.TOP_LEVEL_KEYWORDS,
-                newlineKeywords=hc.Keywords.NEWLINE_KEYWORDS,
                 topLevelKeywordsNoIndent=hc.Keywords.TOP_LEVEL_KEYWORDS_NO_INDENT,
+                newlineKeywords=hc.Keywords.NEWLINE_KEYWORDS,
                 stringTypes=['""', "N''", "''", '[]'],
-                openParens=['(', 'CASE'],
+                openParens=['(', 'CASE'], # the order of the parentheses need to match with closeParens
                 closeParens=[')', 'END'],
                 lineCommentTypes=['--'],
                 reservedKeywordUppercase=True,

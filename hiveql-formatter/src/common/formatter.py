@@ -1,10 +1,36 @@
 # -*- coding: utf-8 -*-
+'''
+MIT License
+
+Copyright (c) 2016-present ZeroTurnaround LLC
+Copyright (c) 2016-present kufii
+Copyright (c) 2020-present largecats
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+'''
 from __future__ import print_function # for print() in Python 2
 import re
 
 from src.common.tokenizer import TokenType
 from src.common.indentation import Indentation
 from src.common.inline_block import InlineBlock
+from src.common.subquery import SubQuery
 
 trim_trailing_spaces = lambda s: re.sub(pattern='[ \t]+$', repl='', string=s)
 
@@ -22,12 +48,13 @@ class Formatter:
         tokenOverrite: TBD
             TBD
         """
-        self.config = config or None
+        self.config = config
         self.indentation = Indentation(config.indent)
         self.inlineBlock = InlineBlock()
+        self.subQuery = SubQuery()
         self.tokenizer = tokenizer
         self.tokenOverride = tokenOverride
-        self.previousKeyWord = None
+        self.previousKeyword = None
         self.tokens = []
         self.index = 0
     
@@ -57,7 +84,7 @@ class Formatter:
             self.index = i
 
             if self.tokenOverride:
-                token = self.tokenOverride(token, self.previousKeyWord) or token
+                token = self.tokenOverride(token, self.previousKeyword) or token
             
             if token.type == TokenType.WHITESPACE:
                 # ignore
@@ -68,19 +95,19 @@ class Formatter:
                 formattedQuery == self.format_block_comment(token, formattedQuery)
             elif token.type == TokenType.TOP_LEVEL_KEYWORD_NO_INDENT:
                 formattedQuery = self.format_top_level_keyword_no_indent(token ,formattedQuery)
-                self.previousKeyWord = token
+                self.previousKeyword = token
             elif token.type == TokenType.TOP_LEVEL_KEYWORD:
                 formattedQuery = self.format_top_level_keyword(token, formattedQuery)
-                self.previousKeyWord = token
+                self.previousKeyword = token
             elif token.type == TokenType.NEWLINE_KEYWORD:
                 formattedQuery = self.format_newline_keyword(token, formattedQuery)
-                self.previousKeyWord = token
+                self.previousKeyword = token
             elif token.type == TokenType.RESERVED_KEYWORD:
                 formattedQuery = self.format_with_spaces(token, formattedQuery)
-                self.previousKeyWord = token
+                self.previousKeyword = token
             elif token.type == TokenType.KEYWORD:
                 formattedQuery = self.format_with_spaces(token, formattedQuery)
-                self.previousKeyWord = token
+                self.previousKeyword = token
             elif token.type == TokenType.OPEN_PAREN:
                 formattedQuery = self.format_opening_parentheses(token, formattedQuery)
             elif token.type == TokenType.CLOSE_PAREN:
@@ -120,7 +147,8 @@ class Formatter:
         return self.add_newline(query)
     
     def format_newline_keyword(self, token, query):
-        if token.value.upper() == 'AND' and self.previousKeyWord.value.upper() == 'BETWEEN':
+        if (self.previousKeyword.value.upper() in ['BETWEEN', 'WHEN', 'ON'] 
+            and token.value.upper() in ['AND', 'OR']):
             return query + Formatter.equalize_white_space(self.format_reserved_keyword(token.value)) + ' '
         else:
             return self.add_newline(query) + Formatter.equalize_white_space(self.format_reserved_keyword(token.value)) + ' '
@@ -150,6 +178,13 @@ class Formatter:
         if not self.inlineBlock.is_active():
             self.indentation.increase_block_level()
             query = self.add_newline(query)
+
+        # print('token = ' + token.value)
+        # print('self.previousKeyword = ' + self.previousKeyword.value)
+        
+        if self.previousKeyword.value.upper() == 'AS': # start of subQuery
+            self.subQuery.reset()
+        self.subQuery.update(self, token)
         
         return query
     
@@ -158,25 +193,36 @@ class Formatter:
         Closing parentheses decrease the block indent level.
         """
         token.value = token.value.upper() if self.config.reservedKeywordUppercase else token.value
+
+        self.subQuery.update(self, token)
+
         if (self.inlineBlock.is_active()):
             self.inlineBlock.end()
-            return Formatter.format_with_space_after(token, query)
+            query = Formatter.format_with_space_after(token, query)
         else:
             self.indentation.decrease_block_level()
-            return self.format_with_spaces(token, self.add_newline(query))
+            query = self.format_with_spaces(token, self.add_newline(query))
+        
+        if self.subQuery.is_ended():
+            query += '\n' * (1 + self.config.linesBetweenQueries)
+        return query
     
     def format_comma(self, token, query):
         """
         Commas start a new line (unless within inline parentheses or SQL "LIMIT" clause)
         """
-        query = trim_trailing_spaces(query) + token.value + ' '
-
-        if (self.inlineBlock.is_active()):
-            return query
-        elif re.search(pattern='^LIMIT$', string=self.previousKeyWord.value):
-            return query
+        if self.subQuery.is_ended(): # add extra blank line after subquery
+            if self.previous_token().type == TokenType.CLOSE_PAREN:
+                query = query.strip()
+            return query + token.value + '\n' * (1 + self.config.linesBetweenQueries)
         else:
-            return self.add_newline(query)
+            query = trim_trailing_spaces(query) + token.value + ' '
+            if (self.inlineBlock.is_active()):
+                return query
+            elif re.search(pattern='^LIMIT$', string=self.previousKeyword.value):
+                return query
+            else:
+                return self.add_newline(query)
     
     @staticmethod
     def format_with_space_after(token, query):

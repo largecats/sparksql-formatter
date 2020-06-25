@@ -2,8 +2,6 @@
 '''
 MIT License
 
-Copyright (c) 2016-present ZeroTurnaround LLC
-Copyright (c) 2016-present kufii
 Copyright (c) 2020-present largecats
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -24,34 +22,30 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 '''
-class Config:
+from src.common.tokenizer import TokenType
 
-    def __init__(
-        self, 
-        keywords,
-        reservedKeywords,
-        topLevelKeywords,
-        newlineKeywords,
-        topLevelKeywordsNoIndent,
-        stringTypes,
-        openParens,
-        closeParens,
-        lineCommentTypes,
-        reservedKeywordUppercase,
-        linesBetweenQueries,
-        specialWordChars,
-        indent
-    ):
-        self.keywords = keywords
-        self.reservedKeywords = reservedKeywords
-        self.topLevelKeywords = topLevelKeywords
-        self.newlineKeywords = newlineKeywords
-        self.topLevelKeywordsNoIndent = topLevelKeywordsNoIndent
-        self.stringTypes = stringTypes
-        self.openParens = openParens
-        self.closeParens = closeParens
-        self.lineCommentTypes = lineCommentTypes
-        self.reservedKeywordUppercase = reservedKeywordUppercase
-        self.linesBetweenQueries = linesBetweenQueries
-        self.specialWordChars = specialWordChars
-        self.indent = indent
+class SubQuery:
+    
+    def __init__(self):
+        self.stack = []
+    
+    def is_ended(self):
+        return len(self.stack) == 0
+    
+    def update(self, formatter, token):
+        openParens = [p for p in formatter.config.openParens if p != 'CASE']
+        closeParens = [p for p in formatter.config.closeParens if p != 'END']
+        if token.value in openParens:
+            self.stack.append(token.value)
+        elif token.value in closeParens:
+            if self.is_ended():
+                raise Exception('Parentheses not matched')
+            lastParen = self.stack[-1]
+            if openParens.index(lastParen) == closeParens.index(token.value):
+                self.stack.pop()
+            else:
+                raise Exception('Parentheses not matched')
+    
+    def reset(self):
+        self.stack = []
+

@@ -373,6 +373,7 @@ class Keywords:
         'OUTER JOIN',
         'RIGHT JOIN',
         'RIGHT OUTER JOIN',
+        'THEN',
         'WHEN',
         'XOR'
     ]
