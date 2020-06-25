@@ -22,5 +22,8 @@ setuptools.setup(
         'Programming Language :: Python :: 3.6',
         'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
-    ]
+    ],
+    entry_points={
+        'console_scripts': ['hiveql-formatter = hiveql-formatter:main'],
+    },
 )

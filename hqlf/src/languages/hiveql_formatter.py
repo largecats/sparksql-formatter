@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
-from src import hiveql_config as hc
-from src.common.tokenizer import Tokenizer
-from src.common.formatter import Formatter
-from src.common.config import Config
+import sys
+import os
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from hqlf.src.languages import hiveql_config as hc
+from hqlf.src.core.tokenizer import Tokenizer
+from hqlf.src.core.formatter import Formatter
+from hqlf.src.core.config import Config
 
 class HiveQlFormatter:
 

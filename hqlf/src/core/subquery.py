@@ -45,7 +45,7 @@ t1 AS (
 
 SELECT * FROM t0
 """
-from src.common.tokenizer import TokenType
+from hqlf.src.core.tokenizer import TokenType
 
 class SubQuery:
     

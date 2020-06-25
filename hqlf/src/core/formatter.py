@@ -25,10 +25,10 @@
 from __future__ import print_function # for print() in Python 2
 import re
 
-from src.common.tokenizer import TokenType
-from src.common.indentation import Indentation
-from src.common.inline_block import InlineBlock
-from src.common.subquery import SubQuery
+from hqlf.src.core.tokenizer import TokenType
+from hqlf.src.core.indentation import Indentation
+from hqlf.src.core.inline_block import InlineBlock
+from hqlf.src.core.subquery import SubQuery
 
 trim_trailing_spaces = lambda s: re.sub(pattern='[ \t]+$', repl='', string=s)
 

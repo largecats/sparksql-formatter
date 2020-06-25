@@ -6,9 +6,9 @@ import argparse
 import logging
 import codecs
 
-from src.hiveql_formatter import HiveQlFormatter
-from src import hiveql_config as hc
-from src.common.config import Config
+from hqlf.src.languages.hiveql_formatter import HiveQlFormatter
+from hqlf.src.languages import hiveql_config as hc
+from hqlf.src.core.config import Config
 
 logger = logging.getLogger(__name__)
 log_formatter = '[%(asctime)s] %(levelname)s [%(filename)s:%(lineno)s:%(funcName)s] %(message)s'

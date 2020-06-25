@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 import sys
 import os
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 import logging
-from src.hiveql_formatter import HiveQlFormatter
+from hqlf.src.languages.hiveql_formatter import HiveQlFormatter
 
 logger = logging.getLogger(__name__)
 log_formatter = '[%(asctime)s] %(levelname)s [%(filename)s:%(lineno)s:%(funcName)s] %(message)s'
