@@ -106,27 +106,16 @@ FROM
     
     def test_case_when(self):
         msg = 'Testing CASE ... WHEN'
-        testQuery = '''CASE WHEN a = 'foo' THEN 1 WHEN a = 'bar' THEN 2 WHEN a = 'baz' THEN 3 ELSE 4 END'''
-        key = '''
-CASE
-    WHEN a = 'foo' THEN 1
-    WHEN a = 'bar' THEN 2
-    WHEN a = 'baz' THEN 3
-    ELSE 4
-END
-        '''.strip()
-        return self.run(msg, testQuery, key)
-    
-    def test_case_when_inside_select(self):
-        msg = 'Testing CASE ... WHEN inside SELECT'
         testQuery = '''SELECT c1, c2, CASE WHEN c3 = 'one' THEN 1 WHEN c3 = 'two' THEN 2 ELSE 3 END AS c4 FROM t0'''
         key = '''
 SELECT
     c1,
     c2,
     CASE
-        WHEN c3 = 'one' THEN 1
-        WHEN c3 = 'two' THEN 2
+        WHEN c3 = 'one'
+        THEN 1
+        WHEN c3 = 'two'
+        THEN 2
         ELSE 3
     END AS c4
 FROM
@@ -136,24 +125,38 @@ FROM
     
     def test_case_when_with_expression(self):
         msg = 'Testing CASE ... WHEN with expression'
-        testQuery = '''CASE WHEN toString(getNumber()) = 'one' THEN 1 WHEN toString(getNumber()) = 'two' THEN 2 ELSE 3 END'''
+        testQuery = '''
+SELECT
+CASE WHEN toString(getNumber()) = 'one' THEN 1
+WHEN toString(getNumber()) = 'two' THEN 2 ELSE 3 END AS c1
+FROM t0
+'''
         key = '''
-CASE
-    WHEN toString(getNumber()) = 'one' THEN 1
-    WHEN toString(getNumber()) = 'two' THEN 2
-    ELSE 3
-END
+SELECT
+    CASE
+        WHEN toString(getNumber()) = 'one'
+        THEN 1
+        WHEN toString(getNumber()) = 'two'
+        THEN 2
+        ELSE 3
+    END AS c1
+FROM
+    t0
         '''.strip()
         return self.run(msg, testQuery, key)
 
     def test_lowercase_case_when(self):
         msg = 'Testing lower-case CASE ... WHEN'
-        testQuery = '''case when c1 = 'foo' then 1 else 2 end'''
+        testQuery = '''select case when c1 = 'foo' then 1 else 2 end from t0'''
         key = '''
-CASE
-    WHEN c1 = 'foo' THEN 1
-    ELSE 2
-END
+SELECT
+    CASE
+        WHEN c1 = 'foo'
+        THEN 1
+        ELSE 2
+    END
+FROM
+    t0
         '''.strip()
         return self.run(msg, testQuery, key)
     
@@ -225,48 +228,43 @@ SELECT
         '''.strip()
         return self.run(msg, testQuery, key)
     
-    def test_complex_query_with_between_and(self):
-        msg = 'Testing complex query with BETWEEN ... AND'
+    def test_query_with_between_and(self):
+        msg = 'Testing query with BETWEEN ... AND'
         testQuery = '''
-select t0.a, t0.b, t1.x, t2.y,
-    t3.c, t3.d
-
-from t0
-    left join t1 on t0.a = t1.z
-    left join t2 on t0.a = t2.z
-
-    left join t3 on t3.c = t0.a
-
-where t0.a between '{date}' and add_months('{date}', 1)
-and t2.y < 0
-order by 1,2,3
+select c1, c2 from t0
+where c1 between '{date}' and add_months('{date}', 1)
+and c2 < 0
         '''
         key = '''
 SELECT
-    t0.a,
-    t0.b,
-    t1.x,
-    t2.y,
-    t3.c,
-    t3.d
+    c1,
+    c2
 FROM
     t0
-    LEFT JOIN t1 ON t0.a = t1.z
-    LEFT JOIN t2 ON t0.a = t2.z
-    LEFT JOIN t3 ON t3.c = t0.a
 WHERE
-    t0.a BETWEEN '{date}' AND add_months('{date}', 1)
-    AND t2.y < 0
-ORDER BY
-    1,
-    2,
-    3
+    c1 BETWEEN '{date}' AND add_months('{date}', 1)
+    AND c2 < 0
         '''.strip()
         return self.run(msg, testQuery, key)
-
     
-    def test_complex_query_with_long_table_name(self):
-        msg = 'Testing complex query with long table name'
+    def test_query_with_left_join_and(self):
+        msg = 'Testing query with LEFT JOIN ... AND'
+        testQuery = '''
+select c1, c2 from t0
+left join t1 on t0.c1 = t1.c1 and t0.c3 = t1.c3
+        '''
+        key = '''
+SELECT
+    c1,
+    c2
+FROM
+    t0
+    LEFT JOIN t1 ON t0.c1 = t1.c1 AND t0.c3 = t1.c3
+        '''.strip()
+        return self.run(msg, testQuery, key)
+    
+    def test_query_with_long_table_name(self):
+        msg = 'Testing query with long table name'
         testQuery = '''
 select t0.a, t0.b, t1.x, t2.y,
     t3.c, t3.d
@@ -304,44 +302,66 @@ ORDER BY
         '''.strip()
         return self.run(msg, testQuery, key)
     
-    def test_complex_query_with_unicode_char(self):
-        msg = 'Testing complex query with unicode character'
+    def test_query_with_unicode_char(self):
+        msg = 'Testing query with unicode character'
         testQuery = '''
-select t0.a, t0.b, t1.x, t2.y,
-    t3.c, t3.d
-
-from t0
-    left join t1 on t0.a = t1.z
-    left join t2 on t0.a = t2.z
-
-    left join t3 on t3.c = t0.a
-
-where t0.a between '{date}' and add_months('{date}', 1)
-and t2.y < 0 and t1.z = '你好' OR t2.z = 'ไหว้'
-order by 1,2,3
+select c1, c2 from t0
+where t1.c2 IN ('你好' 'ไหว้')
         '''
         key = '''
 SELECT
-    t0.a,
-    t0.b,
-    t1.x,
-    t2.y,
-    t3.c,
-    t3.d
+    c1,
+    c2
 FROM
     t0
-    LEFT JOIN t1 ON t0.a = t1.z
-    LEFT JOIN t2 ON t0.a = t2.z
-    LEFT JOIN t3 ON t3.c = t0.a
 WHERE
-    t0.a BETWEEN '{date}' AND add_months('{date}', 1)
-    AND t2.y < 0
-    AND t1.z = '你好'
-    OR t2.z = 'ไหว้'
-ORDER BY
-    1,
-    2,
-    3
+    t1.c2 IN ('你好' 'ไหว้')
+        '''.strip()
+        return self.run(msg, testQuery, key)
+    
+    def test_query_with_subquery(self):
+        msg = 'Testing query with subquery'
+        testQuery = '''
+with t0 as (select c1, c2 from tab1),
+
+t1 as (select c1, c2 from tab2),
+
+t2 as (select c1, c2 from tab3)
+
+select * from t0 left join t1 on t0.c1 = t1.c1
+left join t2 on t0.c1 = t2.c1
+        '''
+        key = '''
+WITH t0 AS (
+    SELECT
+        c1,
+        c2
+    FROM
+        tab1
+),
+
+t1 AS (
+    SELECT
+        c1,
+        c2
+    FROM
+        tab2
+),
+
+t2 AS (
+    SELECT
+        c1,
+        c2
+    FROM
+        tab3
+)
+
+SELECT
+    *
+FROM
+    t0
+    LEFT JOIN t1 ON t0.c1 = t1.c1
+    LEFT JOIN t2 ON t0.c1 = t2.c1
         '''.strip()
         return self.run(msg, testQuery, key)
     

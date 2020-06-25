@@ -1,29 +1,27 @@
 # -*- coding: utf-8 -*-
-'''
-MIT License
+# MIT License
 
-Copyright (c) 2016-present ZeroTurnaround LLC
-Copyright (c) 2016-present kufii
-Copyright (c) 2020-present largecats
+# Copyright (c) 2016-present ZeroTurnaround LLC
+# Copyright (c) 2016-present kufii
+# Copyright (c) 2020-present largecats
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-'''
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
 from __future__ import print_function # for print() in Python 2
 import re
 
@@ -170,7 +168,6 @@ class Formatter:
             TokenType.OPEN_PAREN,
             TokenType.LINE_COMMENT
         ]
-
         if not (any(t == self.previous_token().type for t in preserveWhiteSpaceFor)):
             query = trim_trailing_spaces(query)
         query += token.value.upper() if self.config.reservedKeywordUppercase else token.value
@@ -179,12 +176,12 @@ class Formatter:
             self.indentation.increase_block_level()
             query = self.add_newline(query)
 
-        # print('token = ' + token.value)
-        # print('self.previousKeyword = ' + self.previousKeyword.value)
-        
-        if self.previousKeyword.value.upper() == 'AS': # start of subQuery
-            self.subQuery.reset()
-        self.subQuery.update(self, token)
+        if self.previousKeyword.value.upper() == 'AS': # start of subQuery, e.g., t0 AS (...)
+            self.subQuery.reset() # reset so that occasional syntax error does not affect subsequent formatting
+            self.subQuery.started = True # mark that subquery has started
+            # This is to differentiate from opening/closng parentheses inside subquery
+            # and to distinguish the starting opening parenthesis of the subquery
+        self.subQuery.update(self, token) # update subquery with the current token
         
         return query
     
@@ -192,10 +189,8 @@ class Formatter:
         """
         Closing parentheses decrease the block indent level.
         """
+
         token.value = token.value.upper() if self.config.reservedKeywordUppercase else token.value
-
-        self.subQuery.update(self, token)
-
         if (self.inlineBlock.is_active()):
             self.inlineBlock.end()
             query = Formatter.format_with_space_after(token, query)
@@ -203,26 +198,27 @@ class Formatter:
             self.indentation.decrease_block_level()
             query = self.format_with_spaces(token, self.add_newline(query))
         
-        if self.subQuery.is_ended():
-            query += '\n' * (1 + self.config.linesBetweenQueries)
+        self.subQuery.update(self, token) # update subquery with the current token
+        if self.subQuery.started and self.subQuery.ended(): # if this is the subquery's ending closing parenthesis
+            query = query.rstrip() + '\n' * (1 + self.config.linesBetweenQueries) # add extra blank lines
+            self.subQuery.reset() # mark subquery as ended to start again
         return query
     
     def format_comma(self, token, query):
         """
         Commas start a new line (unless within inline parentheses or SQL "LIMIT" clause)
         """
-        if self.subQuery.is_ended(): # add extra blank line after subquery
+        if not self.subQuery.started and self.subQuery.ended(): # add extra blank line after subquery
             if self.previous_token().type == TokenType.CLOSE_PAREN:
-                query = query.strip()
-            return query + token.value + '\n' * (1 + self.config.linesBetweenQueries)
+                query = query.strip() # remove the \n added immediately after )
+                return query + token.value + '\n' * (1 + self.config.linesBetweenQueries) # add \n after ),
+        query = trim_trailing_spaces(query) + token.value + ' '
+        if (self.inlineBlock.is_active()):
+            return query
+        elif re.search(pattern='^LIMIT$', string=self.previousKeyword.value):
+            return query
         else:
-            query = trim_trailing_spaces(query) + token.value + ' '
-            if (self.inlineBlock.is_active()):
-                return query
-            elif re.search(pattern='^LIMIT$', string=self.previousKeyword.value):
-                return query
-            else:
-                return self.add_newline(query)
+            return self.add_newline(query)
     
     @staticmethod
     def format_with_space_after(token, query):

@@ -1,0 +1,70 @@
+WITH t0 AS
+(
+    SELECT
+        c1,
+        c2,
+        c3,
+        c4,
+        CASE 
+            WHEN c5 = 'A' AND c4 = 'C' THEN 1
+            WHEN c5 = 'B' AND c4 = 'D' THEN 1 
+            ELSE 0 
+        END AS a          
+    FROM 
+        tab1                 
+),
+
+t1 AS
+(   
+    SELECT 
+        c1,
+        c2,
+        c3,
+        c4
+    FROM 
+        (
+            SELECT 
+                *, 
+                ROW_NUMBER() OVER (PARTITION BY c5 ORDER BY c1 ASC, c2 DESC, c3 DESC) AS rank
+            FROM 
+                (
+                    SELECT
+                        t1.c1
+                        sku_id, 
+                        t2.c2 AS c2_1, 
+                        c3, 
+                        c4, 
+                        c5, 
+                        c6, 
+                        1 AS c7
+                    FROM 
+                        t1
+                    LEFT JOIN
+                        t2 
+                        ON t2.c1 = t1.c1
+                    WHERE t1.c10 = 0
+                    UNION
+                    SELECT
+                        t1.c1, 
+                        t1.c3, 
+                        t3.c2 AS c2_1, 
+                        c3,
+                        c4
+                        c5
+                        c6
+                        2 AS c7
+                    FROM 
+                        t1
+                    LEFT JOIN 
+                        t2 
+                        ON t2.c1 = t1.c1
+                    LEFT JOIN t3
+                        ON t3.c2=t2.c2 OR t3.c5 = t2.c5
+                    WHERE 
+                        t3.c3 IS NOT NULL
+                )
+        )
+    WHERE rank = 1
+)
+
+SELECT * FROM t1
