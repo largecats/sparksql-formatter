@@ -5,6 +5,7 @@ import sys
 import argparse
 import logging
 import codecs
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from hqlf.src.languages.hiveql_formatter import HiveQlFormatter
 from hqlf.src.languages import hiveql_config as hc
@@ -27,7 +28,7 @@ def main(argv):
                 openParens=args['openParens'],
                 closeParens=args['closeParens'],
                 lineCommentTypes=args['lineCommentTypes'],
-                reservedKeywordUppercase=args.get('reservedKeywordUppercase') or False,
+                reservedKeywordUppercase=args['reservedKeywordUppercase'],
                 linesBetweenQueries=args['linesBetweenQueries'],
                 specialWordChars=args['specialWordChars'],
                 indent=args['indent']
@@ -150,9 +151,9 @@ def get_arguments(argv):
         help='Prefixes to line comments in the query language')
 
     parser.add_argument(
-        '-u',
         '-reservedKeywordUppercase', 
-        action='store_true',
+        type=bool,
+        default=True,
         help='Convert the reserved keywords to upper case')
 
     parser.add_argument(

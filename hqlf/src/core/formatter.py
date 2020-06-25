@@ -84,6 +84,7 @@ class Formatter:
             if self.tokenOverride:
                 token = self.tokenOverride(token, self.previousKeyword) or token
             
+            # print('token.value = ' + token.value)
             if token.type == TokenType.WHITESPACE:
                 # ignore
                 continue
@@ -118,6 +119,8 @@ class Formatter:
                 formattedQuery = Formatter.format_without_spaces(token, formattedQuery)
             elif token.value == ';':
                 formattedQuery = self.format_query_separator(token, formattedQuery)
+            elif token.value in ['{', '}']:
+                formattedQuery = Formatter.format_without_spaces(token, formattedQuery)
             else:
                 formattedQuery = self.format_with_spaces(token, formattedQuery)
         
@@ -176,7 +179,7 @@ class Formatter:
             self.indentation.increase_block_level()
             query = self.add_newline(query)
 
-        if self.previousKeyword.value.upper() == 'AS': # start of subQuery, e.g., t0 AS (...)
+        if self.previous_token(offset=2).value.upper() == 'AS': # start of subQuery, e.g., t0 AS (...)
             self.subQuery.reset() # reset so that occasional syntax error does not affect subsequent formatting
             self.subQuery.started = True # mark that subquery has started
             # This is to differentiate from opening/closng parentheses inside subquery
@@ -199,6 +202,8 @@ class Formatter:
             query = self.format_with_spaces(token, self.add_newline(query))
         
         self.subQuery.update(self, token) # update subquery with the current token
+        # print('self.subQuery.started = ' + str(self.subQuery.started))
+        # print('self.subQuery.ended() = ' + str(self.subQuery.ended()))
         if self.subQuery.started and self.subQuery.ended(): # if this is the subquery's ending closing parenthesis
             query = query.rstrip() + '\n' * (1 + self.config.linesBetweenQueries) # add extra blank lines
             self.subQuery.reset() # mark subquery as ended to start again

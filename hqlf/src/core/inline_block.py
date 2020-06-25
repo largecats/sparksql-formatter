@@ -24,7 +24,7 @@
 # SOFTWARE.
 from hqlf.src.core.tokenizer import TokenType
 
-INLINE_MAX_LENGTH = 50
+INLINE_MAX_LENGTH = 120
 
 class InlineBlock:
 
