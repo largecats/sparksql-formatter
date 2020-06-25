@@ -1,7 +1,7 @@
 # Change Log
 
 ## 2020-06-24
-Added source code.
+Added source code, translated from JavaScript in [sql-formatter](https://github.com/zeroturnaround/sql-formatter) and its fork [sql-formatter-plus](https://github.com/kufii/sql-formatter-plus) to Python.
 
 ## 2020-06-25
 Added customized tests.
