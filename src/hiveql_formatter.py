@@ -1,7 +1,4 @@
 # -*- coding: utf-8 -*-
-import sys
-import os
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from src import hiveql_config as hc
 from src.common.tokenizer import Tokenizer
 from src.common.formatter import Formatter
