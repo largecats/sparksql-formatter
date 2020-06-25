@@ -31,7 +31,7 @@ class HiveQlFormatter:
                 openParens=['(', 'CASE'],
                 closeParens=[')', 'END'],
                 lineCommentTypes=['--'],
-                keywordUppercase=True,
+                reservedKeywordUppercase=True,
                 linesBetweenQueries=1,
                 specialWordChars=[],
                 indent='    '
