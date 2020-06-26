@@ -1,35 +1,39 @@
-- [hiveql-formatter](#hiveql-formatter)
-  - [Install](#install)
-    - [Install using pip (TBD)](#install-using-pip-tbd)
-    - [Install from source](#install-from-source)
-  - [Usage](#usage)
-    - [Command-line tool](#command-line-tool)
-      - [Configurations](#configurations)
-        - [Path to a config file](#path-to-a-config-file)
-        - [Dictionary](#dictionary)
-    - [Python library](#python-library)
-  - [Supported attributes](#supported-attributes)
+# hiveqlformatter
+A [Hive Query Language](https://cwiki.apache.org/confluence/display/Hive/LanguageManual) formatter in Python based on [sql-formatter](https://github.com/zeroturnaround/sql-formatter) and its fork [sql-formatter-plus](https://github.com/kufii/sql-formatter-plus), with customizations and extra features (both are licensed under the MIT license). The built-in formatter is for HiveQL queries, but can be easily extended to other query languages with similar structure using [configurations](#configurations).
 
-# hiveql-formatter
-A [Hive Query Language](https://cwiki.apache.org/confluence/display/Hive/LanguageManual) formatter in Python based on [sql-formatter](https://github.com/zeroturnaround/sql-formatter) and its fork [sql-formatter-plus](https://github.com/kufii/sql-formatter-plus), with customizations and extra features. Both [sql-formatter](https://github.com/zeroturnaround/sql-formatter) and [sql-formatter-plus](https://github.com/kufii/sql-formatter-plus) are licensed under the MIT license. The built-in formatter is for HiveQL queries, but can be easily extended to other query languages with similar structure using [configurations](#configurations).
+- [hiveqlformatter](#hiveqlformatter)
+- [Installation](#installation)
+  - [Install using pip (TBD)](#install-using-pip-tbd)
+  - [Install from source](#install-from-source)
+- [Compatibility](#compatibility)
+- [Usage](#usage)
+  - [Use as command-line tool](#use-as-command-line-tool)
+    - [Configurations](#configurations)
+      - [Path to a config file](#path-to-a-config-file)
+      - [Dictionary](#dictionary)
+  - [Use as Python library](#use-as-python-library)
+- [Supported attributes](#supported-attributes)
 
-## Install
+# Installation
 
-### Install using pip (TBD)
+## Install using pip (TBD)
 ```
 pip install hiveqlformatter
 ```
 
-### Install from source
+## Install from source
 See [here](https://docs.python.org/2/install/index.html#splitting-the-job-up).
 ```
 python setup.py install
 ```
 
-## Usage
+# Compatibility
+Supports Python 2.7 and 3.6+.
+
+# Usage
 `hiveqlformatter` can be used as either a command-line tool or a Python library.
 
-### Command-line tool
+## Use as command-line tool
 ```
 usage: hiveqlformatter [-h] [-files FILES [FILES ...]] [-i] [--config CONFIG]
 
@@ -42,12 +46,12 @@ optional arguments:
   -i, --in-place        Format the files in place.
   --config CONFIG       Configurations for the query language. Can be a path to a config file or a dictionary.
 ```
-#### Configurations
+### Configurations
 The `--config` argument specifies attributes of the query language, such as keywords, comment prefix, and indent. Supported attributes can be found [at the end of this document](#supported-attributes).
 
 It accepts the following inputs:
 
-##### Path to a config file
+#### Path to a config file
 The config file should have section `[hiveqlformatter]` and key-value pairs specifying attributes, if needed. E.g.,
 ```
 [hiveqlformatter]
@@ -55,19 +59,19 @@ reservedKeywordUppercase = False
 linesBetweenQueries = 2
 ```
 
-##### Dictionary
+#### Dictionary
 E.g.,
 ```
 $ hiveqlformatter --config="{'reservedKeywordUppercase': False}" -files <path_to_file1> <path_to_file2>
 ```
 
-### Python library
+## Use as Python library
 The module can also be used as a Python library.
 ```python
 import hiveqlformatter
 ```
 
-## Supported attributes
+# Supported attributes
 **`keywords`**   
 
 A list of keywords in the query language. E.g., `SELECT`, `FROM`, `from_unixtime()`. Default to HiveQL's [keywords](https://cwiki.apache.org/confluence/display/Hive/LanguageManual+DDL) and [functions](https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF).
