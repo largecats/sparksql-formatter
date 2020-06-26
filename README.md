@@ -33,9 +33,9 @@ optional arguments:
 #### Configurations
 The `--config` argument specifies attributes of the query language, such as keywords, comment prefix, and indent. Supported attributes can be found [at the end of this document](#supported-attributes).
 
-It accepts inputs of the following format:
+It accepts the following inputs:
 
-##### path to a config file
+##### Path to a config file
 The config file should have section `[hiveqlformatter]` and key-value pairs specifying attributes, if needed. E.g.,
 ```
 [hiveqlformatter]
@@ -43,7 +43,7 @@ reservedKeywordUppercase = False
 linesBetweenQueries = 2
 ```
 
-##### dictionary
+##### Dictionary
 E.g.,
 ```
 $ hiveqlformatter --config="{'reservedKeywordUppercase': False}" -files <path_to_file1> <path_to_file2>
