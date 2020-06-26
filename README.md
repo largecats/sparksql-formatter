@@ -1,3 +1,6 @@
+# hiveql-formatter
+A [Hive Query Language](https://cwiki.apache.org/confluence/display/Hive/LanguageManual) formatter in Python based on [sql-formatter](https://github.com/zeroturnaround/sql-formatter) and its fork [sql-formatter-plus](https://github.com/kufii/sql-formatter-plus), with customizations and extra features. Both [sql-formatter](https://github.com/zeroturnaround/sql-formatter) and [sql-formatter-plus](https://github.com/kufii/sql-formatter-plus) are licensed under the MIT license. The built-in formatter is for HiveQL queries, but can be easily extended to other query languages with similar structure using [configurations](#configurations).
+
 - [hiveql-formatter](#hiveql-formatter)
   - [Install](#install)
     - [Install using pip (TBD)](#install-using-pip-tbd)
@@ -9,9 +12,6 @@
         - [Dictionary](#dictionary)
     - [AS Python library](#as-python-library)
   - [Supported attributes](#supported-attributes)
-
-# hiveql-formatter
-A [Hive Query Language](https://cwiki.apache.org/confluence/display/Hive/LanguageManual) formatter in Python based on [sql-formatter](https://github.com/zeroturnaround/sql-formatter) and its fork [sql-formatter-plus](https://github.com/kufii/sql-formatter-plus), with customizations and extra features. Both [sql-formatter](https://github.com/zeroturnaround/sql-formatter) and [sql-formatter-plus](https://github.com/kufii/sql-formatter-plus) are licensed under the MIT license. The built-in formatter is for HiveQL queries, but can be easily extended to other query languages with similar structure using [configurations](#configurations).
 
 ## Install
 
