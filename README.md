@@ -15,7 +15,7 @@ python setup.py install
 ```
 
 ## Usage
-`hiveqlformatter` can be used either as command-line tool or as Python library.
+`hiveqlformatter` can be used as either a command-line tool or a Python library.
 
 ### Command-line tool
 ```
@@ -33,9 +33,9 @@ optional arguments:
 #### Configurations
 The `--config` argument specifies attributes of the query language, such as keywords, comment prefix, and indent. Supported attributes can be found [at the end of this document](#supported-attributes).
 
-It accepts inputs of the following format:
+It accepts the following inputs:
 
-##### path to a config file
+##### Path to a config file
 The config file should have section `[hiveqlformatter]` and key-value pairs specifying attributes, if needed. E.g.,
 ```
 [hiveqlformatter]
@@ -43,7 +43,7 @@ reservedKeywordUppercase = False
 linesBetweenQueries = 2
 ```
 
-##### dictionary
+##### Dictionary
 E.g.,
 ```
 $ hiveqlformatter --config="{'reservedKeywordUppercase': False}" -files <path_to_file1> <path_to_file2>
@@ -56,13 +56,16 @@ import hqlformatter
 ```
 
 ## Supported attributes
-`keywords`
+**`keywords`**   
+
 A list of keywords in the query language. E.g., `SELECT`, `FROM`, `from_unixtime()`. Default to HiveQL's [keywords](https://cwiki.apache.org/confluence/display/Hive/LanguageManual+DDL) and [functions](https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF).
 
-`reservedKeywords`
+**`reservedKeywords`**   
+
 A list of reserved keywords in the query language. Default to HiveQL's [reserved keywords](https://cwiki.apache.org/confluence/display/Hive/LanguageManual+DDL).
 
-`topLevelKeywords`
+**`topLevelKeywords`**   
+
 A list of keywords that should start a query block when formatting. E.g.,
 ```sql
 SELECT
@@ -99,7 +102,8 @@ TOP_LEVEL_KEYWORDS = [
     ]
 ```
 
-`topLevelKeywordsNoIndent`
+**`topLevelKeywordsNoIndent`**   
+
 A list of top-level keywords that should not be indented when formatting. E.g., `UNION` in
 ```sql
 SELECT
@@ -123,7 +127,8 @@ TOP_LEVEL_KEYWORDS_NO_INDENT = [
     ]
 ```
 
-`newlineKeywords`
+**`newlineKeywords`**   
+
 A list of keywords that should start a newline when formatting. E.g., `LEFT JOIN` in
 ```sql
 SELECT
@@ -154,34 +159,40 @@ NEWLINE_KEYWORDS = [
     ]
 ```
 
-`stringTypes`
+**`stringTypes`**   
+
 A list of character pairs that enclose strings in the query language. Default to
 ```python
 ['""', "N''", "''", '[]']
 ```
 
-`openParens`
+**`openParens`**   
+
 A list of strings that behave as opening parentheses in the query language. Default to
 ```python
 ['(', 'CASE']
 ```
 
-`closeParens`
+**`closeParens`**   
+
 A list of strings that behave as closing parentheses in the query language. Default to
 ```python
 [')', 'END']
 ```
 
-`lineCommentTypes`
+**`lineCommentTypes`**   
+
 A list of prefixes to comments in the query language. Default to
 ```python
 ['--']
 ```
 
-`reservedKeywordUppercase`
+**`reservedKeywordUppercase`**   
+
 A boolean indicating whether the keywords should be converted to uppercase when formatting. Default to `True`.
 
-`linesBetweenQueries`
+**`linesBetweenQueries`**   
+
 An integer that specifies the number of blank lines to put between (sub-)queries when formatting. E.g., with `linesBetweenQueries = 1`,
 ```sql
 WITH t0 AS (
@@ -198,9 +209,14 @@ FROM
     ...
 ```
 
-`specialWordChars`
+**`specialWordChars`**   
+
 A list of characters that require special handling when formatting. Default to `[]`.
 
-`indent`
-A string that specifies one indent. Default to `    `, four blanks.
+**`indent`**   
+
+A string that specifies one indent. Default to four blanks:
+```python
+'    '
+```
 
