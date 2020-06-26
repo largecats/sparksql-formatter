@@ -1,7 +1,35 @@
+# -*- coding: utf-8 -*-
+# MIT License
+
+# Copyright (c) 2020-present largecats
+
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
 import sys
 import os
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from src.hiveql_formatter import HiveQlFormatter
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+import logging
+from hqlf.src.languages.hiveql_formatter import HiveQlFormatter
+
+logger = logging.getLogger(__name__)
+log_formatter = '[%(asctime)s] %(levelname)s [%(filename)s:%(lineno)s:%(funcName)s] %(message)s'
+logging.basicConfig(stream=sys.stdout, level=logging.INFO, format=log_formatter)
+logger.info('Script loaded...')
 
 class Test:
 
@@ -9,14 +37,14 @@ class Test:
         self.formatter = HiveQlFormatter()
     
     def run(self, msg, testQuery, key):
-        print(msg + '\n')
+        logger.info(msg)
         formattedQuery = self.formatter.format(testQuery)
-        print('formattedQuery = \n')
-        print(formattedQuery)
-        print(repr(formattedQuery))
-        print('key = \n')
-        print(key)
-        print(repr(key))
+        logger.info('formattedQuery =')
+        logger.info(formattedQuery)
+        logger.info(repr(formattedQuery))
+        logger.info('key =')
+        logger.info(key)
+        logger.info(repr(key))
         assert formattedQuery == key
         return True
     
@@ -28,13 +56,22 @@ class Test:
     
     def test_long_create_table(self):
         msg = 'Testing long CREATE TABLE'
-        testQuery = '''CREATE TABLE t0 (a INT PRIMARY KEY, b STRING, c INT NOT NULL, d INT NOT NULL)'''
+        testQuery = '''
+CREATE TABLE t0 (a INT PRIMARY KEY, b STRING, c INT NOT NULL, d INT NOT NULL,
+e INT NOT NULL, f INT NOT NULL, g INT NOT NULL, h INT NOT NULL, i INT NOT NULL, j INT NOT NULL)
+'''
         key = '''
 CREATE TABLE t0 (
     a INT PRIMARY KEY,
     b STRING,
     c INT NOT NULL,
-    d INT NOT NULL
+    d INT NOT NULL,
+    e INT NOT NULL,
+    f INT NOT NULL,
+    g INT NOT NULL,
+    h INT NOT NULL,
+    i INT NOT NULL,
+    j INT NOT NULL
 )
         '''.strip()
         return self.run(msg, testQuery, key)
@@ -99,27 +136,16 @@ FROM
     
     def test_case_when(self):
         msg = 'Testing CASE ... WHEN'
-        testQuery = '''CASE WHEN a = 'foo' THEN 1 WHEN a = 'bar' THEN 2 WHEN a = 'baz' THEN 3 ELSE 4 END'''
-        key = '''
-CASE
-    WHEN a = 'foo' THEN 1
-    WHEN a = 'bar' THEN 2
-    WHEN a = 'baz' THEN 3
-    ELSE 4
-END
-        '''.strip()
-        return self.run(msg, testQuery, key)
-    
-    def test_case_when_inside_select(self):
-        msg = 'Testing CASE ... WHEN inside SELECT'
         testQuery = '''SELECT c1, c2, CASE WHEN c3 = 'one' THEN 1 WHEN c3 = 'two' THEN 2 ELSE 3 END AS c4 FROM t0'''
         key = '''
 SELECT
     c1,
     c2,
     CASE
-        WHEN c3 = 'one' THEN 1
-        WHEN c3 = 'two' THEN 2
+        WHEN c3 = 'one'
+        THEN 1
+        WHEN c3 = 'two'
+        THEN 2
         ELSE 3
     END AS c4
 FROM
@@ -129,24 +155,38 @@ FROM
     
     def test_case_when_with_expression(self):
         msg = 'Testing CASE ... WHEN with expression'
-        testQuery = '''CASE WHEN toString(getNumber()) = 'one' THEN 1 WHEN toString(getNumber()) = 'two' THEN 2 ELSE 3 END'''
+        testQuery = '''
+SELECT
+CASE WHEN toString(getNumber()) = 'one' THEN 1
+WHEN toString(getNumber()) = 'two' THEN 2 ELSE 3 END AS c1
+FROM t0
+'''
         key = '''
-CASE
-    WHEN toString(getNumber()) = 'one' THEN 1
-    WHEN toString(getNumber()) = 'two' THEN 2
-    ELSE 3
-END
+SELECT
+    CASE
+        WHEN toString(getNumber()) = 'one'
+        THEN 1
+        WHEN toString(getNumber()) = 'two'
+        THEN 2
+        ELSE 3
+    END AS c1
+FROM
+    t0
         '''.strip()
         return self.run(msg, testQuery, key)
 
     def test_lowercase_case_when(self):
         msg = 'Testing lower-case CASE ... WHEN'
-        testQuery = '''case when c1 = 'foo' then 1 else 2 end'''
+        testQuery = '''select case when c1 = 'foo' then 1 else 2 end from t0'''
         key = '''
-CASE
-    WHEN c1 = 'foo' THEN 1
-    ELSE 2
-END
+SELECT
+    CASE
+        WHEN c1 = 'foo'
+        THEN 1
+        ELSE 2
+    END
+FROM
+    t0
         '''.strip()
         return self.run(msg, testQuery, key)
     
@@ -218,48 +258,63 @@ SELECT
         '''.strip()
         return self.run(msg, testQuery, key)
     
-    def test_complex_query(self):
-        msg = 'Testing complex query'
+    def test_query_with_between_and(self):
+        msg = 'Testing query with BETWEEN ... AND'
         testQuery = '''
-select t0.a, t0.b, t1.x, t2.y,
-    t3.c, t3.d
-
-from t0
-    left join t1 on t0.a = t1.z
-    left join t2 on t0.a = t2.z
-
-    left join t3 on t3.c = t0.a
-
-where t0.a between '{date}' and add_months('{date}', 1)
-and t2.y < 0
-order by 1,2,3
+select c1, c2 from t0
+where c1 between '{date}' and add_months('{date}', 1)
+and c2 < 0
         '''
         key = '''
 SELECT
-    t0.a,
-    t0.b,
-    t1.x,
-    t2.y,
-    t3.c,
-    t3.d
+    c1,
+    c2
 FROM
     t0
-    LEFT JOIN t1 ON t0.a = t1.z
-    LEFT JOIN t2 ON t0.a = t2.z
-    LEFT JOIN t3 ON t3.c = t0.a
 WHERE
-    t0.a BETWEEN '{date}' AND add_months('{date}', 1)
-    AND t2.y < 0
-ORDER BY
-    1,
-    2,
-    3
+    c1 BETWEEN '{date}' AND add_months('{date}', 1)
+    AND c2 < 0
         '''.strip()
         return self.run(msg, testQuery, key)
-
     
-    def test_complex_query_with_long_table_name(self):
-        msg = 'Testing complex query'
+    def test_query_with_left_join_and(self):
+        msg = 'Testing query with LEFT JOIN ... AND'
+        testQuery = '''
+select c1, c2 from t0
+left join t1 on t0.c1 = t1.c1 and t0.c3 = t1.c3
+        '''
+        key = '''
+SELECT
+    c1,
+    c2
+FROM
+    t0
+    LEFT JOIN t1 ON t0.c1 = t1.c1 AND t0.c3 = t1.c3
+        '''.strip()
+        return self.run(msg, testQuery, key)
+    
+    def test_query_with_nested_and_in_where(self):
+        msg = 'Testing query with nested AND in WHERE'
+        testQuery = '''
+SELECT c1, c2 FROM t0 WHERE type = 1 OR (c3 = 0 AND type = 2)
+        '''
+        key = '''
+SELECT
+    c1,
+    c2
+FROM
+    t0
+WHERE
+    type = 1
+    OR (
+        c3 = 0
+        AND type = 2
+    )
+        '''.strip()
+        return self.run(msg, testQuery, key)
+    
+    def test_query_with_long_table_name(self):
+        msg = 'Testing query with long table name'
         testQuery = '''
 select t0.a, t0.b, t1.x, t2.y,
     t3.c, t3.d
@@ -294,6 +349,69 @@ ORDER BY
     1,
     2,
     3
+        '''.strip()
+        return self.run(msg, testQuery, key)
+    
+    def test_query_with_unicode_char(self):
+        msg = 'Testing query with unicode character'
+        testQuery = '''
+select c1, c2 from t0
+where t1.c2 IN ('你好' 'ไหว้')
+        '''
+        key = '''
+SELECT
+    c1,
+    c2
+FROM
+    t0
+WHERE
+    t1.c2 IN ('你好' 'ไหว้')
+        '''.strip()
+        return self.run(msg, testQuery, key)
+    
+    def test_query_with_subquery(self):
+        msg = 'Testing query with subquery'
+        testQuery = '''
+with t0 as (select c1, c2 from tab1),
+
+t1 as (select c1, c2 from tab2),
+
+t2 as (select c1, c2 from tab3)
+
+select * from t0 left join t1 on t0.c1 = t1.c1
+left join t2 on t0.c1 = t2.c1
+        '''
+        key = '''
+WITH t0 AS (
+    SELECT
+        c1,
+        c2
+    FROM
+        tab1
+),
+
+t1 AS (
+    SELECT
+        c1,
+        c2
+    FROM
+        tab2
+),
+
+t2 AS (
+    SELECT
+        c1,
+        c2
+    FROM
+        tab3
+)
+
+SELECT
+    *
+FROM
+    t0
+    LEFT JOIN t1 ON t0.c1 = t1.c1
+    LEFT JOIN t2 ON t0.c1 = t2.c1
         '''.strip()
         return self.run(msg, testQuery, key)
     
