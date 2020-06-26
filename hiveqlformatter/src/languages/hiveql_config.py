@@ -379,7 +379,7 @@ class Keywords:
     ]
 
 
-# https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF#LanguageManualUDF-MathematicalFunctions
+# https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF
 class Functions:
     MATHEMATICAL_FUNCTIONS = [
         'round',

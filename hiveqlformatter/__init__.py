@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 log_formatter = '[%(asctime)s] %(levelname)s [%(filename)s:%(lineno)s:%(funcName)s] %(message)s'
 logging.basicConfig(stream=sys.stdout, level=logging.INFO, format=log_formatter)
 
-DEFAULT_CONFIG_SECTION = 'hiveql-formatter'
+DEFAULT_CONFIG_SECTION = 'hiveqlformatter'
 
 def main(argv):
     args = get_arguments(argv)
@@ -44,7 +44,7 @@ def main(argv):
                 openParens=args.get('openParens') or ['(', 'CASE'],
                 closeParens=args.get('closeParens') or [')', 'END'],
                 lineCommentTypes=args.get('lineCommentTypes') or ['--'],
-                reservedKeywordUppercase= True if args.get('reservedKeywordUppercase') is None else args.get('reservedKeywordUppercase'),
+                reservedKeywordUppercase=True if args.get('reservedKeywordUppercase') is None else args.get('reservedKeywordUppercase'),
                 linesBetweenQueries=args.get('linesBetweenQueries') or 1,
                 specialWordChars=args.get('specialWordChars') or [],
                 indent=args.get('indent') or '    '
@@ -88,20 +88,20 @@ def get_arguments(argv):
     Returns: dict
         A dictionary containing arguments for the formatter.
     '''
-    parser = argparse.ArgumentParser(description='hiveql-formatter parameters')
+    parser = argparse.ArgumentParser(description='Formatter for HiveQL queries.')
 
     parser.add_argument(
         '-files',
         type=str, 
         nargs='+',
-        help='Files to format'
+        help='Paths to files to format.'
     )
 
     parser.add_argument(
         '-i',
         '--in-place',
         action='store_true',
-        help='Format the files in place'
+        help='Format the files in place.'
     )
 
     parser.add_argument(
