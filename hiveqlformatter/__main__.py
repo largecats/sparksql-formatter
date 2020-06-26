@@ -23,6 +23,6 @@
 """
 Entry point for command-line tool.
 """
-import hqlf
+import hiveqlformatter
 
-hqlf.run_main()
+hiveqlformatter.run_main()

@@ -9,9 +9,9 @@ import codecs
 import json
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from hqlf.src.languages.hiveql_formatter import HiveQlFormatter
-from hqlf.src.languages import hiveql_config as hc
-from hqlf.src.core.config import Config
+from hiveqlformatter.src.languages.hiveql_formatter import HiveQlFormatter
+from hiveqlformatter.src.languages import hiveql_config as hc
+from hiveqlformatter.src.core.config import Config
 
 logger = logging.getLogger(__name__)
 log_formatter = '[%(asctime)s] %(levelname)s [%(filename)s:%(lineno)s:%(funcName)s] %(message)s'

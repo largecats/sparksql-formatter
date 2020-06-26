@@ -25,10 +25,10 @@
 import sys
 import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from hqlf.src.languages import hiveql_config as hc
-from hqlf.src.core.tokenizer import Tokenizer
-from hqlf.src.core.formatter import Formatter
-from hqlf.src.core.config import Config
+from hiveqlformatter.src.languages import hiveql_config as hc
+from hiveqlformatter.src.core.tokenizer import Tokenizer
+from hiveqlformatter.src.core.formatter import Formatter
+from hiveqlformatter.src.core.config import Config
 
 class HiveQlFormatter:
 

@@ -4,7 +4,7 @@ with open('README.md', 'r') as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name='hiveql-formatter-largecats', # Replace with your own username
+    name='hiveqlformatter-largecats', # Replace with your own username
     version='0.0.1',
     author='largecats',
     author_email='linfanxiaolinda@outlook.com',
@@ -24,6 +24,6 @@ setuptools.setup(
         'Operating System :: OS Independent',
     ],
     entry_points={
-        'console_scripts': ['hiveql-formatter=hqlf:run_main'],
+        'console_scripts': ['hiveqlformatter=hiveqlformatter:run_main'],
     }
 )
