@@ -56,15 +56,15 @@ import hqlformatter
 ```
 
 ## Supported attributes
-`keywords`   
+**`keywords`**   
 
 A list of keywords in the query language. E.g., `SELECT`, `FROM`, `from_unixtime()`. Default to HiveQL's [keywords](https://cwiki.apache.org/confluence/display/Hive/LanguageManual+DDL) and [functions](https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF).
 
-`reservedKeywords`   
+**`reservedKeywords`**   
 
 A list of reserved keywords in the query language. Default to HiveQL's [reserved keywords](https://cwiki.apache.org/confluence/display/Hive/LanguageManual+DDL).
 
-`topLevelKeywords`   
+**`topLevelKeywords`**   
 
 A list of keywords that should start a query block when formatting. E.g.,
 ```sql
@@ -102,7 +102,7 @@ TOP_LEVEL_KEYWORDS = [
     ]
 ```
 
-`topLevelKeywordsNoIndent`   
+**`topLevelKeywordsNoIndent`**   
 
 A list of top-level keywords that should not be indented when formatting. E.g., `UNION` in
 ```sql
@@ -127,7 +127,7 @@ TOP_LEVEL_KEYWORDS_NO_INDENT = [
     ]
 ```
 
-`newlineKeywords`   
+**`newlineKeywords`**   
 
 A list of keywords that should start a newline when formatting. E.g., `LEFT JOIN` in
 ```sql
@@ -159,39 +159,39 @@ NEWLINE_KEYWORDS = [
     ]
 ```
 
-`stringTypes`   
+**`stringTypes`**   
 
 A list of character pairs that enclose strings in the query language. Default to
 ```python
 ['""', "N''", "''", '[]']
 ```
 
-`openParens`   
+**`openParens`**   
 
 A list of strings that behave as opening parentheses in the query language. Default to
 ```python
 ['(', 'CASE']
 ```
 
-`closeParens`   
+**`closeParens`**   
 
 A list of strings that behave as closing parentheses in the query language. Default to
 ```python
 [')', 'END']
 ```
 
-`lineCommentTypes`   
+**`lineCommentTypes`**   
 
 A list of prefixes to comments in the query language. Default to
 ```python
 ['--']
 ```
 
-`reservedKeywordUppercase`   
+**`reservedKeywordUppercase`**   
 
 A boolean indicating whether the keywords should be converted to uppercase when formatting. Default to `True`.
 
-`linesBetweenQueries`   
+**`linesBetweenQueries`**   
 
 An integer that specifies the number of blank lines to put between (sub-)queries when formatting. E.g., with `linesBetweenQueries = 1`,
 ```sql
@@ -209,11 +209,11 @@ FROM
     ...
 ```
 
-`specialWordChars`   
+**`specialWordChars`**   
 
 A list of characters that require special handling when formatting. Default to `[]`.
 
-`indent`   
+**`indent`**   
 
 A string that specifies one indent. Default to `    `, four blanks.
 
