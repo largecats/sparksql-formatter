@@ -2,9 +2,10 @@
 A [Hive Query Language](https://cwiki.apache.org/confluence/display/Hive/LanguageManual) formatter in Python based on [sql-formatter](https://github.com/zeroturnaround/sql-formatter) and its fork [sql-formatter-plus](https://github.com/kufii/sql-formatter-plus), with customizations and extra features (both are licensed under the MIT license). The built-in formatter is for HiveQL queries, but can be easily extended to other query languages with similar structure using [configurations](#configurations).
 
 - [hiveqlformatter](#hiveqlformatter)
-- [Install](#install)
+- [Installation](#installation)
   - [Install using pip (TBD)](#install-using-pip-tbd)
   - [Install from source](#install-from-source)
+- [Compatibility](#compatibility)
 - [Usage](#usage)
   - [Use as command-line tool](#use-as-command-line-tool)
     - [Configurations](#configurations)
@@ -13,7 +14,7 @@ A [Hive Query Language](https://cwiki.apache.org/confluence/display/Hive/Languag
   - [Use as Python library](#use-as-python-library)
 - [Supported attributes](#supported-attributes)
 
-# Install
+# Installation
 
 ## Install using pip (TBD)
 ```
@@ -25,6 +26,9 @@ See [here](https://docs.python.org/2/install/index.html#splitting-the-job-up).
 ```
 python setup.py install
 ```
+
+# Compatibility
+Supports Python 2.7 and 3.6+.
 
 # Usage
 `hiveqlformatter` can be used as either a command-line tool or a Python library.
