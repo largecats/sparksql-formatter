@@ -25,10 +25,10 @@
 from __future__ import print_function # for print() in Python 2
 import re
 
-from hqlf.src.core.tokenizer import TokenType
-from hqlf.src.core.indentation import Indentation
-from hqlf.src.core.inline_block import InlineBlock
-from hqlf.src.core.subquery import SubQuery
+from hiveqlformatter.src.core.tokenizer import TokenType
+from hiveqlformatter.src.core.indentation import Indentation
+from hiveqlformatter.src.core.inline_block import InlineBlock
+from hiveqlformatter.src.core.subquery import SubQuery
 
 trim_trailing_spaces = lambda s: re.sub(pattern='[ \t]+$', repl='', string=s)
 
@@ -76,16 +76,16 @@ class Formatter:
         formattedQuery = ''
 
         for i in range(len(self.tokens)):
-            print('formattedQuery = \n')
-            print(formattedQuery)
+            # print('formattedQuery = \n')
+            # print(formattedQuery)
             token = self.tokens[i]
             self.index = i
 
             if self.tokenOverride:
                 token = self.tokenOverride(token, self.previousKeyword) or token
             
-            print('token.value = ' + token.value)
-            print('token.type = ' + token.type)
+            # print('token.value = ' + token.value)
+            # print('token.type = ' + token.type)
             if token.type == TokenType.WHITESPACE:
                 # ignore
                 continue
