@@ -215,5 +215,8 @@ A list of characters that require special handling when formatting. Default to `
 
 **`indent`**   
 
-A string that specifies one indent. Default to `'    '`, four blanks.
+A string that specifies one indent. Default to four blanks:
+```python
+'    '
+```
 
