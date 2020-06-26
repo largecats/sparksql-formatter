@@ -76,15 +76,16 @@ class Formatter:
         formattedQuery = ''
 
         for i in range(len(self.tokens)):
-            # print('formattedQuery = \n')
-            # print(formattedQuery)
+            print('formattedQuery = \n')
+            print(formattedQuery)
             token = self.tokens[i]
             self.index = i
 
             if self.tokenOverride:
                 token = self.tokenOverride(token, self.previousKeyword) or token
             
-            # print('token.value = ' + token.value)
+            print('token.value = ' + token.value)
+            print('token.type = ' + token.type)
             if token.type == TokenType.WHITESPACE:
                 # ignore
                 continue

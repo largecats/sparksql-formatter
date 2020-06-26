@@ -56,13 +56,22 @@ class Test:
     
     def test_long_create_table(self):
         msg = 'Testing long CREATE TABLE'
-        testQuery = '''CREATE TABLE t0 (a INT PRIMARY KEY, b STRING, c INT NOT NULL, d INT NOT NULL)'''
+        testQuery = '''
+CREATE TABLE t0 (a INT PRIMARY KEY, b STRING, c INT NOT NULL, d INT NOT NULL,
+e INT NOT NULL, f INT NOT NULL, g INT NOT NULL, h INT NOT NULL, i INT NOT NULL, j INT NOT NULL)
+'''
         key = '''
 CREATE TABLE t0 (
     a INT PRIMARY KEY,
     b STRING,
     c INT NOT NULL,
-    d INT NOT NULL
+    d INT NOT NULL,
+    e INT NOT NULL,
+    f INT NOT NULL,
+    g INT NOT NULL,
+    h INT NOT NULL,
+    i INT NOT NULL,
+    j INT NOT NULL
 )
         '''.strip()
         return self.run(msg, testQuery, key)
@@ -281,6 +290,26 @@ SELECT
 FROM
     t0
     LEFT JOIN t1 ON t0.c1 = t1.c1 AND t0.c3 = t1.c3
+        '''.strip()
+        return self.run(msg, testQuery, key)
+    
+    def test_query_with_nested_and_in_where(self):
+        msg = 'Testing query with nested AND in WHERE'
+        testQuery = '''
+SELECT c1, c2 FROM t0 WHERE type = 1 OR (c3 = 0 AND type = 2)
+        '''
+        key = '''
+SELECT
+    c1,
+    c2
+FROM
+    t0
+WHERE
+    type = 1
+    OR (
+        c3 = 0
+        AND type = 2
+    )
         '''.strip()
         return self.run(msg, testQuery, key)
     

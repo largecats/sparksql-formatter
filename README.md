@@ -9,6 +9,9 @@ A HiveQL formatter in Python based on [sql-formatter](https://github.com/zerotur
 ```
 $ hiveql-formatter
 ```
+```
+hiveql-formatter --config="{'reservedKeywordUppercase': False}" -files <path_to_file>
+```
 
 ### Python library
 ```python
