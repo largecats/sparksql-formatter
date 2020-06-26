@@ -52,7 +52,7 @@ $ hiveqlformatter --config="{'reservedKeywordUppercase': False}" -files <path_to
 ### Python library
 The module can also be used as a Python library.
 ```python
-import hqlformatter
+import hiveqlformatter
 ```
 
 ## Supported attributes
