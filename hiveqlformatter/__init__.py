@@ -119,17 +119,21 @@ def get_arguments(argv):
         if config.startswith('{'):
             configWithHeader = {DEFAULT_CONFIG_SECTION: eval(config)}
             configParser.read_dict(configWithHeader)
-            for key in configParser[DEFAULT_CONFIG_SECTION]:
-                if key == 'reservedKeywordUppercase':
-                    args[key] = configParser.getboolean(DEFAULT_CONFIG_SECTION, key) == 'True'
-                else:
-                    args[key] = configParser[DEFAULT_CONFIG_SECTION][key]
+            args = parse_args_with_bool(args, configParser)
         else:
             configParser.read(config)
             if DEFAULT_CONFIG_SECTION in configParser:
-                for key in configParser[DEFAULT_CONFIG_SECTION]:
-                    args[key] = configParser[DEFAULT_CONFIG_SECTION][key]
+                args = parse_args_with_bool(args, configParser)
+    print(args)
 
+    return args
+
+def parse_args_with_bool(args, configParser):
+    for key in configParser[DEFAULT_CONFIG_SECTION]:
+        if key == 'reservedKeywordUppercase':
+            args[key] = configParser.getboolean(DEFAULT_CONFIG_SECTION, key) == 'True'
+        else:
+            args[key] = configParser[DEFAULT_CONFIG_SECTION][key]
     return args
 
 def run_main():
