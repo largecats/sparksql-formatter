@@ -3,11 +3,11 @@
     - [Install using pip (TBD)](#install-using-pip-tbd)
     - [Install from source](#install-from-source)
   - [Usage](#usage)
-    - [Command-line tool](#command-line-tool)
+    - [AS command-line tool](#as-command-line-tool)
       - [Configurations](#configurations)
         - [Path to a config file](#path-to-a-config-file)
         - [Dictionary](#dictionary)
-    - [Python library](#python-library)
+    - [AS Python library](#as-python-library)
   - [Supported attributes](#supported-attributes)
 
 # hiveql-formatter
@@ -29,7 +29,7 @@ python setup.py install
 ## Usage
 `hiveqlformatter` can be used as either a command-line tool or a Python library.
 
-### Command-line tool
+### AS command-line tool
 ```
 usage: hiveqlformatter [-h] [-files FILES [FILES ...]] [-i] [--config CONFIG]
 
@@ -61,7 +61,7 @@ E.g.,
 $ hiveqlformatter --config="{'reservedKeywordUppercase': False}" -files <path_to_file1> <path_to_file2>
 ```
 
-### Python library
+### AS Python library
 The module can also be used as a Python library.
 ```python
 import hiveqlformatter
