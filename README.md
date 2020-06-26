@@ -15,7 +15,7 @@ python setup.py install
 ```
 
 ## Usage
-`hiveqlformatter` can be used either as command-line tool or as Python library.
+`hiveqlformatter` can be used as either a command-line tool or a Python library.
 
 ### Command-line tool
 ```
