@@ -42,35 +42,34 @@ DEFAULT_CONFIG_SECTION = 'hiveqlformatter'
 
 def main(argv):
     args = get_arguments(argv)
-    config = Config(
-                keywords=args.get('keywords') or (
-                    hc.Keywords.RESERVED_KEYWORDS + hc.Keywords.NON_RESERVED_KEYWORDS + 
-                    hc.Functions.MATHEMATICAL_FUNCTIONS +
-                    hc.Functions.COLLECTION_FUNCTIONS +
-                    hc.Functions.TYPE_CONVERSION_FUNCTIONS + 
-                    hc.Functions.DATE_FUNCTIONS + 
-                    hc.Functions.CONDITIONAL_FUNCTIONS + 
-                    hc.Functions.STRING_FUNCTIONS +
-                    hc.Functions.DATA_MASKING_FUNCTIONS +
-                    hc.Functions.MISC_FUNCTIONS +
-                    hc.Functions.AGGREGATE_FUNCTIONS +
-                    hc.Functions.WINDOWING_FUNCTIONS +
-                    hc.Functions.ANALYTICS_FUNCTIONS
-                ),
-                reservedKeywords=args.get('reservedKeywords') or hc.Keywords.RESERVED_KEYWORDS,
-                topLevelKeywords=args.get('topLevelKeywords') or hc.Keywords.TOP_LEVEL_KEYWORDS,
-                topLevelKeywordsNoIndent=args.get('topLevelKeywordsNoIndent') or hc.Keywords.TOP_LEVEL_KEYWORDS_NO_INDENT,
-                newlineKeywords=args.get('newlineKeywords') or hc.Keywords.NEWLINE_KEYWORDS,
-                stringTypes=args.get('stringTypes') or ['""', "N''", "''", '[]'],
-                openParens=args.get('openParens') or ['(', 'CASE'],
-                closeParens=args.get('closeParens') or [')', 'END'],
-                lineCommentTypes=args.get('lineCommentTypes') or ['--'],
-                reservedKeywordUppercase=True if args.get('reservedKeywordUppercase') is None else args.get('reservedKeywordUppercase'),
-                linesBetweenQueries=args.get('linesBetweenQueries') or 1,
-                specialWordChars=args.get('specialWordChars') or [],
-                indent=args.get('indent') or '    '
-            )
-    formatter = HiveQlFormatter(config=config)
+    formatter = HiveQlFormatter(
+        keywords=args.get('keywords') or (
+            hc.Keywords.RESERVED_KEYWORDS + hc.Keywords.NON_RESERVED_KEYWORDS + 
+            hc.Functions.MATHEMATICAL_FUNCTIONS +
+            hc.Functions.COLLECTION_FUNCTIONS +
+            hc.Functions.TYPE_CONVERSION_FUNCTIONS + 
+            hc.Functions.DATE_FUNCTIONS + 
+            hc.Functions.CONDITIONAL_FUNCTIONS + 
+            hc.Functions.STRING_FUNCTIONS +
+            hc.Functions.DATA_MASKING_FUNCTIONS +
+            hc.Functions.MISC_FUNCTIONS +
+            hc.Functions.AGGREGATE_FUNCTIONS +
+            hc.Functions.WINDOWING_FUNCTIONS +
+            hc.Functions.ANALYTICS_FUNCTIONS
+        ),
+        reservedKeywords=args.get('reservedKeywords') or hc.Keywords.RESERVED_KEYWORDS,
+        topLevelKeywords=args.get('topLevelKeywords') or hc.Keywords.TOP_LEVEL_KEYWORDS,
+        topLevelKeywordsNoIndent=args.get('topLevelKeywordsNoIndent') or hc.Keywords.TOP_LEVEL_KEYWORDS_NO_INDENT,
+        newlineKeywords=args.get('newlineKeywords') or hc.Keywords.NEWLINE_KEYWORDS,
+        stringTypes=args.get('stringTypes') or ['""', "N''", "''", '[]'],
+        openParens=args.get('openParens') or ['(', 'CASE'],
+        closeParens=args.get('closeParens') or [')', 'END'],
+        lineCommentTypes=args.get('lineCommentTypes') or ['--'],
+        reservedKeywordUppercase=True if args.get('reservedKeywordUppercase') is None else args.get('reservedKeywordUppercase'),
+        linesBetweenQueries=args.get('linesBetweenQueries') or 1,
+        specialWordChars=args.get('specialWordChars') or [],
+        indent=args.get('indent') or '    '
+    )
     filenames = args['files']
     if filenames:
         for filename in filenames:
