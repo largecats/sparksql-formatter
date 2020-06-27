@@ -8,7 +8,7 @@ setuptools.setup(
     version='0.0.2',
     author='largecats',
     author_email='linfanxiaolinda@outlook.com',
-    description='A HiveQL formatter in Python based on [sql-formatter](https://github.com/zeroturnaround/sql-formatter) and its fork [sql-formatter-plus](https://github.com/kufii/sql-formatter-plus), with customizations and extra features.',
+    description='A HiveQL formatter in Python based on https://github.com/zeroturnaround/sql-formatter, with customizations and extra features.',
     long_description=long_description,
     long_description_content_type='text/markdown',
     url='https://github.com/largecats/hiveql-formatter',
