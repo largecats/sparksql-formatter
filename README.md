@@ -17,7 +17,7 @@ A [Hive Query Language](https://cwiki.apache.org/confluence/display/Hive/Languag
 # Installation
 
 ## Install using pip
-View package at https://test.pypi.org/project/hiveqlformatter-largecats/0.0.1/.
+View package at https://test.pypi.org/project/hiveqlformatter-largecats/.
 ```
 python3 -m pip install --index-url https://test.pypi.org/simple/ --no-deps hiveqlformatter-largecats
 ```
