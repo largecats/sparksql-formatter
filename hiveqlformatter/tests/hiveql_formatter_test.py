@@ -29,7 +29,6 @@ from hqlf.src.languages.hiveql_formatter import HiveQlFormatter
 logger = logging.getLogger(__name__)
 log_formatter = '[%(asctime)s] %(levelname)s [%(filename)s:%(lineno)s:%(funcName)s] %(message)s'
 logging.basicConfig(stream=sys.stdout, level=logging.INFO, format=log_formatter)
-logger.info('Script loaded...')
 
 class Test:
 
