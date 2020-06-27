@@ -73,7 +73,7 @@ $ hiveqlformatter --config="{'reservedKeywordUppercase': False}" -files <path_to
 
 ## Use as Python library
 The module can also be used as a Python library.
-```python
+```
 >> from hiveqlformatter import HiveQlFormatter
 >> formatter = HiveQlFormatter()
 >> query = 'select c1 from t1'
@@ -82,11 +82,13 @@ The module can also be used as a Python library.
 ```
 
 ### Configurations
+```
 >> from hiveqlformatter import HiveQlFormatter
 >> formatter = HiveQlFormatter(reserveKeywordUppercase=False)
 >> query = 'select c1 from t1'
 >> formatter.format(query)
 'select\n    c1\nfrom\n    t0'
+```
 
 # Supported attributes
 **`keywords`**   
