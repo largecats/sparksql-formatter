@@ -12,6 +12,7 @@ A [Hive Query Language](https://cwiki.apache.org/confluence/display/Hive/Languag
       - [Path to a config file](#path-to-a-config-file)
       - [Dictionary](#dictionary)
   - [Use as Python library](#use-as-python-library)
+    - [Configurations](#configurations-1)
 - [Supported attributes](#supported-attributes)
 
 # Installation
@@ -73,8 +74,19 @@ $ hiveqlformatter --config="{'reservedKeywordUppercase': False}" -files <path_to
 ## Use as Python library
 The module can also be used as a Python library.
 ```python
-import hiveqlformatter
+>> from hiveqlformatter import HiveQlFormatter
+>> formatter = HiveQlFormatter()
+>> query = 'select c1 from t1'
+>> formatter.format(query)
+'SELECT\n    c1\nFROM\n    t0'
 ```
+
+### Configurations
+>> from hiveqlformatter import HiveQlFormatter
+>> formatter = HiveQlFormatter(reserveKeywordUppercase=False)
+>> query = 'select c1 from t1'
+>> formatter.format(query)
+'select\n    c1\nfrom\n    t0'
 
 # Supported attributes
 **`keywords`**   
