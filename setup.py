@@ -5,7 +5,7 @@ with open('README.md', 'r') as fh:
 
 setuptools.setup(
     name='hiveqlformatter-largecats', # Replace with your own username
-    version='0.0.1',
+    version='0.0.2',
     author='largecats',
     author_email='linfanxiaolinda@outlook.com',
     description='A HiveQL formatter in Python based on [sql-formatter](https://github.com/zeroturnaround/sql-formatter) and its fork [sql-formatter-plus](https://github.com/kufii/sql-formatter-plus), with customizations and extra features.',
@@ -14,7 +14,6 @@ setuptools.setup(
     url='https://github.com/largecats/hiveql-formatter',
     packages=setuptools.find_packages(),
     classifiers=[
-        'Development Status :: 1 - Planning',
         'Programming Language :: Python',
         'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 2.7',
