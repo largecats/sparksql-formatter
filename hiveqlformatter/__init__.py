@@ -33,6 +33,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from hiveqlformatter.src.languages.hiveql_formatter import HiveQlFormatter
 from hiveqlformatter.src.languages import hiveql_config as hc
 from hiveqlformatter.src.core.config import Config
+from hiveqlformatter.src.core import api
 
 logger = logging.getLogger(__name__)
 log_formatter = '[%(asctime)s] %(levelname)s [%(filename)s:%(lineno)s:%(funcName)s] %(message)s'
@@ -42,60 +43,23 @@ DEFAULT_CONFIG_SECTION = 'hiveqlformatter'
 
 def main(argv):
     args = get_arguments(argv)
-    formatter = HiveQlFormatter(
-        keywords=args.get('keywords') or (
-            hc.Keywords.RESERVED_KEYWORDS + hc.Keywords.NON_RESERVED_KEYWORDS + 
-            hc.Functions.MATHEMATICAL_FUNCTIONS +
-            hc.Functions.COLLECTION_FUNCTIONS +
-            hc.Functions.TYPE_CONVERSION_FUNCTIONS + 
-            hc.Functions.DATE_FUNCTIONS + 
-            hc.Functions.CONDITIONAL_FUNCTIONS + 
-            hc.Functions.STRING_FUNCTIONS +
-            hc.Functions.DATA_MASKING_FUNCTIONS +
-            hc.Functions.MISC_FUNCTIONS +
-            hc.Functions.AGGREGATE_FUNCTIONS +
-            hc.Functions.WINDOWING_FUNCTIONS +
-            hc.Functions.ANALYTICS_FUNCTIONS
-        ),
-        reservedKeywords=args.get('reservedKeywords') or hc.Keywords.RESERVED_KEYWORDS,
-        topLevelKeywords=args.get('topLevelKeywords') or hc.Keywords.TOP_LEVEL_KEYWORDS,
-        topLevelKeywordsNoIndent=args.get('topLevelKeywordsNoIndent') or hc.Keywords.TOP_LEVEL_KEYWORDS_NO_INDENT,
-        newlineKeywords=args.get('newlineKeywords') or hc.Keywords.NEWLINE_KEYWORDS,
-        stringTypes=args.get('stringTypes') or ['""', "N''", "''", '[]'],
-        openParens=args.get('openParens') or ['(', 'CASE'],
-        closeParens=args.get('closeParens') or [')', 'END'],
-        lineCommentTypes=args.get('lineCommentTypes') or ['--'],
-        reservedKeywordUppercase=True if args.get('reservedKeywordUppercase') is None else args.get('reservedKeywordUppercase'),
-        linesBetweenQueries=args.get('linesBetweenQueries') or 1,
-        specialWordChars=args.get('specialWordChars') or [],
-        indent=args.get('indent') or '    '
-    )
+    configParam = args['config']
+    if configParam:
+        if configParam.startswith('{'):
+            config = api.create_config_from_dict(eval(configParam), DEFAULT_CONFIG_SECTION)
+        else:
+            config = api.create_config_from_file(configParam, DEFAULT_CONFIG_SECTION)
+        formatter = HiveQlFormatter(config)
+    else:
+        formatter = HiveQlFormatter()
     filenames = args['files']
     if filenames:
         for filename in filenames:
-            format_file(formatter, filename, args.get('in_place'))
+            api.format_file(filename, formatter, args.get('inplace'))
 
 def convert_to_bool(s):
     if s:
         return s.upper() == 'TRUE'
-
-def format_file(formatter, filename, in_place=False):
-    query = read_from_file(filename)
-    reformattedQuery = formatter.format(query)
-    if in_place: # overwrite file
-        logger.info('Writing to ' + filename + '...')
-        write_to_file(reformattedQuery, filename)
-    else: # write to stdout
-        sys.stdout.write(reformattedQuery)
-
-def read_from_file(filename):
-    with codecs.open(filename=filename, mode='r', encoding='utf-8') as f:
-        text = f.read()
-    return text
-
-def write_to_file(reformattedQuery, filename):
-    with codecs.open(filename=filename, mode='w', encoding='utf-8') as f:
-        f.write(reformattedQuery)
 
 def get_arguments(argv):
     '''
@@ -119,7 +83,7 @@ def get_arguments(argv):
 
     parser.add_argument(
         '-i',
-        '--in-place',
+        '--inplace',
         action='store_true',
         help='Format the files in place.'
     )
@@ -132,28 +96,7 @@ def get_arguments(argv):
     )
     
     args = vars(parser.parse_args(argv[1:]))
-    config = args['config']
-    if config:
-        configParser = configparser.ConfigParser()
-        configParser.optionxform = str # makes the parser case-sensitive
-        if config.startswith('{'):
-            configWithHeader = {DEFAULT_CONFIG_SECTION: eval(config)}
-            configParser.read_dict(configWithHeader)
-            args = parse_args_with_bool(args, configParser)
-        else:
-            configParser.read(config)
-            if DEFAULT_CONFIG_SECTION in configParser:
-                args = parse_args_with_bool(args, configParser)
-    print(args)
 
-    return args
-
-def parse_args_with_bool(args, configParser):
-    for key in configParser[DEFAULT_CONFIG_SECTION]:
-        if key == 'reservedKeywordUppercase':
-            args[key] = configParser.getboolean(DEFAULT_CONFIG_SECTION, key) == 'True'
-        else:
-            args[key] = configParser[DEFAULT_CONFIG_SECTION][key]
     return args
 
 def run_main():

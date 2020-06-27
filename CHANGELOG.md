@@ -8,3 +8,7 @@ Added source code, translated from JavaScript in [sql-formatter](https://github.
 2. Added constraints to not add `\n` before reserved keywords `AND`, `OR` if the previous keyword is `BETWEEN`, `WHEN`, or `ON`.
 3. Added blank line between sub-queries. The number of blank lines is customizable via `-linesBetweenQueries`.
 4. Added command-line interface.
+
+## 2020-06-27
+1. Added api module to interact with scripts and configuration files.
+2. Updated `__init__` file to use the api module to parse configurations.
