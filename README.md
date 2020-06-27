@@ -1,9 +1,9 @@
 # hiveqlformatter
-A [Hive Query Language](https://cwiki.apache.org/confluence/display/Hive/LanguageManual) formatter in Python based on [sql-formatter](https://github.com/zeroturnaround/sql-formatter) and its fork [sql-formatter-plus](https://github.com/kufii/sql-formatter-plus), with customizations and extra features (both are licensed under the MIT license). The built-in formatter is for HiveQL queries, but can be easily extended to other query languages with similar structure using [configurations](#configurations).
+A [Hive Query Language](https://cwiki.apache.org/confluence/display/Hive/LanguageManual) formatter in Python based on [sql-formatter](https://github.com/zeroturnaround/sql-formatter) and its fork [sql-formatter-plus](https://github.com/kufii/sql-formatter-plus) (both are licensed under the MIT license), with customizations and extra features. The built-in formatter is for HiveQL queries, but can be easily extended to other query languages with similar structure using [configurations](#configurations).
 
 - [hiveqlformatter](#hiveqlformatter)
 - [Installation](#installation)
-  - [Install using pip (TBD)](#install-using-pip-tbd)
+  - [Install using pip](#install-using-pip)
   - [Install from source](#install-from-source)
 - [Compatibility](#compatibility)
 - [Usage](#usage)
@@ -16,7 +16,12 @@ A [Hive Query Language](https://cwiki.apache.org/confluence/display/Hive/Languag
 
 # Installation
 
-## Install using pip (TBD)
+## Install using pip
+View package at https://test.pypi.org/project/hiveqlformatter-largecats/0.0.1/.
+```
+python3 -m pip install --index-url https://test.pypi.org/simple/ --no-deps hiveqlformatter-largecats
+```
+TBD:
 ```
 pip install hiveqlformatter
 ```
