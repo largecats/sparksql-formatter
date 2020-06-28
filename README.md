@@ -71,16 +71,16 @@ The module can also be used as a Python library.
 
 Call `hiveqlformatter.api.format_query()` to format query in string:
 ```
->>> from hiveqlformatter import HiveQlFormatter, api
->>> formatter = HiveQlFormatter()
+>>> from hiveqlformatter import HiveqlFormatter, api
+>>> formatter = HiveqlFormatter()
 >>> query = 'select c1 from t1'
 >>> api.format_query(query, formatter)
 'SELECT\n    c1\nFROM\n    t0'
 ```
 Call `hiveql.formatter.api.format_file()` to format query in file:
 ```W
->>> from hiveqlformatter import HiveQlFormatter, api
->>> formatter = HiveQlFormatter()
+>>> from hiveqlformatter import HiveqlFormatter, api
+>>> formatter = HiveqlFormatter()
 >>> api.format_file(<path_to_file>, formatter, inplace=False)
 ...
 ```
@@ -88,15 +88,15 @@ Call `hiveql.formatter.api.format_file()` to format query in file:
 **Configurations**   
 Configurations can be specified as follows:
 ```
->>> formatter = HiveQlFormatter(config)
+>>> formatter = HiveqlFormatter(config)
 ```
 Similar to the command-line tool, there are two ways to create configurations when using `hiveqlformatter` as a Python library:   
 * Path to a config file:   
 Call `api.create_config_from_file` to parse configurations from a config file with section heading `hiveqlformatter`.
 ```
->>> from hiveqlformatter import HiveQlFormatter, api
+>>> from hiveqlformatter import HiveqlFormatter, api
 >>> config = api.create_config_from_file(<path_to_config_file>)
->>> formatter = HiveQlFormatter(config)
+>>> formatter = HiveqlFormatter(config)
 >>> query = 'select c1 FROM t0'
 >>> api.format_query(query, formatter)
 'select\n    c1\nfrom\n    t0'
@@ -104,9 +104,9 @@ Call `api.create_config_from_file` to parse configurations from a config file wi
 * Dictionary:   
 Call `api.create_config_from_dict` to parse configurations from a dictionary.
 ```
->>> from hiveqlformatter import HiveQlFormatter, api
+>>> from hiveqlformatter import HiveqlFormatter, api
 >>> config = api.create_config_from_dict({'reservedKeywordUppercase': False}, 'hiveqlformatter')
->>> formatter = HiveQlFormatter(config)
+>>> formatter = HiveqlFormatter(config)
 >>> query = 'select c1 FROM t0'
 >>> formatter.format(query)
 ...
