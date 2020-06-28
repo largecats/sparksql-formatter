@@ -87,6 +87,7 @@ The module can also be used as a Python library.
 Configurations can be speicfied via `Config` and passed to the `HiveQlFormatter` class.
 
 #### Path to a config file
+Invoke `api.create_config_from_file` to parse configurations from a config file with section heading `hiveqlformatter`.
 ```
 >>> from hiveqlformatter import HiveQlFormatter, Config, api
 >>> config = api.create_config_from_file(<path_to_config_file>)
@@ -97,6 +98,7 @@ Configurations can be speicfied via `Config` and passed to the `HiveQlFormatter`
 ```
 
 #### Dictionary
+Invoke `api.create_config_from_dict` to parse configurations from a dictionary.
 ```
 >>> from hiveqlformatter import HiveQlFormatter, Config, api
 >>> config = api.create_config_from_dict({'reservedKeywordUppercase': False}, 'hiveqlformatter')
