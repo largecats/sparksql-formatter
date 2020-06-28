@@ -36,20 +36,6 @@ class Test:
     def __init__(self):
         pass
     
-    def run(self, msg, testQuery, key, formatter=HiveQlFormatter()):
-        logger.info(msg)
-        logger.info('testQuery =')
-        logger.info(testQuery)
-        formattedQuery = formatter.format(testQuery)
-        logger.info('formattedQuery =')
-        logger.info(formattedQuery)
-        logger.info(repr(formattedQuery))
-        logger.info('key =')
-        logger.info(key)
-        logger.info(repr(key))
-        assert formattedQuery == key
-        return True
-    
     def test_short_create_table(self):
         msg = 'Testing short CREATE TABLE'
         testQuery = 'CREATE TABLE t0 (a INT PRIMARY KEY, b STRING)'
@@ -497,6 +483,20 @@ FROM
         config = api.create_config_from_dict({'linesBetweenQueries': 2})
         formatter =  HiveQlFormatter(config)
         return self.run(msg, testQuery, key, formatter=formatter)
+    
+    def run(self, msg, testQuery, key, formatter=HiveQlFormatter()):
+        logger.info(msg)
+        logger.info('testQuery =')
+        logger.info(testQuery)
+        formattedQuery = formatter.format(testQuery)
+        logger.info('formattedQuery =')
+        logger.info(formattedQuery)
+        logger.info(repr(formattedQuery))
+        logger.info('key =')
+        logger.info(key)
+        logger.info(repr(key))
+        assert formattedQuery == key
+        return True
     
     def run_all(self):
         tests = list(filter(lambda m: m.startswith('test_'), dir(self)))
