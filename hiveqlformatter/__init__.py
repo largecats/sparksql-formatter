@@ -39,16 +39,14 @@ logger = logging.getLogger(__name__)
 log_formatter = '[%(asctime)s] %(levelname)s [%(filename)s:%(lineno)s:%(funcName)s] %(message)s'
 logging.basicConfig(stream=sys.stdout, level=logging.INFO, format=log_formatter)
 
-DEFAULT_CONFIG_SECTION = 'hiveqlformatter'
-
 def main(argv):
     args = get_arguments(argv)
     configParam = args['config']
     if configParam:
-        if configParam.startswith('{'):
-            config = api.create_config_from_dict(eval(configParam), DEFAULT_CONFIG_SECTION)
-        else:
-            config = api.create_config_from_file(configParam, DEFAULT_CONFIG_SECTION)
+        if configParam.startswith('{'): # config is passed as dictionary
+            config = api.create_config_from_dict(eval(configParam))
+        else: # config is passed as file
+            config = api.create_config_from_file(configParam)
         formatter = HiveQlFormatter(config)
     else:
         formatter = HiveQlFormatter()

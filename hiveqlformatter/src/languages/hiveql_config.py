@@ -596,3 +596,5 @@ class Functions:
         'PERCENT_RANK',
         'NTILE'
     ]
+
+DEFAULT_CONFIG_SECTION = 'hiveqlformatter' # default section heading for config files
