@@ -25,6 +25,7 @@ import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 import logging
 from hiveqlformatter.src.languages.hiveql_formatter import HiveQlFormatter
+from hiveqlformatter.src.core import api
 
 logger = logging.getLogger(__name__)
 log_formatter = '[%(asctime)s] %(levelname)s [%(filename)s:%(lineno)s:%(funcName)s] %(message)s'
@@ -33,13 +34,13 @@ logging.basicConfig(stream=sys.stdout, level=logging.INFO, format=log_formatter)
 class Test:
 
     def __init__(self):
-        self.formatter = HiveQlFormatter()
+        pass
     
-    def run(self, msg, testQuery, key):
+    def run(self, msg, testQuery, key, formatter=HiveQlFormatter()):
         logger.info(msg)
         logger.info('testQuery =')
         logger.info(testQuery)
-        formattedQuery = self.formatter.format(testQuery)
+        formattedQuery = formatter.format(testQuery)
         logger.info('formattedQuery =')
         logger.info(formattedQuery)
         logger.info(repr(formattedQuery))
@@ -431,6 +432,71 @@ FROM
     LATERAL VIEW EXPLODE(t0.groupA.list) t AS groupA_list_explode
         '''.strip()
         return self.run(msg, testQuery, key)
+    
+    def test_reservedKeywordUppercase_config(self):
+        msg = 'Testing reservedKeywordUppercase config'
+        testQuery = '''select c1, c2 from t0'''
+        key = '''
+select
+    c1,
+    c2
+from
+    t0
+        '''.strip()
+        config = api.create_config_from_dict({'reservedKeywordUppercase': False})
+        formatter =  HiveQlFormatter(config)
+        return self.run(msg, testQuery, key, formatter=formatter)
+    
+    def test_linesBetweenQueries_config(self):
+        msg = 'Testing linesBetweenQueries config'
+        testQuery = '''
+with t0 as (select c1, c2 from tab1),
+
+t1 as (select c1, c2 from tab2),
+
+t2 as (select c1, c2 from tab3)
+
+select * from t0 left join t1 on t0.c1 = t1.c1
+left join t2 on t0.c1 = t2.c1
+        '''
+        key = '''
+WITH t0 AS (
+    SELECT
+        c1,
+        c2
+    FROM
+        tab1
+),
+
+
+t1 AS (
+    SELECT
+        c1,
+        c2
+    FROM
+        tab2
+),
+
+
+t2 AS (
+    SELECT
+        c1,
+        c2
+    FROM
+        tab3
+)
+
+
+SELECT
+    *
+FROM
+    t0
+    LEFT JOIN t1 ON t0.c1 = t1.c1
+    LEFT JOIN t2 ON t0.c1 = t2.c1
+        '''.strip()
+        config = api.create_config_from_dict({'linesBetweenQueries': 2})
+        formatter =  HiveQlFormatter(config)
+        return self.run(msg, testQuery, key, formatter=formatter)
     
     def run_all(self):
         tests = list(filter(lambda m: m.startswith('test_'), dir(self)))

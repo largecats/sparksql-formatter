@@ -8,13 +8,7 @@ A [Hive Query Language](https://cwiki.apache.org/confluence/display/Hive/Languag
 - [Compatibility](#compatibility)
 - [Usage](#usage)
   - [Use as command-line tool](#use-as-command-line-tool)
-    - [Configurations](#configurations)
-      - [Path to a config file](#path-to-a-config-file)
-      - [Dictionary](#dictionary)
   - [Use as Python library](#use-as-python-library)
-    - [Configurations](#configurations-1)
-      - [Path to a config file](#path-to-a-config-file-1)
-      - [Dictionary](#dictionary-1)
 - [Language attributes](#language-attributes)
 
 # Installation
@@ -54,20 +48,19 @@ optional arguments:
   -i, --in-place        Format the files in place.
   --config CONFIG       Configurations for the query language. Can be a path to a config file or a dictionary.
 ```
-### Configurations
+
+**Configurations**   
 The `--config` argument specifies attributes of the query language, such as keywords, comment prefix, and indent. Supported language attributes can be found [at the end of this document](#language-attributes).
 
-It accepts the following inputs:
-
-#### Path to a config file
+It accepts the following inputs:   
+* Path to a config file:   
 The config file should have section `[hiveqlformatter]` and key-value pairs specifying attributes, if needed. E.g.,
 ```
 [hiveqlformatter]
 reservedKeywordUppercase = False
 linesBetweenQueries = 2
 ```
-
-#### Dictionary
+* Dictionary of configurations expressed as key-value pairs:   
 E.g.,
 ```
 $ hiveqlformatter --config="{'reservedKeywordUppercase': False}" -files <path_to_file1> <path_to_file2>
@@ -75,37 +68,48 @@ $ hiveqlformatter --config="{'reservedKeywordUppercase': False}" -files <path_to
 
 ## Use as Python library
 The module can also be used as a Python library.
+
+Call `hiveqlformatter.api.format_query()` to format query in string:
 ```
->>> from hiveqlformatter import HiveQlFormatter
+>>> from hiveqlformatter import HiveQlFormatter, api
 >>> formatter = HiveQlFormatter()
 >>> query = 'select c1 from t1'
->>> formatter.format(query)
+>>> api.format_query(query, formatter)
 'SELECT\n    c1\nFROM\n    t0'
 ```
+Call `hiveql.formatter.api.format_file()` to format query in file:
+```
+>>> from hiveqlformatter import HiveQlFormatter, api
+>>> formatter = HiveQlFormatter()
+>>> api.format_file(<path_to_file>, formatter, inplace=False)
+...
+```
 
-### Configurations
-Configurations can be speicfied via `Config` and passed to the `HiveQlFormatter` class.
-
-#### Path to a config file
-Invoke `api.create_config_from_file` to parse configurations from a config file with section heading `hiveqlformatter`.
+**Configurations**   
+Configurations can be specified as follows:
+```
+>>> formatter = HiveQlFormatter(config)
+```
+Similar to the command-line tool, there are two ways to create configurations when using `hiveqlformatter` as a Python library:   
+* Path to a config file:   
+Call `api.create_config_from_file` to parse configurations from a config file with section heading `hiveqlformatter`.
 ```
 >>> from hiveqlformatter import HiveQlFormatter, Config, api
 >>> config = api.create_config_from_file(<path_to_config_file>)
 >>> formatter = HiveQlFormatter(config)
 >>> query = 'select c1 FROM t0'
->>> formatter.format(query)
+>>> api.format_query(query, formatter)
 'select\n    c1\nfrom\n    t0'
 ```
-
-#### Dictionary
-Invoke `api.create_config_from_dict` to parse configurations from a dictionary.
+* Dictionary:   
+Call `api.create_config_from_dict` to parse configurations from a dictionary.
 ```
 >>> from hiveqlformatter import HiveQlFormatter, Config, api
 >>> config = api.create_config_from_dict({'reservedKeywordUppercase': False}, 'hiveqlformatter')
 >>> formatter = HiveQlFormatter(config)
 >>> query = 'select c1 FROM t0'
 >>> formatter.format(query)
-'select\n    c1\nfrom\n    t0'
+...
 ```
 
 # Language attributes
