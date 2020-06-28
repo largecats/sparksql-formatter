@@ -24,7 +24,7 @@ import sys
 import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 import logging
-from hiveqlformatter.src.languages.hiveql_formatter import HiveQlFormatter
+from hiveqlformatter.src.languages.hiveql_formatter import HiveqlFormatter
 from hiveqlformatter.src.core import api
 
 logger = logging.getLogger(__name__)
@@ -430,7 +430,7 @@ from
     t0
         '''.strip()
         config = api.create_config_from_dict({'reservedKeywordUppercase': False})
-        formatter =  HiveQlFormatter(config)
+        formatter =  HiveqlFormatter(config)
         return self.run(msg, testQuery, key, formatter=formatter)
     
     def test_linesBetweenQueries_config(self):
@@ -481,10 +481,10 @@ FROM
     LEFT JOIN t2 ON t0.c1 = t2.c1
         '''.strip()
         config = api.create_config_from_dict({'linesBetweenQueries': 2})
-        formatter =  HiveQlFormatter(config)
+        formatter =  HiveqlFormatter(config)
         return self.run(msg, testQuery, key, formatter=formatter)
     
-    def run(self, msg, testQuery, key, formatter=HiveQlFormatter()):
+    def run(self, msg, testQuery, key, formatter=HiveqlFormatter()):
         logger.info(msg)
         logger.info('testQuery =')
         logger.info(testQuery)

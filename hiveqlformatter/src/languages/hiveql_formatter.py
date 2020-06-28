@@ -30,7 +30,7 @@ from hiveqlformatter.src.core.tokenizer import Tokenizer
 from hiveqlformatter.src.core.formatter import Formatter
 from hiveqlformatter.src.core.config import Config
 
-class HiveQlFormatter:
+class HiveqlFormatter:
 
     def __init__(self, config=None):
         self.config = config or Config()
