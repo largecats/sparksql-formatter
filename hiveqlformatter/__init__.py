@@ -30,7 +30,7 @@ import codecs
 import json
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from hiveqlformatter.src.languages.hiveql_formatter import HiveQlFormatter
+from hiveqlformatter.src.languages.hiveql_formatter import HiveqlFormatter
 from hiveqlformatter.src.languages import hiveql_config as hc
 from hiveqlformatter.src.core.config import Config
 from hiveqlformatter.src.core import api
@@ -47,9 +47,9 @@ def main(argv):
             config = api.create_config_from_dict(eval(configParam))
         else: # config is passed as file
             config = api.create_config_from_file(configParam)
-        formatter = HiveQlFormatter(config)
+        formatter = HiveqlFormatter(config)
     else:
-        formatter = HiveQlFormatter()
+        formatter = HiveqlFormatter()
     filenames = args['files']
     if filenames:
         for filename in filenames:
