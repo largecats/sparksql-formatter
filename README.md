@@ -1,5 +1,5 @@
 # hiveqlformatter
-A [Hive Query Language](https://cwiki.apache.org/confluence/display/Hive/LanguageManual) formatter in Python based on [sql-formatter](https://github.com/zeroturnaround/sql-formatter) and its fork [sql-formatter-plus](https://github.com/kufii/sql-formatter-plus) (both are licensed under the MIT license), with customizations and extra features. The built-in formatter is for HiveQL queries, but can be easily extended to other query languages with similar structure using [configurations](#configurations).
+A [Hive Query Language](https://cwiki.apache.org/confluence/display/Hive/LanguageManual) formatter in Python based on [sql-formatter](https://github.com/zeroturnaround/sql-formatter) and its fork [sql-formatter-plus](https://github.com/kufii/sql-formatter-plus) (both are licensed under the MIT license), with customizations and extra features. The built-in formatter is for HiveQL queries, but can be easily extended to other query languages with similar structure by setting [language attributes](#language-attributes).
 
 - [hiveqlformatter](#hiveqlformatter)
 - [Installation](#installation)
@@ -15,7 +15,7 @@ A [Hive Query Language](https://cwiki.apache.org/confluence/display/Hive/Languag
     - [Configurations](#configurations-1)
       - [Path to a config file](#path-to-a-config-file-1)
       - [Dictionary](#dictionary-1)
-- [Supported attributes](#supported-attributes)
+- [Language attributes](#language-attributes)
 
 # Installation
 
@@ -55,7 +55,7 @@ optional arguments:
   --config CONFIG       Configurations for the query language. Can be a path to a config file or a dictionary.
 ```
 ### Configurations
-The `--config` argument specifies attributes of the query language, such as keywords, comment prefix, and indent. Supported attributes can be found [at the end of this document](#supported-attributes).
+The `--config` argument specifies attributes of the query language, such as keywords, comment prefix, and indent. Supported language attributes can be found [at the end of this document](#language-attributes).
 
 It accepts the following inputs:
 
@@ -108,7 +108,7 @@ Invoke `api.create_config_from_dict` to parse configurations from a dictionary.
 'select\n    c1\nfrom\n    t0'
 ```
 
-# Supported attributes
+# Language attributes
 **`keywords`**   
 
 A list of keywords in the query language. E.g., `SELECT`, `FROM`, `from_unixtime()`. Default to HiveQL's [keywords](https://cwiki.apache.org/confluence/display/Hive/LanguageManual+DDL) and [functions](https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF).
