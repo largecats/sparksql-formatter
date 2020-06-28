@@ -13,6 +13,8 @@ A [Hive Query Language](https://cwiki.apache.org/confluence/display/Hive/Languag
       - [Dictionary](#dictionary)
   - [Use as Python library](#use-as-python-library)
     - [Configurations](#configurations-1)
+      - [Path to a config file](#path-to-a-config-file-1)
+      - [Dictionary](#dictionary-1)
 - [Supported attributes](#supported-attributes)
 
 # Installation
@@ -82,11 +84,24 @@ The module can also be used as a Python library.
 ```
 
 ### Configurations
-Configurations can be speicfied as arguments of the `HiveQlFormatter` class.
+Configurations can be speicfied via `Config` and passed to the `HiveQlFormatter` class.
+
+#### Path to a config file
 ```
->>> from hiveqlformatter import HiveQlFormatter
->>> formatter = HiveQlFormatter(reserveKeywordUppercase=False)
->>> query = 'select c1 from t1'
+>>> from hiveqlformatter import HiveQlFormatter, Config, api
+>>> config = api.create_config_from_file(<path_to_config_file>)
+>>> formatter = HiveQlFormatter(config)
+>>> query = 'select c1 FROM t0'
+>>> formatter.format(query)
+'select\n    c1\nfrom\n    t0'
+```
+
+#### Dictionary
+```
+>>> from hiveqlformatter import HiveQlFormatter, Config, api
+>>> config = api.create_config_from_dict({'reservedKeywordUppercase': False}, 'hiveqlformatter')
+>>> formatter = HiveQlFormatter(config)
+>>> query = 'select c1 FROM t0'
 >>> formatter.format(query)
 'select\n    c1\nfrom\n    t0'
 ```

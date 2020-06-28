@@ -6,6 +6,7 @@ import logging
 import configparser
 
 from hiveqlformatter.src.core.config import Config
+from hiveqlformatter.src.languages.hiveql_config import DEFAULT_CONFIG_SECTION
 
 logger = logging.getLogger(__name__)
 log_formatter = '[%(asctime)s] %(levelname)s [%(filename)s:%(lineno)s:%(funcName)s] %(message)s'
@@ -32,7 +33,7 @@ def write_to_file(reformattedQuery, filename):
 def format_query(query, formatter):
     return formatter.format(query)
 
-def create_config_from_dict(configDict, defaultConfigSection):
+def create_config_from_dict(configDict, defaultConfigSection=DEFAULT_CONFIG_SECTION):
     '''
     Create Config object from dictionary, with extra handling for boolean values if the dictionary is converted from string.
     '''
@@ -46,7 +47,7 @@ def create_config_from_dict(configDict, defaultConfigSection):
     config = Config(**args)
     return config
 
-def create_config_from_file(configFilename, defaultConfigSection):
+def create_config_from_file(configFilename, defaultConfigSection=DEFAULT_CONFIG_SECTION):
     '''
     Read config from a config file and return a dictionary.
     '''
@@ -60,7 +61,7 @@ def create_config_from_file(configFilename, defaultConfigSection):
     else:
         raise Exception('Section ' + defaultConfigSection + 'not found in ' + configFilename)
     
-def parse_args_with_bool(args, configParser, defaultConfigSection):
+def parse_args_with_bool(args, configParser, defaultConfigSection=DEFAULT_CONFIG_SECTION):
     '''
     Parse paramters in config with special handling for boolean values if config is converted from string.
     '''

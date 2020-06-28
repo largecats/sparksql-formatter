@@ -24,7 +24,7 @@ import sys
 import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 import logging
-from hqlf.src.languages.hiveql_formatter import HiveQlFormatter
+from hiveqlformatter.src.languages.hiveql_formatter import HiveQlFormatter
 
 logger = logging.getLogger(__name__)
 log_formatter = '[%(asctime)s] %(levelname)s [%(filename)s:%(lineno)s:%(funcName)s] %(message)s'
@@ -37,6 +37,8 @@ class Test:
     
     def run(self, msg, testQuery, key):
         logger.info(msg)
+        logger.info('testQuery =')
+        logger.info(testQuery)
         formattedQuery = self.formatter.format(testQuery)
         logger.info('formattedQuery =')
         logger.info(formattedQuery)
@@ -411,6 +413,22 @@ FROM
     t0
     LEFT JOIN t1 ON t0.c1 = t1.c1
     LEFT JOIN t2 ON t0.c1 = t2.c1
+        '''.strip()
+        return self.run(msg, testQuery, key)
+    
+    def test_query_with_lateral_view_explode(self):
+        msg = 'Testing query with LATERAL VIEW EXPLODE'
+        testQuery = '''
+select * from
+    t0
+    LATERAL VIEW EXPLODE(t0.groupA.list) t as groupA_list_explode
+        '''
+        key = '''
+SELECT
+    *
+FROM
+    t0
+    LATERAL VIEW EXPLODE(t0.groupA.list) t AS groupA_list_explode
         '''.strip()
         return self.run(msg, testQuery, key)
     

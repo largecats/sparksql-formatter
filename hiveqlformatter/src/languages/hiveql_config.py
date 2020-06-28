@@ -367,6 +367,7 @@ class Keywords:
         'ELSE',
         'INNER JOIN',
         'JOIN',
+        'LATERAL',
         'LEFT JOIN',
         'LEFT OUTER JOIN',
         'OR',
@@ -596,3 +597,5 @@ class Functions:
         'PERCENT_RANK',
         'NTILE'
     ]
+
+DEFAULT_CONFIG_SECTION = 'hiveqlformatter' # default section heading for config files
