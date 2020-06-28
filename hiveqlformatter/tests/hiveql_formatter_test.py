@@ -24,7 +24,7 @@ import sys
 import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 import logging
-from hqlf.src.languages.hiveql_formatter import HiveQlFormatter
+from hiveqlformatter.src.languages.hiveql_formatter import HiveQlFormatter
 
 logger = logging.getLogger(__name__)
 log_formatter = '[%(asctime)s] %(levelname)s [%(filename)s:%(lineno)s:%(funcName)s] %(message)s'
@@ -427,7 +427,7 @@ select * from
 SELECT
     *
 FROM
-    t0 
+    t0
     LATERAL VIEW EXPLODE(t0.groupA.list) t AS groupA_list_explode
         '''.strip()
         return self.run(msg, testQuery, key)
