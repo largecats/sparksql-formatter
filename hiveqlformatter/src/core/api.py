@@ -26,6 +26,7 @@ import re
 import codecs
 import logging
 import configparser
+import ast
 
 from hiveqlformatter.src.core.config import Config
 from hiveqlformatter.src.languages.hiveql_config import DEFAULT_CONFIG_SECTION
@@ -65,7 +66,7 @@ def create_config_from_dict(configDict, defaultConfigSection=DEFAULT_CONFIG_SECT
         configDict = {defaultConfigSection: configDict}
     configParser.read_dict(configDict)
     args = {}
-    args = parse_args_with_bool(args, configParser, defaultConfigSection)
+    args = parse_args_in_correct_type(args, configParser, defaultConfigSection)
     config = Config(**args)
     return config
 
@@ -78,18 +79,15 @@ def create_config_from_file(configFilename, defaultConfigSection=DEFAULT_CONFIG_
     configParser.read(configFilename)
     if defaultConfigSection in configParser:
         configDict = {}
-        configDict = parse_args_with_bool(configDict, configParser, defaultConfigSection)
+        configDict = parse_args_in_correct_type(configDict, configParser, defaultConfigSection)
         return Config(**configDict)
     else:
         raise Exception('Section ' + defaultConfigSection + 'not found in ' + configFilename)
     
-def parse_args_with_bool(args, configParser, defaultConfigSection=DEFAULT_CONFIG_SECTION):
+def parse_args_in_correct_type(args, configParser, defaultConfigSection=DEFAULT_CONFIG_SECTION):
     '''
     Parse paramters in config with special handling for boolean values if config is converted from string.
     '''
     for key in configParser[defaultConfigSection]:
-        if key == 'reservedKeywordUppercase':
-            args[key] = configParser.getboolean(defaultConfigSection, key) == 'True'
-        else:
-            args[key] = configParser[defaultConfigSection][key]
+        args[key] = ast.literal_eval(configParser[defaultConfigSection][key])
     return args
