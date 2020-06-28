@@ -367,6 +367,7 @@ class Keywords:
         'ELSE',
         'INNER JOIN',
         'JOIN',
+        'LATERAL',
         'LEFT JOIN',
         'LEFT OUTER JOIN',
         'OR',
