@@ -191,6 +191,55 @@ FROM
         '''.strip()
         return self.run(msg, testQuery, key)
     
+    def test_nested_case_when(self):
+        msg = 'Testing nested CASE ... WHEN'
+        testQuery = '''
+select
+    case when a > 0 then
+        case when b > 0 then True
+        else False
+        end
+    end
+    from t0
+        '''
+        key = '''
+SELECT
+    CASE
+        WHEN a > 0
+        THEN CASE
+            WHEN b > 0
+            THEN TRUE
+            ELSE FALSE
+        END
+    END
+FROM
+    t0
+        '''.strip()
+        return self.run(msg, testQuery, key)
+    
+    def test_operator_spacing(self):
+        msg = 'Testing operator spacing, e.g., -, &, {, }'
+        testQuery = '''
+select
+    *,
+    case when (a>0) and (cast(b as int) & {KEYWORD}=0)
+    then -c
+    else 0 end
+    from t0
+        '''
+        key = '''
+SELECT
+    *,
+    CASE
+        WHEN (a > 0) AND (CAST(b AS INT) & {KEYWORD} = 0)
+        THEN -c
+        ELSE 0
+    END
+FROM
+    t0
+        '''.strip()
+        return self.run(msg, testQuery, key)
+    
     def test_line_comment(self):
         msg = 'Testing line comment'
         testQuery = '''
