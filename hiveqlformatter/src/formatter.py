@@ -25,16 +25,17 @@
 from __future__ import print_function # for print() in Python 2
 import re
 
-from hiveqlformatter.src.core.tokenizer import TokenType
-from hiveqlformatter.src.core.indentation import Indentation
-from hiveqlformatter.src.core.inline_block import InlineBlock
-from hiveqlformatter.src.core.subquery import SubQuery
+from hiveqlformatter.src.tokenizer import TokenType, Tokenizer
+from hiveqlformatter.src.indentation import Indentation
+from hiveqlformatter.src.inline_block import InlineBlock
+from hiveqlformatter.src.subquery import SubQuery
+from hiveqlformatter.src.config import Config
 
 trim_trailing_spaces = lambda s: re.sub(pattern='[ \t]+$', repl='', string=s)
 
 class Formatter:
 
-    def __init__(self, config, tokenizer, tokenOverride):
+    def __init__(self, config=Config(), tokenOverride=None):
         """
         Class for formatting queries.
 
@@ -50,7 +51,7 @@ class Formatter:
         self.indentation = Indentation(config.indent)
         self.inlineBlock = InlineBlock()
         self.subQuery = SubQuery()
-        self.tokenizer = tokenizer
+        self.tokenizer = Tokenizer(config=config)
         self.tokenOverride = tokenOverride
         self.previousKeyword = None
         self.tokens = []

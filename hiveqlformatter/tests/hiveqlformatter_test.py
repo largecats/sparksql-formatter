@@ -24,8 +24,9 @@ import sys
 import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 import logging
-from hiveqlformatter.src.languages.hiveql_formatter import HiveqlFormatter
-from hiveqlformatter.src.core import api
+from hiveqlformatter.src import api
+from hiveqlformatter.src.formatter import Formatter
+from hiveqlformatter.src.config import Config
 
 logger = logging.getLogger(__name__)
 log_formatter = '[%(asctime)s] %(levelname)s [%(filename)s:%(lineno)s:%(funcName)s] %(message)s'
@@ -429,9 +430,7 @@ select
 from
     t0
         '''.strip()
-        config = api.create_config_from_dict({'reservedKeywordUppercase': False})
-        formatter =  HiveqlFormatter(config)
-        return self.run(msg, testQuery, key, formatter=formatter)
+        return self.run(msg, testQuery, key, {'reservedKeywordUppercase': False})
     
     def test_linesBetweenQueries_config(self):
         msg = 'Testing linesBetweenQueries config'
@@ -480,15 +479,13 @@ FROM
     LEFT JOIN t1 ON t0.c1 = t1.c1
     LEFT JOIN t2 ON t0.c1 = t2.c1
         '''.strip()
-        config = api.create_config_from_dict({'linesBetweenQueries': 2})
-        formatter =  HiveqlFormatter(config)
-        return self.run(msg, testQuery, key, formatter=formatter)
+        return self.run(msg, testQuery, key, {'linesBetweenQueries': 2})
     
-    def run(self, msg, testQuery, key, formatter=HiveqlFormatter()):
+    def run(self, msg, testQuery, key, config=Config()):
         logger.info(msg)
         logger.info('testQuery =')
         logger.info(testQuery)
-        formattedQuery = formatter.format(testQuery)
+        formattedQuery = api.format_query(testQuery, config)
         logger.info('formattedQuery =')
         logger.info(formattedQuery)
         logger.info(repr(formattedQuery))

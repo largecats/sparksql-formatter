@@ -45,7 +45,7 @@ t1 AS (
 
 SELECT * FROM t0
 """
-from hiveqlformatter.src.core.tokenizer import TokenType
+from hiveqlformatter.src.tokenizer import TokenType
 
 class SubQuery:
     

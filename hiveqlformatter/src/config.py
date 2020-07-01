@@ -22,7 +22,7 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-from hiveqlformatter.src.languages import hiveql_config as hc
+from hiveqlformatter.src import hiveql_config as hc
 
 class Config:
 

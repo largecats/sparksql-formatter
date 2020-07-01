@@ -71,41 +71,37 @@ The module can also be used as a Python library.
 
 Call `hiveqlformatter.api.format_query()` to format query in string:
 ```
->>> from hiveqlformatter import HiveqlFormatter, api
+>>> from hiveqlformatter import api
 >>> query = 'select c1 from t1'
->>> api.format_query(query, HiveqlFormatter())
+>>> api.format_query(query)
 'SELECT\n    c1\nFROM\n    t0'
 ```
 Call `hiveql.formatter.api.format_file()` to format query in file:
 ```W
->>> from hiveqlformatter import HiveqlFormatter, api
->>> api.format_file(<path_to_file>, HiveqlFormatter(), inplace=False)
+>>> from hiveqlformatter import api
+>>> api.format_file(<path_to_file>, inplace=False)
 ...
 ```
 
 **Configurations**   
-Configurations can be specified by passing a `config` argument to the `HiveqlFormatter` class.
-```python
-HiveqlFormatter(config=config)
-```
+Configurations can be specified by passing a `config` parameter to the api format functions.
+
 Similar to the command-line tool, there are two ways to create configurations when using `hiveqlformatter` as a Python library:   
-* Path to a config file:   
-Call `api.create_config_from_file` to parse configurations from a config file with section heading `hiveqlformatter`.
+* Path to a config file
 ```
->>> from hiveqlformatter import HiveqlFormatter, api
->>> config = api.create_config_from_file(<path_to_config_file>)
+>>> from hiveqlformatter import api
+>>> config = '<path_to_config_file>'
 >>> query = 'select c1 FROM t0'
->>> api.format_query(query, HiveqlFormatter(config))
-'select\n    c1\nfrom\n    t0'
-```
-* Dictionary:   
-Call `api.create_config_from_dict` to parse configurations from a dictionary.
-```
->>> from hiveqlformatter import HiveqlFormatter, api
->>> config = api.create_config_from_dict({'reservedKeywordUppercase': False}, 'hiveqlformatter')
->>> query = 'select c1 FROM t0'
->>> api.format_query(query, HiveqlFormatter(config))
+>>> api.format_query(query, config)
 ...
+```
+* Dictionary
+```
+>>> from hiveqlformatter import api
+>>> config = {'reservedKeywordUppercase': False}
+>>> query = 'select c1 FROM t0'
+>>> api.format_query(query, config)
+'select\n    c1\nfrom\n    t0'
 ```
 
 # Language attributes
