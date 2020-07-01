@@ -116,13 +116,19 @@ class Formatter:
             elif token.value == ',':
                 formattedQuery = self.format_comma(token, formattedQuery)
             elif token.value == ':':
-                formattedQuery = Formatter.format_with_space_after(token, formattedQuery)
+                formattedQuery = Formatter.format_without_spaces_before_with_space_after(token, formattedQuery)
             elif token.value == '.':
                 formattedQuery = Formatter.format_without_spaces(token, formattedQuery)
             elif token.value == ';':
                 formattedQuery = self.format_query_separator(token, formattedQuery)
             elif token.value in ['{', '}']:
-                formattedQuery = Formatter.format_without_spaces(token, formattedQuery)
+                if token.value == '{':
+                    formattedQuery = Formatter.format_without_spaces_after(token, formattedQuery)
+                else:
+                    formattedQuery = Formatter.format_without_spaces_before_with_space_after(token, formattedQuery)
+            elif token.value == '-':
+                if i > 1 and self.tokens[i-1].type != TokenType.KEYWORD:
+                    formattedQuery = Formatter.format_without_spaces_after(token, formattedQuery)
             else:
                 formattedQuery = self.format_with_spaces(token, formattedQuery)
         
@@ -198,7 +204,7 @@ class Formatter:
         token.value = token.value.upper() if self.config.reservedKeywordUppercase else token.value.lower()
         if (self.inlineBlock.is_active()):
             self.inlineBlock.end()
-            query = Formatter.format_with_space_after(token, query)
+            query = Formatter.format_without_spaces_before_with_space_after(token, query)
         else:
             self.indentation.decrease_block_level()
             query = self.format_with_spaces(token, self.add_newline(query))
@@ -228,12 +234,16 @@ class Formatter:
             return self.add_newline(query)
     
     @staticmethod
-    def format_with_space_after(token, query):
+    def format_without_spaces_before_with_space_after(token, query):
         return trim_trailing_spaces(query) + token.value + ' '
     
     @staticmethod
     def format_without_spaces(token, query):
         return trim_trailing_spaces(query) + token.value
+    
+    @staticmethod
+    def format_without_spaces_after(token, query):
+        return query + token.value
 
     def format_with_spaces(self, token, query):
         if token.type == TokenType.RESERVED_KEYWORD:
