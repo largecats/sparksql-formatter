@@ -25,16 +25,17 @@
 from __future__ import print_function # for print() in Python 2
 import re
 
-from hiveqlformatter.src.core.tokenizer import TokenType
-from hiveqlformatter.src.core.indentation import Indentation
-from hiveqlformatter.src.core.inline_block import InlineBlock
-from hiveqlformatter.src.core.subquery import SubQuery
+from hiveqlformatter.src.tokenizer import TokenType, Tokenizer
+from hiveqlformatter.src.indentation import Indentation
+from hiveqlformatter.src.inline_block import InlineBlock
+from hiveqlformatter.src.subquery import SubQuery
+from hiveqlformatter.src.config import Config
 
 trim_trailing_spaces = lambda s: re.sub(pattern='[ \t]+$', repl='', string=s)
 
 class Formatter:
 
-    def __init__(self, config, tokenizer, tokenOverride):
+    def __init__(self, config=Config(), tokenOverride=None):
         """
         Class for formatting queries.
 
@@ -50,7 +51,7 @@ class Formatter:
         self.indentation = Indentation(config.indent)
         self.inlineBlock = InlineBlock()
         self.subQuery = SubQuery()
-        self.tokenizer = tokenizer
+        self.tokenizer = Tokenizer(config=config)
         self.tokenOverride = tokenOverride
         self.previousKeyword = None
         self.tokens = []
@@ -115,13 +116,19 @@ class Formatter:
             elif token.value == ',':
                 formattedQuery = self.format_comma(token, formattedQuery)
             elif token.value == ':':
-                formattedQuery = Formatter.format_with_space_after(token, formattedQuery)
+                formattedQuery = Formatter.format_without_spaces_before_with_space_after(token, formattedQuery)
             elif token.value == '.':
                 formattedQuery = Formatter.format_without_spaces(token, formattedQuery)
             elif token.value == ';':
                 formattedQuery = self.format_query_separator(token, formattedQuery)
             elif token.value in ['{', '}']:
-                formattedQuery = Formatter.format_without_spaces(token, formattedQuery)
+                if token.value == '{':
+                    formattedQuery = Formatter.format_without_spaces_after(token, formattedQuery)
+                else:
+                    formattedQuery = Formatter.format_without_spaces_before_with_space_after(token, formattedQuery)
+            elif token.value == '-':
+                if i > 1 and self.tokens[i-1].type != TokenType.KEYWORD:
+                    formattedQuery = Formatter.format_without_spaces_after(token, formattedQuery)
             else:
                 formattedQuery = self.format_with_spaces(token, formattedQuery)
         
@@ -197,7 +204,7 @@ class Formatter:
         token.value = token.value.upper() if self.config.reservedKeywordUppercase else token.value.lower()
         if (self.inlineBlock.is_active()):
             self.inlineBlock.end()
-            query = Formatter.format_with_space_after(token, query)
+            query = Formatter.format_without_spaces_before_with_space_after(token, query)
         else:
             self.indentation.decrease_block_level()
             query = self.format_with_spaces(token, self.add_newline(query))
@@ -227,12 +234,16 @@ class Formatter:
             return self.add_newline(query)
     
     @staticmethod
-    def format_with_space_after(token, query):
+    def format_without_spaces_before_with_space_after(token, query):
         return trim_trailing_spaces(query) + token.value + ' '
     
     @staticmethod
     def format_without_spaces(token, query):
         return trim_trailing_spaces(query) + token.value
+    
+    @staticmethod
+    def format_without_spaces_after(token, query):
+        return query + token.value
 
     def format_with_spaces(self, token, query):
         if token.type == TokenType.RESERVED_KEYWORD:

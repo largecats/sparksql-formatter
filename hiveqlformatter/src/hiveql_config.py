@@ -363,6 +363,7 @@ class Keywords:
 
     NEWLINE_KEYWORDS = [
         'AND',
+        'CASE',
         'CROSS JOIN',
         'ELSE',
         'INNER JOIN',

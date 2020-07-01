@@ -30,10 +30,10 @@ import codecs
 import json
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from hiveqlformatter.src.languages.hiveql_formatter import HiveqlFormatter
-from hiveqlformatter.src.languages import hiveql_config as hc
-from hiveqlformatter.src.core.config import Config
-from hiveqlformatter.src.core import api
+from hiveqlformatter.src import hiveql_config as hc
+from hiveqlformatter.src.config import Config
+from hiveqlformatter.src import api
+from hiveqlformatter.src.formatter import Formatter
 
 logger = logging.getLogger(__name__)
 log_formatter = '[%(asctime)s] %(levelname)s [%(filename)s:%(lineno)s:%(funcName)s] %(message)s'
@@ -42,18 +42,14 @@ logging.basicConfig(stream=sys.stdout, level=logging.INFO, format=log_formatter)
 def main(argv):
     args = get_arguments(argv)
     configParam = args['config']
-    if configParam:
-        if configParam.startswith('{'): # config is passed as dictionary
-            config = api.create_config_from_dict(eval(configParam))
-        else: # config is passed as file
-            config = api.create_config_from_file(configParam)
-        formatter = HiveqlFormatter(config)
-    else:
-        formatter = HiveqlFormatter()
     filenames = args['files']
     if filenames:
-        for filename in filenames:
-            api.format_file(filename, formatter, args.get('inplace'))
+        if configParam:
+            for filename in filenames:
+                api.format_file(filename=filename, config=configParam, inplace=args.get('inplace'))
+        else:
+            for filename in filenames:
+                api.format_file(filename=filename, inplace=args.get('inplace'))
 
 def convert_to_bool(s):
     if s:
