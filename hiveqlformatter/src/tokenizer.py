@@ -26,20 +26,20 @@ from __future__ import print_function # for print() in Python 2
 import re
 
 class TokenType:
-    WHITESPACE = 'whitespace'
-    WORD = 'word'
-    KEYWORD = 'keyword'
-    STRING = 'string'
-    RESERVED_KEYWORD = 'reserved-keyword'
-    TOP_LEVEL_KEYWORD = 'top-level-keyword'
-    TOP_LEVEL_KEYWORD_NO_INDENT = 'top-level-keyword-no-indent'
-    NEWLINE_KEYWORD = 'newline-keyword'
-    OPERATOR = 'operator'
-    OPEN_PAREN = 'open-paren'
-    CLOSE_PAREN = 'close-paren'
-    LINE_COMMENT = 'line-comment'
-    BLOCK_COMMENT = 'block-comment'
-    NUMBER = 'number'
+    WHITESPACE = 'WHITESPACE'
+    WORD = 'WORD'
+    KEYWORD = 'KEYWORD'
+    STRING = 'STRING'
+    RESERVED_KEYWORD = 'RESERVED_KEYWORD'
+    TOP_LEVEL_KEYWORD = 'TOP_LEVEL_KEYWORD'
+    TOP_LEVEL_KEYWORD_NO_INDENT = 'TOP_LEVEL_KEYWORD_NO_INDENT'
+    NEWLINE_KEYWORD = 'NEWLINE_KEYWORD'
+    OPERATOR = 'OPERATOR'
+    OPEN_PAREN = 'OPEN_PAREN'
+    CLOSE_PAREN = 'CLOSE_PAREN'
+    LINE_COMMENT = 'LINE_COMMENT'
+    BLOCK_COMMENT = 'BLOCK_COMMENT'
+    NUMBER = 'NUMBER'
 
 class Token:
     
