@@ -43,9 +43,9 @@ class InlineBlock:
 
         Parameters
         tokens: list
-            array of tokens
+            List of tokens.
         index: int
-            current token position
+            Current token position.
         """
         if self.level == 0 and self.is_inline_block(tokens, index):
             self.level = 1
@@ -57,19 +57,30 @@ class InlineBlock:
     def end(self):
         """
         Finishes current inline block. There might be several nested ones.
+
+        Return: None
         """
         self.level -= 1
 
     def is_active(self):
         """
-        Returns True when inside an inline block.
+        Check if currently is inside an inline block.
+
+        Return: bool
+            Returns True when inside an inline block.
         """
         return self.level > 0
 
     def is_inline_block(self, tokens, index):
         """
         Check if this should be an inline parentheses block.
-        Examples are "NOW()", "COUNT(*)", "int(10)", key(`some_column`), DECIMAL(7,2)
+        Examples are "NOW()", "COUNT(*)", "int(10)", key(`some_column`), DECIMAL(7,2).
+
+        Parameters
+        tokens: list
+            List of tokens.
+        index: int
+            Current token position.
         """
         length = 0
         level = 0
@@ -95,6 +106,14 @@ class InlineBlock:
 
     @staticmethod
     def is_forbidden_token(token):
+        '''
+        Check if token does not belong to an inline block.
+
+        Parameters
+        token: hiveqlformatter.src.tokenizer.Token() object
+
+        Return: bool
+        '''
         type, value = token.type, token.value
         return (type == TokenType.TOP_LEVEL_KEYWORD or type == TokenType.NEWLINE_KEYWORD
                 or type == TokenType.LINE_COMMENT or type == TokenType.BLOCK_COMMENT or value == ';')

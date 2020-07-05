@@ -20,63 +20,77 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-"""
-Maintain the start and end of sub-queries.
-
-A sub-query is a query starting with
-WITH t0 AS (
-    ...
-)
-or simply
-...,
-t0 AS (
-    ...
-)
-
-It needs to be succeeded by a comma if and only if the following statement is another sub-query. E.g.:
-
-WITH t0 AS (
-    ...
-),
-
-t1 AS (
-    ...
-)
-
-SELECT * FROM t0
-"""
 from hiveqlformatter.src.tokenizer import TokenType
 
+
 class SubQuery:
-    
+    '''
+    Class for maintaining the start and end of sub-queries.
+
+    A sub-query is a query starting with
+    WITH t0 AS (
+        ...
+    )
+    or simply
+    ...,
+    t0 AS (
+        ...
+    )
+
+    It needs to be succeeded by a comma if and only if the following statement is another sub-query. E.g.:
+
+    WITH t0 AS (
+        ...
+    ),
+
+    t1 AS (
+        ...
+    )
+
+    SELECT * FROM t0
+    '''
     def __init__(self):
-        self.stack = [] # stack to hold unmatched opening and closing parentheses
-        self.started = False # whether a subquery has started, e.g., t0 AS (...)
-    
+        self.stack = []  # stack to hold unmatched opening and closing parentheses
+        self.started = False  # whether a subquery has started, e.g., t0 AS (...)
+
     def ended(self):
         """
-        Returns whether the subquery has ended.
+        Check if the subquery has ended.
+
+        Return: bool
         """
         return len(self.stack) == 0
-    
+
     def update(self, formatter, token):
         """
         Update self.stack and self.started with current token.
+
+        Parameters
+        formatter: hiveqlformatter.src.formatter.Formatter() object
+            The formatter currently in use.
+        token: hiveqlformatter.src.tokenizer.Token() object
+            The current token.
+
+        Return: None
         """
         openParens = [p for p in formatter.config.openParens if p != 'CASE']
         closeParens = [p for p in formatter.config.closeParens if p != 'END']
-        if token.value in openParens: # push opening parenthesis onto stack
+        if token.value in openParens:  # push opening parenthesis onto stack
             self.stack.append(token.value)
         elif token.value in closeParens:
-            if self.ended(): # no opening parenthesis to match
+            if self.ended():  # no opening parenthesis to match
                 raise Exception('Parentheses not matched')
-            lastParen = self.stack[-1] # retrieve last opening parenthesis
-            if openParens.index(lastParen) == closeParens.index(token.value): # check if they match
-                self.stack.pop() # remove the matched opening parenthesis
+            lastParen = self.stack[-1]  # retrieve last opening parenthesis
+            if openParens.index(lastParen) == closeParens.index(token.value):  # check if they match
+                self.stack.pop()  # remove the matched opening parenthesis
             else:
                 raise Exception('Parentheses not matched')
-    
+
     def reset(self):
+        '''
+        Reset the stack and started attributes of the class.
+
+        Return: None
+        '''
         self.stack = []
         self.started = False
-
