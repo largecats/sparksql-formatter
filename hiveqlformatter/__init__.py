@@ -51,10 +51,6 @@ def main(argv):
             for filename in filenames:
                 api.format_file(filename=filename, inplace=args.get('inplace'))
 
-def convert_to_bool(s):
-    if s:
-        return s.upper() == 'TRUE'
-
 def get_arguments(argv):
     '''
     Return arguments passed via command-line.
