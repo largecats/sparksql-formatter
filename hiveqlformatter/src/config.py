@@ -57,14 +57,14 @@ class Config:
         reservedKeywords: list
             Reserved keywords in the query language.
         topLevelKeywords: list
-            Keywords that initiate top level blocks in the query so that the following lines are indented.
+            Keywords that initiate top-level blocks in the query so that the following lines are indented.
             E.g., SELECT and FROM in
             SELECT
                 ...
             FROM
                 ...
         topLevelKeywordsNoIndent: list
-            Keywords that initiate top level blocks in the query without indenting the following lines.
+            Keywords that initiate top-level blocks in the query without indenting the following lines.
             E.g., UNION in
             SELECT
                 *
