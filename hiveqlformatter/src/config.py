@@ -24,37 +24,78 @@
 # SOFTWARE.
 from hiveqlformatter.src import hiveql_config as hc
 
-class Config:
 
+class Config:
+    '''
+    Class for configurations of the query language.
+    '''
     def __init__(
-        self, 
-        keywords=(
-            hc.Keywords.RESERVED_KEYWORDS + hc.Keywords.NON_RESERVED_KEYWORDS + 
-            hc.Functions.MATHEMATICAL_FUNCTIONS +
-            hc.Functions.COLLECTION_FUNCTIONS +
-            hc.Functions.TYPE_CONVERSION_FUNCTIONS + 
-            hc.Functions.DATE_FUNCTIONS + 
-            hc.Functions.CONDITIONAL_FUNCTIONS + 
-            hc.Functions.STRING_FUNCTIONS +
-            hc.Functions.DATA_MASKING_FUNCTIONS +
-            hc.Functions.MISC_FUNCTIONS +
-            hc.Functions.AGGREGATE_FUNCTIONS +
-            hc.Functions.WINDOWING_FUNCTIONS +
-            hc.Functions.ANALYTICS_FUNCTIONS
-        ),
-        reservedKeywords=hc.Keywords.RESERVED_KEYWORDS,
-        topLevelKeywords=hc.Keywords.TOP_LEVEL_KEYWORDS,
-        topLevelKeywordsNoIndent=hc.Keywords.TOP_LEVEL_KEYWORDS_NO_INDENT,
-        newlineKeywords=hc.Keywords.NEWLINE_KEYWORDS,
-        stringTypes=['""', "N''", "''", '[]'],
-        openParens=['(', 'CASE'], # the order of the parentheses need to match with closeParens
-        closeParens=[')', 'END'],
-        lineCommentTypes=['--'],
-        reservedKeywordUppercase=True,
-        linesBetweenQueries=1,
-        specialWordChars=[],
-        indent='    '
-    ):
+            self,
+            keywords=(hc.Keywords.RESERVED_KEYWORDS + hc.Keywords.NON_RESERVED_KEYWORDS +
+                      hc.Functions.MATHEMATICAL_FUNCTIONS + hc.Functions.COLLECTION_FUNCTIONS +
+                      hc.Functions.TYPE_CONVERSION_FUNCTIONS + hc.Functions.DATE_FUNCTIONS +
+                      hc.Functions.CONDITIONAL_FUNCTIONS + hc.Functions.STRING_FUNCTIONS +
+                      hc.Functions.DATA_MASKING_FUNCTIONS + hc.Functions.MISC_FUNCTIONS +
+                      hc.Functions.AGGREGATE_FUNCTIONS + hc.Functions.WINDOWING_FUNCTIONS +
+                      hc.Functions.ANALYTICS_FUNCTIONS),
+            reservedKeywords=hc.Keywords.RESERVED_KEYWORDS,
+            topLevelKeywords=hc.Keywords.TOP_LEVEL_KEYWORDS,
+            topLevelKeywordsNoIndent=hc.Keywords.TOP_LEVEL_KEYWORDS_NO_INDENT,
+            newlineKeywords=hc.Keywords.NEWLINE_KEYWORDS,
+            stringTypes=['""', "N''", "''", '[]'],
+            openParens=['(', 'CASE'],
+            closeParens=[')', 'END'],  # the order of the parentheses need to match with openParens
+            lineCommentTypes=['--'],
+            reservedKeywordUppercase=True,
+            linesBetweenQueries=1,
+            specialWordChars=[],
+            indent='    '):
+        '''
+        Parameters
+        keywords: list
+            Keywords in the query language.
+        reservedKeywords: list
+            Reserved keywords in the query language.
+        topLevelKeywords: list
+            Keywords that initiate top level blocks in the query so that the following lines are indented.
+            E.g., SELECT and FROM in
+            SELECT
+                ...
+            FROM
+                ...
+        topLevelKeywordsNoIndent: list
+            Keywords that initiate top level blocks in the query without indenting the following lines.
+            E.g., UNION in
+            SELECT
+                *
+            FROM
+                ...
+            UNION
+            SELECT
+                *
+            FROM
+                ...
+        newlineKeywords: list
+            Keywords that initiate a newline in the query.
+        stringTypes: list
+            Pairs of characters that enclose strings in the query.
+        openParens: list
+            Characters tbat behave as opening parentheses in the query.
+        closdParens: list
+            Characters that behave as closing parentheses in the query. 
+            The order of the closing parentheses need to match with that of the opening parentheses.
+        lineCommentTypes: list
+            Strings that initiate comments in the query.
+        resercedKeywordsUppercase: bool
+            If True, convert all reserved keywords to uppercase.
+            Else, convert all reserved keywords to lowercase.
+        linesBetweenQueries: int
+            Number of blank lines to put between (sub)queries.
+        specialWordChars: list
+            Characters with special meanings in the query lanauge.
+        indent: string
+            One unit of indentation.
+        '''
         self.keywords = keywords
         self.reservedKeywords = reservedKeywords
         self.topLevelKeywords = topLevelKeywords
