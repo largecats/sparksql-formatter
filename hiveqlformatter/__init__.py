@@ -50,14 +50,14 @@ def main(argv):
     '''
     args = get_arguments(argv)
     configParam = args['config']
-    filenames = args['files']
-    if filenames:
+    filePaths = args['files']
+    if filePaths:
         if configParam:
-            for filename in filenames:
-                api.format_file(filename=filename, config=configParam, inplace=args.get('inplace'))
+            for filePath in filePaths:
+                api.format_file(filePath=filePath, config=configParam, inplace=args.get('inplace'))
         else:
-            for filename in filenames:
-                api.format_file(filename=filename, inplace=args.get('inplace'))
+            for filePath in filePaths:
+                api.format_file(filePath=filePath, inplace=args.get('inplace'))
 
 
 def get_arguments(argv):
