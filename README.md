@@ -60,8 +60,7 @@ The config file should have section `[hiveqlformatter]` and key-value pairs spec
 reservedKeywordUppercase = False
 linesBetweenQueries = 2
 ```
-* Dictionary of configurations expressed as key-value pairs:   
-E.g.,
+* Dictionary of configurations expressed as key-value pairs. E.g.,
 ```
 $ hiveqlformatter --config="{'reservedKeywordUppercase': False}" -files <path_to_file1> <path_to_file2>
 ```
