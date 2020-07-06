@@ -37,15 +37,15 @@ Supports Python 2.7 and 3.6+.
 
 ## Use as command-line tool
 ```
-usage: hiveqlformatter [-h] [-files FILES [FILES ...]] [-i] [--config CONFIG]
+usage: hiveqlformatter [-h] [-f FILES [FILES ...]] [-i] [--config CONFIG]
 
 Formatter for HiveQL queries.
 
 optional arguments:
   -h, --help            show this help message and exit
-  -files FILES [FILES ...]
+  -f FILES [FILES ...], --files FILES [FILES ...]
                         Paths to files to format.
-  -i, --in-place        Format the files in place.
+  -i, --inplace         Format the files in place.
   --config CONFIG       Configurations for the query language. Can be a path to a config file or a dictionary.
 ```
 
@@ -53,17 +53,19 @@ optional arguments:
 The `--config` argument specifies attributes of the query language, such as keywords, comment prefix, and indent. Supported language attributes can be found [at the end of this document](#language-attributes).
 
 It accepts the following inputs:   
-* Path to a config file:   
+* Path to a config file. E.g.,
+  ```
+$ hiveqlformatter --config="<path_to_config_file>" -f <path_to_file1> <path_to_file2>
+```
 The config file should have section `[hiveqlformatter]` and key-value pairs specifying attributes, if needed. E.g.,
 ```
 [hiveqlformatter]
 reservedKeywordUppercase = False
 linesBetweenQueries = 2
 ```
-* Dictionary of configurations expressed as key-value pairs:   
-E.g.,
+* Dictionary of configurations expressed as key-value pairs. E.g.,
 ```
-$ hiveqlformatter --config="{'reservedKeywordUppercase': False}" -files <path_to_file1> <path_to_file2>
+$ hiveqlformatter --config="{'reservedKeywordUppercase': False}" -f <path_to_file1> <path_to_file2>
 ```
 
 ## Use as Python library

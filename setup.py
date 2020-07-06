@@ -4,11 +4,12 @@ with open('README.md', 'r') as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name='hiveqlformatter-largecats', # Replace with your own username
-    version='0.0.9',
+    name='hiveqlformatter-largecats',  # Replace with your own username
+    version='0.0.10',
     author='largecats',
     author_email='linfanxiaolinda@outlook.com',
-    description='A HiveQL formatter in Python based on https://github.com/zeroturnaround/sql-formatter, with customizations and extra features.',
+    description=
+    'A HiveQL formatter in Python based on https://github.com/zeroturnaround/sql-formatter, with customizations and extra features.',
     long_description=long_description,
     long_description_content_type='text/markdown',
     url='https://github.com/largecats/hiveql-formatter',
@@ -24,5 +25,4 @@ setuptools.setup(
     ],
     entry_points={
         'console_scripts': ['hiveqlformatter=hiveqlformatter:run_main'],
-    }
-)
+    })

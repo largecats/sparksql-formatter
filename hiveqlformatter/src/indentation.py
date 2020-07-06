@@ -51,16 +51,12 @@ class Indentation:
     def increase_top_level(self):
         """
         Increases indentation by one top-level indent.
-
-        Return: None
         """
         self.indentTypes.append(INDENT_TYPE_TOP_LEVEL)
 
     def increase_block_level(self):
         """
         Increases indentation by one block-level indent.
-
-        Return: None
         """
         self.indentTypes.append(INDENT_TYPE_BLOCK_LEVEL)
 
@@ -68,8 +64,6 @@ class Indentation:
         """
         Decreases indentation by one top-level indent.
         Does nothing if the previous indent is not top-level.
-        
-        Return: None
         """
         if len(self.indentTypes) > 0:
             if (self.indentTypes[-1] == INDENT_TYPE_TOP_LEVEL):
@@ -79,8 +73,6 @@ class Indentation:
         """
         Decreases indentation by one block-level indent.
         If there are top-level indents within the block-level indent, throws away these as well.
-
-        Return: None
         """
         while len(self.indentTypes) > 0:
             type = self.indentTypes.pop()
@@ -90,7 +82,5 @@ class Indentation:
     def reset_indentation(self):
         '''
         Reset indentation level by clearing self.indentTypes.
-
-        Return: None
         '''
         self.indentTypes = []

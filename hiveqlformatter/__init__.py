@@ -50,14 +50,14 @@ def main(argv):
     '''
     args = get_arguments(argv)
     configParam = args['config']
-    filenames = args['files']
-    if filenames:
+    filePaths = args['files']
+    if filePaths:
         if configParam:
-            for filename in filenames:
-                api.format_file(filename=filename, config=configParam, inplace=args.get('inplace'))
+            for filePath in filePaths:
+                api.format_file(filePath=filePath, config=configParam, inplace=args.get('inplace'))
         else:
-            for filename in filenames:
-                api.format_file(filename=filename, inplace=args.get('inplace'))
+            for filePath in filePaths:
+                api.format_file(filePath=filePath, inplace=args.get('inplace'))
 
 
 def get_arguments(argv):
@@ -73,7 +73,7 @@ def get_arguments(argv):
     '''
     parser = argparse.ArgumentParser(description='Formatter for HiveQL queries.')
 
-    parser.add_argument('-files', type=str, nargs='+', help='Paths to files to format.')
+    parser.add_argument('-f', '--files', type=str, nargs='+', help='Paths to files to format.')
 
     parser.add_argument('-i', '--inplace', action='store_true', help='Format the files in place.')
 

@@ -49,8 +49,6 @@ def format_file(filePath, config=Config(), inplace=False):
     inplace: bool
         If True, will format the file in place.
         Else, will write the formatted file to stdout.
-
-    Return: None
     '''
     if type(config) == type(Config()):  # config is a Config() object
         formatter = Formatter(config=config)
@@ -104,13 +102,11 @@ def _format_file(filePath, formatter, inplace=False):
     Parameters
     filePath: string
         Path to the file to format.
-    formatter: hiveqlformatter.src.formatter.Formatter object
+    formatter: hiveqlformatter.src.formatter.Formatter() object
         Formatter.
     inplace: bool
         If True, will format the file in place.
         Else, will write the formatted file to stdout.
-    
-    Return: None
     '''
     query = _read_from_file(filePath)
     reformattedQuery = _format_query(query, formatter)
@@ -132,7 +128,7 @@ def _read_from_file(filePath):
     Return: string
         The file content.
     '''
-    with codecs.open(filePath=filePath, mode='r', encoding='utf-8') as f:
+    with codecs.open(filename=filePath, mode='r', encoding='utf-8') as f:
         text = f.read()
     return text
 
@@ -146,10 +142,8 @@ def _write_to_file(formattedQuery, filePath):
         The formatted query.
     filePath: string
         Path to the file to write to.
-
-    Return: None    
     '''
-    with codecs.open(filePath=filePath, mode='w', encoding='utf-8') as f:
+    with codecs.open(filename=filePath, mode='w', encoding='utf-8') as f:
         f.write(formattedQuery)
 
 
