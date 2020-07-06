@@ -128,7 +128,7 @@ def _read_from_file(filePath):
     Return: string
         The file content.
     '''
-    with codecs.open(filePath=filePath, mode='r', encoding='utf-8') as f:
+    with codecs.open(filename=filePath, mode='r', encoding='utf-8') as f:
         text = f.read()
     return text
 
@@ -143,7 +143,7 @@ def _write_to_file(formattedQuery, filePath):
     filePath: string
         Path to the file to write to.
     '''
-    with codecs.open(filePath=filePath, mode='w', encoding='utf-8') as f:
+    with codecs.open(filename=filePath, mode='w', encoding='utf-8') as f:
         f.write(formattedQuery)
 
 
