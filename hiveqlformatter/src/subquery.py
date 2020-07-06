@@ -70,8 +70,6 @@ class SubQuery:
             The formatter currently in use.
         token: hiveqlformatter.src.tokenizer.Token() object
             The current token.
-
-        Return: None
         """
         openParens = [p for p in formatter.config.openParens if p != 'CASE']
         closeParens = [p for p in formatter.config.closeParens if p != 'END']
@@ -89,8 +87,6 @@ class SubQuery:
     def reset(self):
         '''
         Reset the stack and started attributes of the class.
-
-        Return: None
         '''
         self.stack = []
         self.started = False

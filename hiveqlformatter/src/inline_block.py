@@ -57,8 +57,6 @@ class InlineBlock:
     def end(self):
         """
         Finishes current inline block. There might be several nested ones.
-
-        Return: None
         """
         self.level -= 1
 
