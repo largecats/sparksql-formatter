@@ -20,7 +20,7 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-from __future__ import print_function # for print() in Python 2
+from __future__ import print_function  # for print() in Python 2
 import os
 import sys
 import argparse
@@ -39,7 +39,15 @@ logger = logging.getLogger(__name__)
 log_formatter = '[%(asctime)s] %(levelname)s [%(filename)s:%(lineno)s:%(funcName)s] %(message)s'
 logging.basicConfig(stream=sys.stdout, level=logging.INFO, format=log_formatter)
 
+
 def main(argv):
+    '''
+    Main function that enables formatting file from command-line.
+
+    Parameters
+    argv: list
+        List of arguments in sys.argv, excluding the first argument which is the script itself.
+    '''
     args = get_arguments(argv)
     configParam = args['config']
     filenames = args['files']
@@ -51,46 +59,40 @@ def main(argv):
             for filename in filenames:
                 api.format_file(filename=filename, inplace=args.get('inplace'))
 
+
 def get_arguments(argv):
     '''
-    Return arguments passed via command-line.
+    Get arguments passed via command-line in dictionary.
 
     Paramters:
     argv: list
-        sys.argv
+        List of arguments in sys.argv, including the first argument which is the script itself.
     
     Returns: dict
         A dictionary containing arguments for the formatter.
     '''
     parser = argparse.ArgumentParser(description='Formatter for HiveQL queries.')
 
-    parser.add_argument(
-        '-files',
-        type=str, 
-        nargs='+',
-        help='Paths to files to format.'
-    )
+    parser.add_argument('-files', type=str, nargs='+', help='Paths to files to format.')
 
-    parser.add_argument(
-        '-i',
-        '--inplace',
-        action='store_true',
-        help='Format the files in place.'
-    )
+    parser.add_argument('-i', '--inplace', action='store_true', help='Format the files in place.')
 
-    parser.add_argument(
-        '--config',
-        type=str,
-        default=None,
-        help="Configurations for the query language. Can be a path to a config file or a dictionary."
-    )
-    
+    parser.add_argument('--config',
+                        type=str,
+                        default=None,
+                        help="Configurations for the query language. Can be a path to a config file or a dictionary.")
+
     args = vars(parser.parse_args(argv[1:]))
 
     return args
 
+
 def run_main():
+    '''
+    Entry point for console_scripts in setup.py
+    '''
     main(sys.argv)
+
 
 if __name__ == '__main__':
     run_main()
