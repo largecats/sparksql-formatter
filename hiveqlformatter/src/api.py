@@ -23,7 +23,6 @@
 from __future__ import print_function  # for print() in Python 2
 import sys
 import re
-import codecs
 import logging
 import configparser
 import ast
@@ -128,7 +127,7 @@ def _read_from_file(filePath):
     Return: string
         The file content.
     '''
-    with codecs.open(filename=filePath, mode='r', encoding='utf-8') as f:
+    with open(filename=filePath, mode='r', newline='', encoding='utf-8') as f:
         text = f.read()
     return text
 
@@ -143,7 +142,7 @@ def _write_to_file(formattedQuery, filePath):
     filePath: string
         Path to the file to write to.
     '''
-    with codecs.open(filename=filePath, mode='w', encoding='utf-8') as f:
+    with open(filename=filePath, mode='w', newline='', encoding='utf-8') as f:
         f.write(formattedQuery)
 
 
