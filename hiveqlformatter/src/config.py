@@ -42,7 +42,7 @@ class Config:
             topLevelKeywords=hc.Keywords.TOP_LEVEL_KEYWORDS,
             topLevelKeywordsNoIndent=hc.Keywords.TOP_LEVEL_KEYWORDS_NO_INDENT,
             newlineKeywords=hc.Keywords.NEWLINE_KEYWORDS,
-            stringTypes=['""', "N''", "''", '[]'],
+            stringTypes=['""', "''", '{}'],
             openParens=['(', 'CASE'],
             closeParens=[')', 'END'],  # the order of the parentheses need to match with openParens
             lineCommentTypes=['--'],

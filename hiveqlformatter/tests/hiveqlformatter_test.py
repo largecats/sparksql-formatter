@@ -32,17 +32,17 @@ logger = logging.getLogger(__name__)
 log_formatter = '[%(asctime)s] %(levelname)s [%(filename)s:%(lineno)s:%(funcName)s] %(message)s'
 logging.basicConfig(stream=sys.stdout, level=logging.INFO, format=log_formatter)
 
-class Test:
 
+class Test:
     def __init__(self):
         pass
-    
+
     def test_short_create_table(self):
         msg = 'Testing short CREATE TABLE'
         testQuery = 'CREATE TABLE t0 (a INT PRIMARY KEY, b STRING)'
         key = 'CREATE TABLE t0 (a INT PRIMARY KEY, b STRING)'
         return self.run(msg, testQuery, key)
-    
+
     def test_long_create_table(self):
         msg = 'Testing long CREATE TABLE'
         testQuery = '''
@@ -75,7 +75,7 @@ VALUES
     (12, -123.4, 'Skagen 2111', 'Stv')
         '''.strip()
         return self.run(msg, testQuery, key)
-    
+
     def test_alter_table_modify(self):
         msg = 'Testing ALTER TABLE ... MODIFY query'
         testQuery = '''ALTER TABLE supplier MODIFY supplier_name STRING(100) NOT NULL'''
@@ -97,7 +97,7 @@ ALTER COLUMN
     supplier_name STRING(100) NOT NULL
         '''.strip()
         return self.run(msg, testQuery, key)
-    
+
     def test_select_with_cross_join(self):
         msg = 'Testing SELECT query with LEFT JOIN'
         testQuery = '''SELECT a, b FROM t LEFT JOIN t2 ON t.id = t2.id_t'''
@@ -122,7 +122,7 @@ FROM
     t0
         '''.strip()
         return self.run(msg, testQuery, key)
-    
+
     def test_case_when(self):
         msg = 'Testing CASE ... WHEN'
         testQuery = '''SELECT c1, c2, CASE WHEN c3 = 'one' THEN 1 WHEN c3 = 'two' THEN 2 ELSE 3 END AS c4 FROM t0'''
@@ -141,7 +141,7 @@ FROM
     t0
         '''.strip()
         return self.run(msg, testQuery, key)
-    
+
     def test_case_when_with_expression(self):
         msg = 'Testing CASE ... WHEN with expression'
         testQuery = '''
@@ -178,7 +178,7 @@ FROM
     t0
         '''.strip()
         return self.run(msg, testQuery, key)
-    
+
     def test_ignore_case_when_in_other_string(self):
         msg = 'Testing ignore CASE, WHEN in other strings'
         testQuery = '''SELECT CASEDATE, ENDDATE FROM table1'''
@@ -190,7 +190,7 @@ FROM
     table1
         '''.strip()
         return self.run(msg, testQuery, key)
-    
+
     def test_nested_case_when(self):
         msg = 'Testing nested CASE ... WHEN'
         testQuery = '''
@@ -216,7 +216,7 @@ FROM
     t0
         '''.strip()
         return self.run(msg, testQuery, key)
-    
+
     def test_operator_spacing(self):
         msg = 'Testing operator spacing, e.g., -, &, {, }'
         testQuery = '''
@@ -224,7 +224,7 @@ select
     *,
     case when (a>0) and (cast(b as int) & {KEYWORD}=0)
     then -c
-    else 0 end
+    else a-c end
     from t0
         '''
         key = '''
@@ -233,13 +233,13 @@ SELECT
     CASE
         WHEN (a > 0) AND (CAST(b AS INT) & {KEYWORD} = 0)
         THEN -c
-        ELSE 0
+        ELSE a - c
     END
 FROM
     t0
         '''.strip()
         return self.run(msg, testQuery, key)
-    
+
     def test_line_comment(self):
         msg = 'Testing line comment'
         testQuery = '''
@@ -254,7 +254,7 @@ FROM
     t0 --comment
         '''.strip()
         return self.run(msg, testQuery, key)
-    
+
     def test_line_comment_followed_by_comma(self):
         msg = 'Testing line comment followed by comma'
         testQuery = '''
@@ -268,7 +268,7 @@ SELECT
     b
         '''.strip()
         return self.run(msg, testQuery, key)
-    
+
     def test_line_comment_followed_by_close_paren(self):
         msg = 'Testing line comment followed by closing parentheses'
         testQuery = '''
@@ -282,7 +282,7 @@ SELECT
     )
         '''.strip()
         return self.run(msg, testQuery, key)
-    
+
     def test_line_comment_followed_by_open_paren(self):
         msg = 'Testing line comment followed by opening parentheses'
         testQuery = '''
@@ -295,7 +295,7 @@ SELECT
     ()
         '''.strip()
         return self.run(msg, testQuery, key)
-    
+
     def test_query_with_between_and(self):
         msg = 'Testing query with BETWEEN ... AND'
         testQuery = '''
@@ -314,7 +314,7 @@ WHERE
     AND c2 < 0
         '''.strip()
         return self.run(msg, testQuery, key)
-    
+
     def test_query_with_left_join_and(self):
         msg = 'Testing query with LEFT JOIN ... AND'
         testQuery = '''
@@ -330,7 +330,7 @@ FROM
     LEFT JOIN t1 ON t0.c1 = t1.c1 AND t0.c3 = t1.c3
         '''.strip()
         return self.run(msg, testQuery, key)
-    
+
     def test_query_with_nested_and_in_where(self):
         msg = 'Testing query with nested AND in WHERE'
         testQuery = '''
@@ -350,7 +350,7 @@ WHERE
     )
         '''.strip()
         return self.run(msg, testQuery, key)
-    
+
     def test_query_with_long_table_name(self):
         msg = 'Testing query with long table name'
         testQuery = '''
@@ -389,7 +389,7 @@ ORDER BY
     3
         '''.strip()
         return self.run(msg, testQuery, key)
-    
+
     def test_query_with_unicode_char(self):
         msg = 'Testing query with unicode character'
         testQuery = '''
@@ -406,7 +406,36 @@ WHERE
     t1.c2 IN ('你好' 'ไหว้')
         '''.strip()
         return self.run(msg, testQuery, key)
-    
+
+    def test_query_with_string_formatting_with_keyword(self):
+        msg = 'Testing query with mutliple {} for Python string formatting that contain keywords in the query'
+        testQuery = '''
+select * from t0 where t0.id in ({CREATE}, {UPDATE}, {UPDATE}, {UPDATE}, {UPDATE}, {UPDATE}, {UPDATE}, {UPDATE}, {UPDATE}, {UPDATE}, {UPDATE}, {UPDATE}, {UPDATE}) --CREATE or UPDATE
+        '''
+        key = '''
+SELECT
+    *
+FROM
+    t0
+WHERE
+    t0.id IN (
+        {CREATE},
+        {UPDATE},
+        {UPDATE},
+        {UPDATE},
+        {UPDATE},
+        {UPDATE},
+        {UPDATE},
+        {UPDATE},
+        {UPDATE},
+        {UPDATE},
+        {UPDATE},
+        {UPDATE},
+        {UPDATE}
+    ) --CREATE or UPDATE
+        '''.strip()
+        return self.run(msg, testQuery, key)
+
     def test_query_with_subquery(self):
         msg = 'Testing query with subquery'
         testQuery = '''
@@ -452,7 +481,7 @@ FROM
     LEFT JOIN t2 ON t0.c1 = t2.c1
         '''.strip()
         return self.run(msg, testQuery, key)
-    
+
     def test_query_with_lateral_view_explode(self):
         msg = 'Testing query with LATERAL VIEW EXPLODE'
         testQuery = '''
@@ -468,7 +497,7 @@ FROM
     LATERAL VIEW EXPLODE(t0.groupA.list) t AS groupA_list_explode
         '''.strip()
         return self.run(msg, testQuery, key)
-    
+
     def test_reservedKeywordUppercase_config(self):
         msg = 'Testing reservedKeywordUppercase config'
         testQuery = '''select c1, c2 from t0'''
@@ -480,7 +509,7 @@ from
     t0
         '''.strip()
         return self.run(msg, testQuery, key, {'reservedKeywordUppercase': False})
-    
+
     def test_linesBetweenQueries_config(self):
         msg = 'Testing linesBetweenQueries config'
         testQuery = '''
@@ -529,7 +558,7 @@ FROM
     LEFT JOIN t2 ON t0.c1 = t2.c1
         '''.strip()
         return self.run(msg, testQuery, key, {'linesBetweenQueries': 2})
-    
+
     def run(self, msg, testQuery, key, config=Config()):
         logger.info(msg)
         logger.info('testQuery =')
@@ -543,11 +572,12 @@ FROM
         logger.info(repr(key))
         assert formattedQuery == key
         return True
-    
+
     def run_all(self):
         tests = list(filter(lambda m: m.startswith('test_'), dir(self)))
         for test in tests:
             getattr(self, test)()
+
 
 if __name__ == "__main__":
     Test().run_all()

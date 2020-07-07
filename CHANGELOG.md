@@ -19,3 +19,13 @@ Added source code, translated from JavaScript in [sql-formatter](https://github.
 3. Put files in `core` and `languages` directly under `src`. Removed file `hiveql_formatter.py`.
 4. Added feature to remove space after `-` when it is used as negative sign isntead of minus sign.
 5. Added feature to remove space after `{` and space before `}` for string formatting.
+
+## 2020-07-07
+1. Added extra handling to treat text enclosed by `{}` (Python string formatting keyword) as string in the query language, so that query language keywords enclosed by `{}` are ignored. E.g., for newline keyword `CREATE`, the text `{CREATE}` is not formatted as 
+```
+{
+    CREATE
+}
+```
+Added test.
+2. Fixed bug in minus sign formatting. Added test.
