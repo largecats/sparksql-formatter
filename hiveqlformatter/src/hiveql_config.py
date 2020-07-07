@@ -353,13 +353,7 @@ class Keywords:
         'WHERE'
     ]
 
-    TOP_LEVEL_KEYWORDS_NO_INDENT = [
-        'INTERSECT',
-        'INTERSECT ALL',
-        'MINUS',
-        'UNION',
-        'UNION ALL'
-    ]
+    TOP_LEVEL_KEYWORDS_NO_INDENT = ['INTERSECT', 'INTERSECT ALL', 'MINUS', 'UNION', 'UNION ALL']
 
     NEWLINE_KEYWORDS = [
         'AND',
@@ -424,13 +418,7 @@ class Functions:
         'width_bucket'
     ]
 
-    COLLECTION_FUNCTIONS = [
-        'size',
-        'map_keys',
-        'map_values',
-        'array_contains',
-        'sort_array'
-    ]
+    COLLECTION_FUNCTIONS = ['size', 'map_keys', 'map_values', 'array_contains', 'sort_array']
 
     TYPE_CONVERSION_FUNCTIONS = ['binary', 'cast']
 
@@ -462,15 +450,7 @@ class Functions:
         'date_format'
     ]
 
-    CONDITIONAL_FUNCTIONS = [
-        'if',
-        'isnull',
-        'isnotnull',
-        'nvl',
-        'COALESCE',
-        'nullif',
-        'assert_true'
-    ]
+    CONDITIONAL_FUNCTIONS = ['if', 'isnull', 'isnotnull', 'nvl', 'COALESCE', 'nullif', 'assert_true']
 
     STRING_FUNCTIONS = [
         'ascii',
@@ -577,25 +557,12 @@ class Functions:
         'ntile'
     ]
 
-    TABLE_GENERATING_FUNCTIONS = [
-        'explode',
-        'posexplode',
-        'inline',
-        'stack',
-        'json_tuple',
-        'parse_url_tuple'
-    ]
+    TABLE_GENERATING_FUNCTIONS = ['explode', 'posexplode', 'inline', 'stack', 'json_tuple', 'parse_url_tuple']
 
     # https://cwiki.apache.org/confluence/display/Hive/LanguageManual+WindowingAndAnalytics#LanguageManualWindowingAndAnalytics-EnhancementstoHiveQL
     WINDOWING_FUNCTIONS = ['LEAD', 'LAG', 'FIRST_VALUE', 'LAST_VALUE']
 
-    ANALYTICS_FUNCTIONS = [
-        'RANK',
-        'ROW_NUMBER',
-        'DENSE_RANK',
-        'CUME_DIST',
-        'PERCENT_RANK',
-        'NTILE'
-    ]
+    ANALYTICS_FUNCTIONS = ['RANK', 'ROW_NUMBER', 'DENSE_RANK', 'CUME_DIST', 'PERCENT_RANK', 'NTILE']
 
-DEFAULT_CONFIG_SECTION = 'hiveqlformatter' # default section heading for config files
+
+DEFAULT_CONFIG_SECTION = 'hiveqlformatter'  # default section heading for config files

@@ -124,14 +124,21 @@ class Formatter:
                 formattedQuery = Formatter.format_without_spaces(token, formattedQuery)
             elif token.value == ';':
                 formattedQuery = self.format_query_separator(token, formattedQuery)
-            elif token.value in ['{', '}']:
-                if token.value == '{':  # possibly with space before
-                    formattedQuery = Formatter.format_without_spaces_after(token, formattedQuery)
-                else:
-                    formattedQuery = Formatter.format_without_spaces_before_with_space_after(token, formattedQuery)
             elif token.value == '-':
-                if i > 1 and self.tokens[i - 1].type != TokenType.KEYWORD:
-                    formattedQuery = Formatter.format_without_spaces_after(token, formattedQuery)
+                if i > 1:
+                    offset = 1
+                    while self.previous_token(offset=offset).type == TokenType.WHITESPACE:
+                        offset += 1  # find most immediate previous token that is not white space
+                    if self.previous_token(offset=offset).type in [
+                            TokenType.KEYWORD,
+                            TokenType.RESERVED_KEYWORD,
+                            TokenType.NEWLINE_KEYWORD,
+                            TokenType.TOP_LEVEL_KEYWORD,
+                            TokenType.TOP_LEVEL_KEYWORD_NO_INDENT
+                    ]:
+                        formattedQuery = Formatter.format_without_spaces_after(token, formattedQuery)
+                    else:
+                        formattedQuery = self.format_with_spaces(token, formattedQuery)
             else:
                 formattedQuery = self.format_with_spaces(token, formattedQuery)
 

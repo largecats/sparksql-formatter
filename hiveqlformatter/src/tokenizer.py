@@ -60,7 +60,7 @@ class Tokenizer:
     def __init__(self, config):
         self.WHITESPACE_REGEX = u'^(\s+)'
         self.NUMBER_REGEX = r'^((-\s*)?[0-9]+(\.[0-9]+)?|0x[0-9a-fA-F]+|0b[01]+)\b'
-        self.OPERATOR_REGEX = u'^(!=|<>|==|<=|>=|!<|!>|\|\||::|->>|->|~~\*|~~|!~~\*|!~~|~\*|!~\*|!~|:=|.)'
+        self.OPERATOR_REGEX = u'^([^\{\}]!=|<>|==|<=|>=|!<|!>|\|\||::|->>|->|~~\*|~~|!~~\*|!~~|~\*|!~\*|!~|:=|.)'
 
         self.BLOCK_COMMENT_REGEX = u'^(\/\*[.\\n]*?(?:\*\/|$))'
         self.LINE_COMMENT_REGEX = Tokenizer.create_line_comment_regex(config.lineCommentTypes)
@@ -108,7 +108,9 @@ class Tokenizer:
         '''
         keywordsString = ('|').join(keywords)
         keywordsPattern = re.sub(
-            pattern=' ', repl='\\\s+', string=keywordsString
+            pattern=' ',
+            repl='\\\s+',
+            string=keywordsString
         )  # https://stackoverflow.com/questions/58328587/python-3-7-4-re-error-bad-escape-s-at-position-0
         regexString = u'^({keywordsPattern})\\b'.format(keywordsPattern=keywordsPattern)
         return regexString
@@ -123,7 +125,7 @@ class Tokenizer:
             Attribute of hiveqlformatter.src.config.Config() object.
         
         Return: string
-            Regex pattern that matches special characters.     
+            Regex pattern that matches word with special characters.     
         '''
         specialCharsString = ('|').join(specialChars)
         regexString = u'^([\\w{specialCharsString}]+)'.format(specialCharsString=specialCharsString)
@@ -146,14 +148,10 @@ class Tokenizer:
 
     @staticmethod
     def create_string_pattern(stringTypes):
-        '''
-        From original Javascript code:
-        This enables the following string patterns:
-        1. backtick quoted string using `` to escape (not applicable now)
-        2. square bracket quoted string (SQL Server) using ]] to escape
-        3. double quoted string using "" or \" to escape
-        4. single quoted string using '' or \' to escape
-        5. national character quoted string using N'' or N\' to escape
+        '''This enables the following string patterns:
+        1. curly bracket quoted python formatting keyword to be treated as string in hiveql formatting
+        2. double quoted string using "" or \" to escape
+        3. single quoted string using '' or \' to escape
 
         Parameters
         stringTypes: list
@@ -163,10 +161,9 @@ class Tokenizer:
             Regex pattern that matches strings.    
         '''
         patterns = {
-            '[]': '((\\[[^\\]]*($|\\]))(\\][^\\]]*($|\\]))*)',
+            '{}': '(({[^}\\\\]*(?:\\\\.[^{\\\\]*)*(}|$))+)',
             '""': '(("[^"\\\\]*(?:\\\\.[^"\\\\]*)*("|$))+)',
-            "''": "(('[^'\\\\]*(?:\\\\.[^'\\\\]*)*('|$))+)",
-            "N''": "((N'[^N'\\\\]*(?:\\\\.[^N'\\\\]*)*('|$))+)"
+            "''": "(('[^'\\\\]*(?:\\\\.[^'\\\\]*)*('|$))+)"
         }
         return ('|').join(list(map(lambda t: patterns[t], stringTypes)))
 
@@ -243,7 +240,8 @@ class Tokenizer:
         '''
         return (self.get_white_space_token(input) or self.get_comment_token(input) or self.get_string_token(input)
                 or self.get_open_paren_token(input) or self.get_close_paren_token(input) or self.get_number_token(input)
-                or self.get_keyword_token(input, previousToken) or self.get_word_token(input)
+                or self.get_keyword_token(input,
+                                          previousToken) or self.get_word_token(input)
                 or self.get_operator_token(input))
 
     def get_white_space_token(self, input):
@@ -492,8 +490,13 @@ class Tokenizer:
             The matched token.
         '''
         if type in [
-                TokenType.RESERVED_KEYWORD, TokenType.TOP_LEVEL_KEYWORD, TokenType.TOP_LEVEL_KEYWORD_NO_INDENT,
-                TokenType.NEWLINE_KEYWORD, TokenType.KEYWORD, TokenType.OPEN_PAREN, TokenType.CLOSE_PAREN
+                TokenType.RESERVED_KEYWORD,
+                TokenType.TOP_LEVEL_KEYWORD,
+                TokenType.TOP_LEVEL_KEYWORD_NO_INDENT,
+                TokenType.NEWLINE_KEYWORD,
+                TokenType.KEYWORD,
+                TokenType.OPEN_PAREN,
+                TokenType.CLOSE_PAREN
         ]:
             matches = re.search(pattern=regex, string=input, flags=re.IGNORECASE | re.UNICODE)
         else:
