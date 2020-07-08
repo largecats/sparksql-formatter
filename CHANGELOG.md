@@ -29,3 +29,7 @@ Added source code, translated from JavaScript in [sql-formatter](https://github.
 ```
 Added test.
 2. Fixed bug in minus sign formatting. Added test.
+
+## 2020-07-08
+1. Removed `\n` before line comment after comma so that the comment can be kept on the same line as the query.
+2. Made `inlineMaxLength` a customizable parameter in `Config()`.

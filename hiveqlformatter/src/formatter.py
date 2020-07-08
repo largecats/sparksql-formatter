@@ -48,7 +48,7 @@ class Formatter:
         '''
         self.config = config
         self.indentation = Indentation(config.indent)
-        self.inlineBlock = InlineBlock()
+        self.inlineBlock = InlineBlock(config.inlineMaxLength)
         self.subQuery = SubQuery()
         self.tokenizer = Tokenizer(config=config)  # use the same configurations as Formatter()
         self.tokenOverride = tokenOverride

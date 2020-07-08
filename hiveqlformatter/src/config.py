@@ -49,7 +49,8 @@ class Config:
             reservedKeywordUppercase=True,
             linesBetweenQueries=1,
             specialWordChars=[],
-            indent='    '):
+            indent='    ',
+            inlineMaxLength=120):
         '''
         Parameters
         keywords: list
@@ -95,6 +96,8 @@ class Config:
             Characters with special meanings in the query lanauge.
         indent: string
             One unit of indentation.
+        inlineMaxLength: int
+            Maximum length of an inline block.
         '''
         self.keywords = keywords
         self.reservedKeywords = reservedKeywords
@@ -109,3 +112,4 @@ class Config:
         self.linesBetweenQueries = linesBetweenQueries
         self.specialWordChars = specialWordChars
         self.indent = indent
+        self.inlineMaxLength = inlineMaxLength
