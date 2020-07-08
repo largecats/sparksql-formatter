@@ -271,6 +271,6 @@ A string that specifies one indent. Default to four blanks:
 '    '
 ```
 
-**inlineMaxLength**
+**`inlineMaxLength`**
 Maximum length of an inline block. Default to `120`.
 
