@@ -31,7 +31,7 @@ from hiveqlformatter.src.inline_block import InlineBlock
 from hiveqlformatter.src.subquery import SubQuery
 from hiveqlformatter.src.config import Config
 
-trim_trailing_spaces = lambda s: re.sub(pattern='[ \t]+$', repl='', string=s)
+trim_trailing_spaces = lambda s: re.sub(pattern='[ \t]+$', repl='', string=s)  # remove trailing spaces except \n
 
 
 class Formatter:
@@ -157,7 +157,7 @@ class Formatter:
         Return: string
             The query formatted so far together with the newly formatted line comment.
         '''
-        return self.add_newline(query + token.value)
+        return self.add_newline(query.rstrip() + ' ' + token.value)
 
     def format_block_comment(self, token, query):
         '''
