@@ -24,22 +24,21 @@
 # SOFTWARE.
 from hiveqlformatter.src.tokenizer import TokenType
 
-INLINE_MAX_LENGTH = 120
-
 
 class InlineBlock:
     '''
     Class for managing inline blocks.
 
-    Inline blocks are parenthesized expressions that are shorter than INLINE_MAX_LENGTH.
+    Inline blocks are parenthesized expressions that are shorter than self.inlineMaxLength.
     These blocks are formatted on a single line, unlike longer parenthesized expressions where open-parenthesis causes newline and increase of indentation.
     '''
-    def __init__(self):
+    def __init__(self, inlineMaxLength):
         self.level = 0
+        self.inlineMaxLength = inlineMaxLength
 
     def begin_if_possible(self, tokens, index):
         """
-        Begins inline block when lookahead through upcoming tokens determines that the block would be smaller than INLINE_MAX_LENGTH.
+        Begins inline block when lookahead through upcoming tokens determines that the block would be smaller than self.inlineMaxLength.
 
         Parameters
         tokens: list
@@ -87,7 +86,7 @@ class InlineBlock:
             token = tokens[i]
             length += len(token.value)
 
-            if length > INLINE_MAX_LENGTH:
+            if length > self.inlineMaxLength:
                 return False
 
             if token.type == TokenType.OPEN_PAREN:
