@@ -128,7 +128,8 @@ def _read_from_file(filePath):
     Return: string
         The file content.
     '''
-    with open(file=filePath, mode='r', newline='\n', encoding='utf-8') as f:
+    # see https://docs.python.org/3.5/library/functions.html#open
+    with open(file=filePath, mode='r', newline=None, encoding='utf-8') as f:
         text = f.read()
     return text
 
@@ -143,6 +144,7 @@ def _write_to_file(formattedQuery, filePath):
     filePath: string
         Path to the file to write to.
     '''
+    # see https://docs.python.org/3.5/library/functions.html#open
     with open(file=filePath, mode='w', newline='\n', encoding='utf-8') as f:
         f.write(formattedQuery)
 
