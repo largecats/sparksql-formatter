@@ -247,8 +247,7 @@ SELECT a,--comment, here
 b FROM t0--comment'''
         key = '''
 SELECT
-    a,
-    --comment, here
+    a, --comment, here
     b
 FROM
     t0 --comment
