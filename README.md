@@ -45,7 +45,7 @@ optional arguments:
   -h, --help            show this help message and exit
   -f FILES [FILES ...], --files FILES [FILES ...]
                         Paths to files to format.
-  -i, --inplace         Format the files in place.
+  -i, --in-place        Format the files in place.
   --config CONFIG       Configurations for the query language. Can be a path to a config file or a dictionary.
 ```
 
@@ -81,7 +81,7 @@ Call `hiveqlformatter.api.format_query()` to format query in string:
 Call `hiveql.formatter.api.format_file()` to format query in file:
 ```W
 >>> from hiveqlformatter import api
->>> api.format_file(<path_to_file>, inplace=False)
+>>> api.format_file(<path_to_file>, inPlace=False)
 ...
 ```
 

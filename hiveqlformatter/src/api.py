@@ -37,7 +37,7 @@ log_formatter = '[%(asctime)s] %(levelname)s [%(filename)s:%(lineno)s:%(funcName
 logging.basicConfig(stream=sys.stdout, level=logging.INFO, format=log_formatter)
 
 
-def format_file(filePath, config=Config(), inplace=False):
+def format_file(filePath, config=Config(), inPlace=False):
     '''
     Format given file with given configurations.
 
@@ -46,7 +46,7 @@ def format_file(filePath, config=Config(), inplace=False):
         Path to the file to format.
     config: string, dict, or hiveqlformatter.src.config.Config() object
         Configurations for the query language.
-    inplace: bool
+    inPlace: bool
         If True, will format the file in place.
         Else, will write the formatted file to stdout.
     '''
@@ -63,7 +63,7 @@ def format_file(filePath, config=Config(), inplace=False):
             formatter = Formatter(config=_create_config_from_dict(config))
         else:
             raise Exception('Unsupported config type')
-    _format_file(filePath, formatter, inplace)
+    _format_file(filePath, formatter, inPlace)
 
 
 def format_query(query, config=Config()):
@@ -95,7 +95,7 @@ def format_query(query, config=Config()):
     return _format_query(query, formatter)
 
 
-def _format_file(filePath, formatter, inplace=False):
+def _format_file(filePath, formatter, inPlace=False):
     '''
     The I/O helper function for format_file(). Read from given file, format it, and write to specified output.
 
@@ -104,13 +104,13 @@ def _format_file(filePath, formatter, inplace=False):
         Path to the file to format.
     formatter: hiveqlformatter.src.formatter.Formatter() object
         Formatter.
-    inplace: bool
+    inPlace: bool
         If True, will format the file in place.
         Else, will write the formatted file to stdout.
     '''
     query = _read_from_file(filePath)
     reformattedQuery = _format_query(query, formatter)
-    if inplace:  # overwrite file
+    if inPlace:  # overwrite file
         logger.info('Writing to ' + filePath + '...')
         _write_to_file(reformattedQuery, filePath)
     else:  # write to stdout
