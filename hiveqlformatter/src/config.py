@@ -31,14 +31,6 @@ class Config:
     '''
     def __init__(
             self,
-            keywords=(hc.Keywords.RESERVED_KEYWORDS + hc.Keywords.NON_RESERVED_KEYWORDS +
-                      hc.Functions.MATHEMATICAL_FUNCTIONS + hc.Functions.COLLECTION_FUNCTIONS +
-                      hc.Functions.TYPE_CONVERSION_FUNCTIONS + hc.Functions.DATE_FUNCTIONS +
-                      hc.Functions.CONDITIONAL_FUNCTIONS + hc.Functions.STRING_FUNCTIONS +
-                      hc.Functions.DATA_MASKING_FUNCTIONS + hc.Functions.MISC_FUNCTIONS +
-                      hc.Functions.AGGREGATE_FUNCTIONS + hc.Functions.WINDOWING_FUNCTIONS +
-                      hc.Functions.ANALYTICS_FUNCTIONS),
-            reservedKeywords=hc.Keywords.RESERVED_KEYWORDS,
             topLevelKeywords=hc.Keywords.TOP_LEVEL_KEYWORDS,
             topLevelKeywordsNoIndent=hc.Keywords.TOP_LEVEL_KEYWORDS_NO_INDENT,
             newlineKeywords=hc.Keywords.NEWLINE_KEYWORDS,
@@ -53,10 +45,6 @@ class Config:
             inlineMaxLength=120):
         '''
         Parameters
-        keywords: list
-            Keywords in the query language.
-        reservedKeywords: list
-            Reserved keywords in the query language.
         topLevelKeywords: list
             Keywords that initiate top-level blocks in the query so that the following lines are indented.
             E.g., SELECT and FROM in
@@ -99,8 +87,14 @@ class Config:
         inlineMaxLength: int
             Maximum length of an inline block.
         '''
-        self.keywords = keywords
-        self.reservedKeywords = reservedKeywords
+        self.keywords = (hc.Keywords.RESERVED_KEYWORDS + hc.Keywords.NON_RESERVED_KEYWORDS +
+                         hc.Functions.MATHEMATICAL_FUNCTIONS + hc.Functions.COLLECTION_FUNCTIONS +
+                         hc.Functions.TYPE_CONVERSION_FUNCTIONS + hc.Functions.DATE_FUNCTIONS +
+                         hc.Functions.CONDITIONAL_FUNCTIONS + hc.Functions.STRING_FUNCTIONS +
+                         hc.Functions.DATA_MASKING_FUNCTIONS + hc.Functions.MISC_FUNCTIONS +
+                         hc.Functions.AGGREGATE_FUNCTIONS + hc.Functions.WINDOWING_FUNCTIONS +
+                         hc.Functions.ANALYTICS_FUNCTIONS)
+        self.reservedKeywords = hc.Keywords.RESERVED_KEYWORDS
         self.topLevelKeywords = topLevelKeywords
         self.newlineKeywords = newlineKeywords
         self.topLevelKeywordsNoIndent = topLevelKeywordsNoIndent
