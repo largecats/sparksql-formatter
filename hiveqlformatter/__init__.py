@@ -30,7 +30,7 @@ import codecs
 import json
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from hiveqlformatter.src import hiveql_config as hc
+from hiveqlformatter.src import hiveql_config
 from hiveqlformatter.src.config import Config
 from hiveqlformatter.src import api
 from hiveqlformatter.src.formatter import Formatter

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # https://cwiki.apache.org/confluence/display/Hive/LanguageManual+DDL
-class Keywords:
+class Keyword:
     RESERVED_KEYWORDS = [
         'ALL',
         'ALTER',
@@ -384,7 +384,7 @@ class Keywords:
 
 
 # https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF
-class Functions:
+class Function:
     MATHEMATICAL_FUNCTIONS = [
         'round',
         'ceil',

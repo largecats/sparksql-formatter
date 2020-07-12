@@ -31,9 +31,9 @@ class Config:
     '''
     def __init__(
             self,
-            topLevelKeywords=hc.Keywords.TOP_LEVEL_KEYWORDS,
-            topLevelKeywordsNoIndent=hc.Keywords.TOP_LEVEL_KEYWORDS_NO_INDENT,
-            newlineKeywords=hc.Keywords.NEWLINE_KEYWORDS,
+            topLevelKeywords=hc.Keyword.TOP_LEVEL_KEYWORDS,
+            topLevelKeywordsNoIndent=hc.Keyword.TOP_LEVEL_KEYWORDS_NO_INDENT,
+            newlineKeywords=hc.Keyword.NEWLINE_KEYWORDS,
             stringTypes=['""', "''", '{}'],
             openParens=['(', 'CASE'],
             closeParens=[')', 'END'],  # the order of the parentheses need to match with openParens
@@ -87,14 +87,14 @@ class Config:
         inlineMaxLength: int
             Maximum length of an inline block.
         '''
-        self.keywords = (hc.Keywords.RESERVED_KEYWORDS + hc.Keywords.NON_RESERVED_KEYWORDS +
-                         hc.Functions.MATHEMATICAL_FUNCTIONS + hc.Functions.COLLECTION_FUNCTIONS +
-                         hc.Functions.TYPE_CONVERSION_FUNCTIONS + hc.Functions.DATE_FUNCTIONS +
-                         hc.Functions.CONDITIONAL_FUNCTIONS + hc.Functions.STRING_FUNCTIONS +
-                         hc.Functions.DATA_MASKING_FUNCTIONS + hc.Functions.MISC_FUNCTIONS +
-                         hc.Functions.AGGREGATE_FUNCTIONS + hc.Functions.WINDOWING_FUNCTIONS +
-                         hc.Functions.ANALYTICS_FUNCTIONS)
-        self.reservedKeywords = hc.Keywords.RESERVED_KEYWORDS
+        self.keywords = (hc.Keyword.RESERVED_KEYWORDS + hc.Keyword.NON_RESERVED_KEYWORDS +
+                         hc.Function.MATHEMATICAL_FUNCTIONS + hc.Function.COLLECTION_FUNCTIONS +
+                         hc.Function.TYPE_CONVERSION_FUNCTIONS + hc.Function.DATE_FUNCTIONS +
+                         hc.Function.CONDITIONAL_FUNCTIONS + hc.Function.STRING_FUNCTIONS +
+                         hc.Function.DATA_MASKING_FUNCTIONS + hc.Function.MISC_FUNCTIONS +
+                         hc.Function.AGGREGATE_FUNCTIONS + hc.Function.WINDOWING_FUNCTIONS +
+                         hc.Function.ANALYTICS_FUNCTIONS)
+        self.reservedKeywords = hc.Keyword.RESERVED_KEYWORDS
         self.topLevelKeywords = topLevelKeywords
         self.newlineKeywords = newlineKeywords
         self.topLevelKeywordsNoIndent = topLevelKeywordsNoIndent
