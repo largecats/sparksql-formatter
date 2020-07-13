@@ -22,7 +22,7 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-from hiveqlformatter.src import hiveql_config as hc
+from sparksqlformatter.src import hiveql_config as hc
 
 
 class Config:
@@ -88,12 +88,11 @@ class Config:
             Maximum length of an inline block.
         '''
         self.keywords = (hc.Keyword.RESERVED_KEYWORDS + hc.Keyword.NON_RESERVED_KEYWORDS +
-                         hc.Function.MATHEMATICAL_FUNCTIONS + hc.Function.COLLECTION_FUNCTIONS +
-                         hc.Function.TYPE_CONVERSION_FUNCTIONS + hc.Function.DATE_FUNCTIONS +
+                         hc.Function.MATHEMATICAL_FUNCTIONS + hc.Function.ARRAY_FUNCTIONS +
+                         hc.Function.TYPE_CONVERSION_FUNCTIONS + hc.Function.DATE_TIME_FUNCTIONS +
                          hc.Function.CONDITIONAL_FUNCTIONS + hc.Function.STRING_FUNCTIONS +
                          hc.Function.DATA_MASKING_FUNCTIONS + hc.Function.MISC_FUNCTIONS +
-                         hc.Function.AGGREGATE_FUNCTIONS + hc.Function.WINDOWING_FUNCTIONS +
-                         hc.Function.ANALYTICS_FUNCTIONS)
+                         hc.Function.AGGREGATE_FUNCTIONS + hc.Function.WINDOW_FUNCTIONS)
         self.reservedKeywords = hc.Keyword.RESERVED_KEYWORDS
         self.topLevelKeywords = topLevelKeywords
         self.newlineKeywords = newlineKeywords

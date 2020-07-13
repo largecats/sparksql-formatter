@@ -107,7 +107,9 @@ SELECT
     b
 FROM
     t
-    LEFT JOIN t2 ON t.id = t2.id_t
+LEFT JOIN
+    t2
+    ON t.id = t2.id_t
         '''.strip()
         return self.run(msg, testQuery, key)
 
@@ -326,7 +328,10 @@ SELECT
     c2
 FROM
     t0
-    LEFT JOIN t1 ON t0.c1 = t1.c1 AND t0.c3 = t1.c3
+LEFT JOIN
+    t1
+    ON t0.c1 = t1.c1
+    AND t0.c3 = t1.c3
         '''.strip()
         return self.run(msg, testQuery, key)
 
@@ -376,9 +381,15 @@ SELECT
     t3.d
 FROM
     t0_very_very_very_very_very_very_very_very_very_long_table_name t0
-    LEFT JOIN t1_very_very_very_very_very_very_very_very_very_long_table_name t1 ON t0.a = t1.z
-    LEFT JOIN t2 ON t0.a = t2.z
-    LEFT JOIN t3 ON t3.c = t0.a
+LEFT JOIN
+    t1_very_very_very_very_very_very_very_very_very_long_table_name t1
+    ON t0.a = t1.z
+LEFT JOIN
+    t2
+    ON t0.a = t2.z
+LEFT JOIN
+    t3
+    ON t3.c = t0.a
 WHERE
     t0.a BETWEEN '{date}' AND add_months('{date}', 1)
     AND t2.y < 0
@@ -476,8 +487,12 @@ SELECT
     *
 FROM
     t0
-    LEFT JOIN t1 ON t0.c1 = t1.c1
-    LEFT JOIN t2 ON t0.c1 = t2.c1
+LEFT JOIN
+    t1
+    ON t0.c1 = t1.c1
+LEFT JOIN
+    t2
+    ON t0.c1 = t2.c1
         '''.strip()
         return self.run(msg, testQuery, key)
 
@@ -553,8 +568,12 @@ SELECT
     *
 FROM
     t0
-    LEFT JOIN t1 ON t0.c1 = t1.c1
-    LEFT JOIN t2 ON t0.c1 = t2.c1
+LEFT JOIN
+    t1
+    ON t0.c1 = t1.c1
+LEFT JOIN
+    t2
+    ON t0.c1 = t2.c1
         '''.strip()
         return self.run(msg, testQuery, key, {'linesBetweenQueries': 2})
 

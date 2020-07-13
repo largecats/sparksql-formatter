@@ -30,10 +30,10 @@ import codecs
 import json
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from hiveqlformatter.src import hiveql_config
-from hiveqlformatter.src.config import Config
-from hiveqlformatter.src import api
-from hiveqlformatter.src.formatter import Formatter
+from sparksqlformatter.src import hiveql_config
+from sparksqlformatter.src.config import Config
+from sparksqlformatter.src import api
+from sparksqlformatter.src.formatter import Formatter
 
 logger = logging.getLogger(__name__)
 log_formatter = '[%(asctime)s] %(levelname)s [%(filename)s:%(lineno)s:%(funcName)s] %(message)s'

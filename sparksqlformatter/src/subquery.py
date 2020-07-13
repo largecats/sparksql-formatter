@@ -20,7 +20,7 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-from hiveqlformatter.src.tokenizer import TokenType
+from sparksqlformatter.src.tokenizer import TokenType
 
 
 class SubQuery:
@@ -66,9 +66,9 @@ class SubQuery:
         Update self.stack and self.started with current token.
 
         Parameters
-        formatter: hiveqlformatter.src.formatter.Formatter() object
+        formatter: sparksqlformatter.src.formatter.Formatter() object
             The formatter currently in use.
-        token: hiveqlformatter.src.tokenizer.Token() object
+        token: sparksqlformatter.src.tokenizer.Token() object
             The current token.
         """
         openParens = [p for p in formatter.config.openParens if p != 'CASE']
