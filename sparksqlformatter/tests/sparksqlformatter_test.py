@@ -88,7 +88,19 @@ ALTER COLUMN
         '''.strip()
         return self.run(msg, testQuery, key)
 
-    def test_select_with_cross_join(self):
+    def test_simple_select(self):
+        msg = 'Testing simple SELECT'
+        testQuery = '''SELECT c1, c2 FROM t0'''
+        key = '''
+SELECT
+    c1,
+    c2
+FROM
+    t0
+        '''.strip()
+        return self.run(msg, testQuery, key)
+
+    def test_select_with_left_join(self):
         msg = 'Testing SELECT query with LEFT JOIN'
         testQuery = '''SELECT a, b FROM t LEFT JOIN t2 ON t.id = t2.id_t'''
         key = '''
@@ -103,17 +115,29 @@ LEFT JOIN
         '''.strip()
         return self.run(msg, testQuery, key)
 
-    def test_simple_select(self):
-        msg = 'Testing simple SELECT'
-        testQuery = '''SELECT c1, c2 FROM t0'''
+    def test_select_with_function(self):
+        msg = 'Testing SELECT with udf'
+        testQuery = '''SELECT from_unixtime(time), c2 FROM t0'''
         key = '''
 SELECT
-    c1,
+    from_unixtime(time),
     c2
 FROM
     t0
         '''.strip()
         return self.run(msg, testQuery, key)
+
+    def test_select_with_udf(self):
+        msg = 'Testing SELECT with udf'
+        testQuery = '''SELECT foo(c1), c2 FROM t0'''
+        key = '''
+SELECT
+    foo(c1),
+    c2
+FROM
+    t0
+        '''.strip()
+        return self.run(msg, testQuery, key, {'userDefinedFunctions': ['foo']})
 
     def test_case_when(self):
         msg = 'Testing CASE ... WHEN'
@@ -483,6 +507,31 @@ LEFT JOIN
 LEFT JOIN
     t2
     ON t0.c1 = t2.c1
+        '''.strip()
+        return self.run(msg, testQuery, key)
+
+    def test_query_with_nested_subquery(self):
+        msg = 'Testing query with nested subquery'
+        testQuery = '''
+select
+    *,
+    from_unixtime(ctime)
+from
+    (
+        select * from t1
+    )
+        '''
+        key = '''
+SELECT
+    *,
+    from_unixtime(ctime)
+FROM
+    (
+        SELECT
+            *
+        FROM
+            t1
+    )
         '''.strip()
         return self.run(msg, testQuery, key)
 
