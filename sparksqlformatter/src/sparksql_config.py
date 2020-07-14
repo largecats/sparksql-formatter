@@ -87,6 +87,7 @@ class SparkSQL:
             'ONLY',
             'OPTION',
             'OPTIONS',
+            'OR',
             'ORDER',
             'OUT',
             'OUTER',
