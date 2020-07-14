@@ -30,7 +30,7 @@ import codecs
 import json
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from sparksqlformatter.src import hiveql_config
+from sparksqlformatter.src import sparksql_config
 from sparksqlformatter.src.config import Config
 from sparksqlformatter.src import api
 from sparksqlformatter.src.formatter import Formatter

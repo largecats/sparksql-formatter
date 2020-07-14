@@ -1,5 +1,5 @@
 # sparksqlformatter
-A [SparkSQL](http://spark.apache.org/docs/latest/sql-ref.html) formatter with [Hive support](http://spark.apache.org/docs/latest/sql-ref-functions-udf-hive.html) in Python based on [sql-formatter](https://github.com/zeroturnaround/sql-formatter) and its fork [sql-formatter-plus](https://github.com/kufii/sql-formatter-plus) (both are licensed under the MIT license), with customizations and extra features. The built-in formatter is for HiveQL queries, but can be easily extended to other query languages with similar structure by setting [language attributes](#language-attributes).
+A [SparkSQL](http://spark.apache.org/docs/latest/sql-ref.html) formatter in Python based on [sql-formatter](https://github.com/zeroturnaround/sql-formatter) and its fork [sql-formatter-plus](https://github.com/kufii/sql-formatter-plus) (both are licensed under the MIT license), with customizations and extra features. The built-in formatter is for HiveQL queries, but can be easily extended to other query languages with similar structure by setting [language attributes](#language-attributes).
 
 - [sparksqlformatter](#sparksqlformatter)
 - [Installation](#installation)

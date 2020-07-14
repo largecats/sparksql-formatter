@@ -24,9 +24,9 @@ import sys
 import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 import logging
-from hiveqlformatter.src import api
-from hiveqlformatter.src.formatter import Formatter
-from hiveqlformatter.src.config import Config
+from sparksqlformatter.src import api
+from sparksqlformatter.src.formatter import Formatter
+from sparksqlformatter.src.config import Config
 
 logger = logging.getLogger(__name__)
 log_formatter = '[%(asctime)s] %(levelname)s [%(filename)s:%(lineno)s:%(funcName)s] %(message)s'
@@ -37,31 +37,21 @@ class Test:
     def __init__(self):
         pass
 
-    def test_short_create_table(self):
-        msg = 'Testing short CREATE TABLE'
-        testQuery = 'CREATE TABLE t0 (a INT PRIMARY KEY, b STRING)'
-        key = 'CREATE TABLE t0 (a INT PRIMARY KEY, b STRING)'
-        return self.run(msg, testQuery, key)
-
-    def test_long_create_table(self):
-        msg = 'Testing long CREATE TABLE'
+    def test_create_table_using_data_source(self):
+        msg = 'Testing create table using data source'
         testQuery = '''
-CREATE TABLE t0 (a INT PRIMARY KEY, b STRING, c INT NOT NULL, d INT NOT NULL,
-e INT NOT NULL, f INT NOT NULL, g INT NOT NULL, h INT NOT NULL, i INT NOT NULL, j INT NOT NULL)
-'''
+CREATE TABLE xxx
+    (time string, amount double, country string, date date)
+    USING org.apache.spark.sql.parquet
+    OPTIONS ('serialization.format'='1', 'path'='/user/xxx', 'mergeSchema'='true')
+    PARTITIONED BY (country, date)
+        '''
         key = '''
-CREATE TABLE t0 (
-    a INT PRIMARY KEY,
-    b STRING,
-    c INT NOT NULL,
-    d INT NOT NULL,
-    e INT NOT NULL,
-    f INT NOT NULL,
-    g INT NOT NULL,
-    h INT NOT NULL,
-    i INT NOT NULL,
-    j INT NOT NULL
-)
+CREATE TABLE
+    xxx (time string, amount double, country string, date date)
+    USING org.apache.spark.sql.parquet
+    OPTIONS ('serialization.format' = '1', 'path' = '/user/xxx', 'mergeSchema' = 'true')
+    PARTITIONED BY (country, date)
         '''.strip()
         return self.run(msg, testQuery, key)
 
@@ -233,7 +223,7 @@ select
 SELECT
     *,
     CASE
-        WHEN (a > 0) AND (CAST(b AS INT) & {KEYWORD} = 0)
+        WHEN (a > 0) AND (CAST(b AS int) & {KEYWORD} = 0)
         THEN -c
         ELSE a - c
     END

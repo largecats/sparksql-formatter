@@ -22,7 +22,7 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-from sparksqlformatter.src import hiveql_config as hc
+from sparksqlformatter.src import sparksql_config as sc
 
 
 class Config:
@@ -31,9 +31,9 @@ class Config:
     '''
     def __init__(
             self,
-            topLevelKeywords=hc.Keyword.TOP_LEVEL_KEYWORDS,
-            topLevelKeywordsNoIndent=hc.Keyword.TOP_LEVEL_KEYWORDS_NO_INDENT,
-            newlineKeywords=hc.Keyword.NEWLINE_KEYWORDS,
+            topLevelKeywords=sc.Keyword.TOP_LEVEL_KEYWORDS,
+            topLevelKeywordsNoIndent=sc.Keyword.TOP_LEVEL_KEYWORDS_NO_INDENT,
+            newlineKeywords=sc.Keyword.NEWLINE_KEYWORDS,
             stringTypes=['""', "''", '{}'],
             openParens=['(', 'CASE'],
             closeParens=[')', 'END'],  # the order of the parentheses need to match with openParens
@@ -87,13 +87,15 @@ class Config:
         inlineMaxLength: int
             Maximum length of an inline block.
         '''
-        self.keywords = (hc.Keyword.RESERVED_KEYWORDS + hc.Keyword.NON_RESERVED_KEYWORDS +
-                         hc.Function.MATHEMATICAL_FUNCTIONS + hc.Function.ARRAY_FUNCTIONS +
-                         hc.Function.TYPE_CONVERSION_FUNCTIONS + hc.Function.DATE_TIME_FUNCTIONS +
-                         hc.Function.CONDITIONAL_FUNCTIONS + hc.Function.STRING_FUNCTIONS +
-                         hc.Function.DATA_MASKING_FUNCTIONS + hc.Function.MISC_FUNCTIONS +
-                         hc.Function.AGGREGATE_FUNCTIONS + hc.Function.WINDOW_FUNCTIONS)
-        self.reservedKeywords = hc.Keyword.RESERVED_KEYWORDS
+        self.keywords = (sc.Keyword.RESERVED_KEYWORDS + sc.Keyword.NON_RESERVED_KEYWORDS +
+                         sc.Function.AGGREGATE_FUNCTIONS + sc.Function.ARRAY_FUNCTIONS +
+                         sc.Function.CONDITIONAL_FUNCTIONS + sc.Function.DATE_TIME_FUNCTIONS +
+                         sc.Function.HASH_FUNCTIONS + sc.Function.JSON_FUNCTIONS + sc.Function.MAP_FUNCTIONS +
+                         sc.Function.MATHEMATICAL_FUNCTIONS + sc.Function.MISC_FUNCTIONS +
+                         sc.Function.OPERATOR_FUNCTIONS + sc.Function.STRING_FUNCTIONS + sc.Function.STRUCT_FUNCTIONS +
+                         sc.Function.TABLE_GENERATING_FUNCTIONS + sc.Function.TYPE_CONVERSION_FUNCTIONS +
+                         sc.Function.WINDOW_FUNCTIONS + sc.Function.XPATH_FUNCTIONS)
+        self.reservedKeywords = sc.Keyword.RESERVED_KEYWORDS
         self.topLevelKeywords = topLevelKeywords
         self.newlineKeywords = newlineKeywords
         self.topLevelKeywordsNoIndent = topLevelKeywordsNoIndent

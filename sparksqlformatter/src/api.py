@@ -30,7 +30,7 @@ import ast
 
 from sparksqlformatter.src.config import Config
 from sparksqlformatter.src.formatter import Formatter
-from sparksqlformatter.src.hiveql_config import DEFAULT_CONFIG_SECTION
+from sparksqlformatter.src.sparksql_config import DEFAULT_CONFIG_SECTION
 
 logger = logging.getLogger(__name__)
 log_formatter = '[%(asctime)s] %(levelname)s [%(filename)s:%(lineno)s:%(funcName)s] %(message)s'
