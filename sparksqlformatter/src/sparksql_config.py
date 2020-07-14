@@ -532,7 +532,7 @@ class SQL:
             'slice',
             'sort_array',
             'transform',
-            'zip_with',
+            'zip_with'
         ]
         CONDITIONAL_FUNCTIONS = [
             'assert_true',
