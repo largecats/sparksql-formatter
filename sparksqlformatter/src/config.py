@@ -34,6 +34,7 @@ class Config:
             topLevelKeywords=sc.Keyword.TOP_LEVEL_KEYWORDS,
             topLevelKeywordsNoIndent=sc.Keyword.TOP_LEVEL_KEYWORDS_NO_INDENT,
             newlineKeywords=sc.Keyword.NEWLINE_KEYWORDS,
+            userDefinedFunctions=sc.Function.USER_DEFINED_FUNCTIONS,
             stringTypes=['""', "''", '{}'],
             openParens=['(', 'CASE'],
             closeParens=[')', 'END'],  # the order of the parentheses need to match with openParens
@@ -66,6 +67,8 @@ class Config:
                 ...
         newlineKeywords: list
             Keywords that initiate a newline in the query.
+        userDefinedFunctions: list
+            Functions defined by user. To be treated as in-built functions in formatting.
         stringTypes: list
             Pairs of characters that enclose strings in the query.
         openParens: list
@@ -94,7 +97,7 @@ class Config:
                          sc.Function.MATHEMATICAL_FUNCTIONS + sc.Function.MISC_FUNCTIONS +
                          sc.Function.OPERATOR_FUNCTIONS + sc.Function.STRING_FUNCTIONS + sc.Function.STRUCT_FUNCTIONS +
                          sc.Function.TABLE_GENERATING_FUNCTIONS + sc.Function.TYPE_CONVERSION_FUNCTIONS +
-                         sc.Function.WINDOW_FUNCTIONS + sc.Function.XPATH_FUNCTIONS)
+                         sc.Function.WINDOW_FUNCTIONS + sc.Function.XPATH_FUNCTIONS + userDefinedFunctions)
         self.reservedKeywords = sc.Keyword.RESERVED_KEYWORDS
         self.topLevelKeywords = topLevelKeywords
         self.newlineKeywords = newlineKeywords

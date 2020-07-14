@@ -299,9 +299,10 @@ class Formatter:
             query = self.format_with_spaces(token, self.add_newline(query))
 
         self.subQuery.update(self, token)  # update subquery with the current token
-        if self.subQuery.started and self.subQuery.ended():  # if this is the subquery's ending closing parenthesis
+        if self.subQuery.started and self.subQuery.matched():  # if this is the subquery's ending closing parenthesis
             query = query.rstrip() + '\n' * (1 + self.config.linesBetweenQueries)  # add extra blank lines
-            self.subQuery.reset()  # mark subquery as ended to start again
+            self.subQuery.reset()  # reset to start again
+            self.subQuery.ended = True  # set true for format_comma()
         return query
 
     def format_comma(self, token, query):
@@ -317,9 +318,10 @@ class Formatter:
         Return: string
             The query formatted so far together with the newly formatted comma.
         '''
-        if not self.subQuery.started and self.subQuery.ended():  # add extra blank line after subquery
+        if self.subQuery.ended:  # add extra blank line after the comma after subquery
             if self.previous_token().type == TokenType.CLOSE_PAREN:
                 query = query.strip()  # remove the \n added immediately after )
+                self.subQuery.reset()
                 return query + token.value + '\n' * (1 + self.config.linesBetweenQueries)  # add \n after ),
         query = trim_trailing_spaces(query) + token.value + ' '
         if (self.inlineBlock.is_active()):

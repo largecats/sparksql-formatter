@@ -52,17 +52,26 @@ class SubQuery:
     def __init__(self):
         self.stack = []  # stack to hold unmatched opening and closing parentheses
         self.started = False  # whether a subquery has started, e.g., t0 AS (...)
+        self.ended = False  # whether a subquery has ended
+
+    def matched(self):
+        '''
+        Check if all parentheses in the subquery have matched.
+
+        Return: bool
+        '''
+        return len(self.stack) == 0
 
     def ended(self):
-        """
+        '''
         Check if the subquery has ended.
 
         Return: bool
-        """
-        return len(self.stack) == 0
+        '''
+        return self.started and len(self.stack) == 0  # subQuery has started and parentheses are matched
 
     def update(self, formatter, token):
-        """
+        '''
         Update self.stack and self.started with current token.
 
         Parameters
@@ -70,13 +79,13 @@ class SubQuery:
             The formatter currently in use.
         token: sparksqlformatter.src.tokenizer.Token() object
             The current token.
-        """
+        '''
         openParens = [p for p in formatter.config.openParens if p != 'CASE']
         closeParens = [p for p in formatter.config.closeParens if p != 'END']
         if token.value in openParens:  # push opening parenthesis onto stack
             self.stack.append(token.value)
         elif token.value in closeParens:
-            if self.ended():  # no opening parenthesis to match
+            if self.matched():  # no opening parenthesis to match
                 raise Exception('Parentheses not matched')
             lastParen = self.stack[-1]  # retrieve last opening parenthesis
             if openParens.index(lastParen) == closeParens.index(token.value):  # check if they match
@@ -90,3 +99,4 @@ class SubQuery:
         '''
         self.stack = []
         self.started = False
+        self.ended = False

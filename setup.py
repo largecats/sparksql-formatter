@@ -12,7 +12,7 @@ setuptools.setup(
     'A SparkSQL formatter in Python based on https://github.com/zeroturnaround/sql-formatter, with customizations and extra features.',
     long_description=long_description,
     long_description_content_type='text/markdown',
-    url='https://github.com/largecats/hiveql-formatter',
+    url='https://github.com/largecats/sparksql-formatter',
     packages=setuptools.find_packages(),
     classifiers=[
         'Programming Language :: Python',
