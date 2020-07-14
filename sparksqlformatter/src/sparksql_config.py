@@ -46,7 +46,7 @@ class SparkSQL:
             'EXTRACT',
             'FALSE',
             'FETCH',
-            'FILTER'
+            'FILTER',
             'FOLLOWING',
             'FOR',
             'FOREIGN',
@@ -258,6 +258,32 @@ class SparkSQL:
             'UNLOCK',
             'UNSET',
             'VIEWS'
+        ]
+
+        DATA_TYPES = [
+            'BOOLEAN',
+            'BYTE',
+            'TINYINT',
+            'SHORT',
+            'SMALLINT',
+            'INT',
+            'INTEGER',
+            'LONG',
+            'BIGINT',
+            'FLOAT',
+            'REAL',
+            'DOUBLE',
+            'DATE',
+            'TIMESTAMP',
+            'STRING',
+            'BINARY',
+            'DECIMAL',
+            'DEC',
+            'NUMERIC',
+            'INTERVAL',
+            'ARRAY',
+            'STRUCT',
+            'MAP'
         ]
 
         TOP_LEVEL_KEYWORDS = [
@@ -743,7 +769,7 @@ DEFAULT_CONFIG_SECTION = 'sparksqlformatter'  # default section heading for conf
 
 class Keyword:
     RESERVED_KEYWORDS = SparkSQL.Keyword.RESERVED_KEYWORDS
-    NON_RESERVED_KEYWORDS = SparkSQL.Keyword.NON_RESERVED_KEYWORDS
+    NON_RESERVED_KEYWORDS = SparkSQL.Keyword.NON_RESERVED_KEYWORDS + SparkSQL.Keyword.DATA_TYPES
     TOP_LEVEL_KEYWORDS = SparkSQL.Keyword.TOP_LEVEL_KEYWORDS
     TOP_LEVEL_KEYWORDS_NO_INDENT = SparkSQL.Keyword.TOP_LEVEL_KEYWORDS_NO_INDENT
     NEWLINE_KEYWORDS = SparkSQL.Keyword.NEWLINE_KEYWORDS
