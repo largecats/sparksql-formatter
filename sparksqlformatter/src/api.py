@@ -109,12 +109,12 @@ def _format_file(filePath, formatter, inPlace=False):
         Else, will write the formatted file to stdout.
     '''
     query = _read_from_file(filePath)
-    reformattedQuery = _format_query(query, formatter)
+    formattedQuery = _format_query(query, formatter)
     if inPlace:  # overwrite file
         logger.info('Writing to ' + filePath + '...')
-        _write_to_file(reformattedQuery, filePath)
+        _write_to_file(formattedQuery, filePath)
     else:  # write to stdout
-        sys.stdout.write(reformattedQuery)
+        sys.stdout.write(formattedQuery)
 
 
 def _read_from_file(filePath):
