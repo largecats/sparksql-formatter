@@ -71,7 +71,7 @@ def get_arguments(argv):
     Returns: dict
         A dictionary containing arguments for the formatter.
     '''
-    parser = argparse.ArgumentParser(description='Formatter for HiveQL queries.')
+    parser = argparse.ArgumentParser(description='Formatter for SparkSQL queries.')
 
     parser.add_argument('-f', '--files', type=str, nargs='+', help='Paths to files to format.')
 

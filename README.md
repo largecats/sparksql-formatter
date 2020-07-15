@@ -1,5 +1,5 @@
 # sparksqlformatter
-A [SparkSQL](http://spark.apache.org/docs/latest/sql-ref.html) formatter in Python based on [sql-formatter](https://github.com/zeroturnaround/sql-formatter) and its fork [sql-formatter-plus](https://github.com/kufii/sql-formatter-plus) (both are licensed under the MIT license), with customizations and extra features. The built-in formatter is for HiveQL queries, but can be easily extended to other query languages with similar structure by setting [language attributes](#language-attributes).
+A [SparkSQL](http://spark.apache.org/docs/latest/sql-ref.html) formatter in Python based on [sql-formatter](https://github.com/zeroturnaround/sql-formatter) and its fork [sql-formatter-plus](https://github.com/kufii/sql-formatter-plus) (both are licensed under the MIT license), with customizations and extra features. The built-in formatter is for SparkSQL queries, but can be easily extended to other query languages with similar structure by setting [language attributes](#language-attributes).
 
 - [sparksqlformatter](#sparksqlformatter)
 - [Installation](#installation)
@@ -39,7 +39,7 @@ Supports Python 2.7 and 3.6+.
 ```
 usage: sparksqlformatter [-h] [-f FILES [FILES ...]] [-i] [--config CONFIG]
 
-Formatter for HiveQL queries.
+Formatter for SparkSQL queries.
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -109,11 +109,11 @@ Similar to the command-line tool, there are two ways to create configurations wh
 # Language attributes
 **`keywords`**   
 
-A list of keywords in the query language. E.g., `SELECT`, `FROM`, `from_unixtime()`. Default to HiveQL's [keywords](https://cwiki.apache.org/confluence/display/Hive/LanguageManual+DDL) and [functions](https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF).
+A list of keywords in the query language. E.g., `SELECT`, `FROM`, `from_unixtime()`. Default to SparkSQL's [keywords](https://cwiki.apache.org/confluence/display/Hive/LanguageManual+DDL) and [functions](https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF).
 
 **`reservedKeywords`**   
 
-A list of reserved keywords in the query language. Default to HiveQL's [reserved keywords](https://cwiki.apache.org/confluence/display/Hive/LanguageManual+DDL).
+A list of reserved keywords in the query language. Default to SparkSQL's [reserved keywords](https://cwiki.apache.org/confluence/display/Hive/LanguageManual+DDL).
 
 **`topLevelKeywords`**   
 
