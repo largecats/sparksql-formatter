@@ -50,10 +50,11 @@ class Token:
     '''
     A token is a string that forms a unit in formatting.
     '''
-    def __init__(self, type, value):
-        __slots__ = 'type', 'value'  # saves space since there would be many instances of Token
+    def __init__(self, type, value, flag=None):
+        __slots__ = 'type', 'value', 'flag'  # saves space since there would be many instances of Token
         self.type = type
         self.value = value
+        self.flag = flag # added by formatter.py when formatting
 
 
 class Tokenizer:

@@ -34,6 +34,12 @@ from sparksqlformatter.src.config import Config
 trim_trailing_spaces = lambda s: re.sub(pattern='[ \t]+$', repl='', string=s)  # remove trailing spaces except \n
 
 
+class Flag:
+    '''
+    Class for flags, or anotations, that can be added to tokens when formatting.
+    '''
+    SUBQUERY_ENDING_PAREN = 'SUBQUERY_ENDING_PAREN'
+
 class Formatter:
     '''
     Class for formatting queries.
@@ -268,7 +274,6 @@ class Formatter:
             query = self.add_newline(query)
 
         if self.previous_token(offset=2).value.upper() == 'AS':  # start of subQuery, e.g., t0 AS (...)
-            self.subQuery.reset()  # reset so that occasional syntax error does not affect subsequent formatting
             self.subQuery.started = True  # mark that subquery has started
             # This is to differentiate from opening/closng parentheses inside subquery
             # and to distinguish the starting opening parenthesis of the subquery
@@ -289,7 +294,6 @@ class Formatter:
         Return: string
             The query formatted so far together with the newly formatted closing parentheses.
         '''
-
         token.value = token.value.upper() if self.config.reservedKeywordUppercase else token.value.lower()
         if (self.inlineBlock.is_active()):
             self.inlineBlock.end()
@@ -300,9 +304,9 @@ class Formatter:
 
         self.subQuery.update(self, token)  # update subquery with the current token
         if self.subQuery.started and self.subQuery.matched():  # if this is the subquery's ending closing parenthesis
+            token.flag = Flag.SUBQUERY_ENDING_PAREN # add flag to mark this as subquery's ending parenthesis
             query = query.rstrip() + '\n' * (1 + self.config.linesBetweenQueries)  # add extra blank lines
             self.subQuery.reset()  # reset to start again
-            self.subQuery.ended = True  # set true for format_comma()
         return query
 
     def format_comma(self, token, query):
@@ -318,11 +322,11 @@ class Formatter:
         Return: string
             The query formatted so far together with the newly formatted comma.
         '''
-        if self.subQuery.ended:  # add extra blank line after the comma after subquery
-            if self.previous_token().type == TokenType.CLOSE_PAREN:
-                query = query.strip()  # remove the \n added immediately after )
-                self.subQuery.reset()
-                return query + token.value + '\n' * (1 + self.config.linesBetweenQueries)  # add \n after ),
+        # if this is the comma immediately after the closing parenthesis of a subquery, add extra blank line
+        if self.previous_token().flag == Flag.SUBQUERY_ENDING_PAREN:
+            query = query.strip()  # remove the \n added immediately after )
+            self.subQuery.reset()
+            return query + token.value + '\n' * (1 + self.config.linesBetweenQueries)  # add \n after ),
         query = trim_trailing_spaces(query) + token.value + ' '
         if (self.inlineBlock.is_active()):
             return query

@@ -91,13 +91,11 @@ class SubQuery:
             if openParens.index(lastParen) == closeParens.index(token.value):  # check if they match
                 self.stack.pop()  # remove the matched opening parenthesis
             else:
-                msg = 'token.type = {}, token.value = {}'.format(token.type, token.value)
-                raise Exception('Parentheses not matched' + msg)
+                raise Exception('Parentheses not matched')
 
     def reset(self):
         '''
         Reset the stack and started attributes of the class.
         '''
-        self.stack = []
         self.started = False
         self.ended = False
