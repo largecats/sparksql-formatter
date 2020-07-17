@@ -91,7 +91,8 @@ class SubQuery:
             if openParens.index(lastParen) == closeParens.index(token.value):  # check if they match
                 self.stack.pop()  # remove the matched opening parenthesis
             else:
-                raise Exception('Parentheses not matched')
+                msg = 'token.type = {}, token.value = {}'.format(token.type, token.value)
+                raise Exception('Parentheses not matched' + msg)
 
     def reset(self):
         '''
