@@ -242,6 +242,7 @@ select
     then -c
     else a-c end
     from t0
+    where id != 1 or amount >= 0
         '''
         key = '''
 SELECT
@@ -253,6 +254,9 @@ SELECT
     END
 FROM
     t0
+WHERE
+    id != 1
+    OR amount >= 0
         '''.strip()
         return self.run(msg, testQuery, key)
 

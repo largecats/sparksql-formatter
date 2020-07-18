@@ -61,9 +61,8 @@ class Tokenizer:
     def __init__(self, config):
         self.WHITESPACE_REGEX = u'^(\s+)'
         self.NUMBER_REGEX = r'^((-\s*)?[0-9]+(\.[0-9]+)?|0x[0-9a-fA-F]+|0b[01]+)\b'
-        self.OPERATOR_REGEX = u'^([^\{\}]!=|<>|==|<=|>=|!<|!>|\|\||::|->>|->|~~\*|~~|!~~\*|!~~|~\*|!~\*|!~|:=|.)'
+        self.OPERATOR_REGEX = u'^([^\{\}]!=|<>|==|<=|>=|!=|!<|!>|\|\||::|->>|->|~~\*|~~|!~~\*|!~~|~\*|!~\*|!~|:=|.)'
 
-        # self.BLOCK_COMMENT_REGEX = u'^(\/\*[.\\n]*?(?:\*\/|$))'
         self.BLOCK_COMMENT_REGEX = u'(\/\*(?s).*?\*\/)'  # (?s) is inline flag for re.DOTALL
         self.LINE_COMMENT_REGEX = Tokenizer.create_line_comment_regex(config.lineCommentTypes)
 
