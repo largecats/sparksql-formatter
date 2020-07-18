@@ -316,16 +316,20 @@ SELECT
         testQuery = '''
 select
     a,
-    /* block
-    comment */
+    /* case
+        when a > 0 then true
+        else false
+    end as is_positive, */
     b
 from t0
         '''
         key = '''
 SELECT
     a,
-    /* block
-    comment */
+    /* case
+    when a > 0 then true
+    else false
+    end as is_positive, */
     b
 FROM
     t0
