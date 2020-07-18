@@ -103,7 +103,7 @@ class Formatter:
             elif token.type == TokenType.LINE_COMMENT:
                 formattedQuery = self.format_line_comment(token, formattedQuery)
             elif token.type == TokenType.BLOCK_COMMENT:
-                formattedQuery == self.format_block_comment(token, formattedQuery)
+                formattedQuery = self.format_block_comment(token, formattedQuery)
             elif token.type == TokenType.TOP_LEVEL_KEYWORD_NO_INDENT:
                 formattedQuery = self.format_top_level_keyword_no_indent(token, formattedQuery)
                 self.previousKeyword = token
@@ -189,7 +189,7 @@ class Formatter:
         Return: string
             The comment with proper indentation.
         '''
-        return re.sub(pattern='\n[ \t]*', repl='\n', string=comment) + self.indentation.get_indent() + ' '
+        return re.sub(pattern='\n[ \t]*', repl=('\n' + self.indentation.get_indent()), string=comment)
 
     def format_top_level_keyword_no_indent(self, token, query):
         '''

@@ -37,7 +37,6 @@ class Test:
     def __init__(self):
         pass
 
-
     def test_create_table_using_data_source(self):
         msg = 'Testing create table using data source'
         testQuery = '''
@@ -309,6 +308,31 @@ SELECT a --comment
 SELECT
     a --comment
     ()
+        '''.strip()
+        return self.run(msg, testQuery, key)
+
+    def test_block_comment(self):
+        msg = 'Testing block comment'
+        testQuery = '''
+select
+    a,
+    /* case
+        when a > 0 then true
+        else false
+    end as is_positive, */
+    b
+from t0
+        '''
+        key = '''
+SELECT
+    a,
+    /* case
+    when a > 0 then true
+    else false
+    end as is_positive, */
+    b
+FROM
+    t0
         '''.strip()
         return self.run(msg, testQuery, key)
 
@@ -635,6 +659,7 @@ LEFT JOIN
         tests = list(filter(lambda m: m.startswith('test_'), dir(self)))
         for test in tests:
             getattr(self, test)()
+
 
 if __name__ == "__main__":
     Test().run_all()
