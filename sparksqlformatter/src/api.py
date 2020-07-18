@@ -28,25 +28,25 @@ import logging
 import configparser
 import ast
 
-from hiveqlformatter.src.config import Config
-from hiveqlformatter.src.formatter import Formatter
-from hiveqlformatter.src.hiveql_config import DEFAULT_CONFIG_SECTION
+from sparksqlformatter.src.config import Config
+from sparksqlformatter.src.formatter import Formatter
+from sparksqlformatter.src.sparksql_config import DEFAULT_CONFIG_SECTION
 
 logger = logging.getLogger(__name__)
 log_formatter = '[%(asctime)s] %(levelname)s [%(filename)s:%(lineno)s:%(funcName)s] %(message)s'
 logging.basicConfig(stream=sys.stdout, level=logging.INFO, format=log_formatter)
 
 
-def format_file(filePath, config=Config(), inplace=False):
+def format_file(filePath, config=Config(), inPlace=False):
     '''
     Format given file with given configurations.
 
     Parameters
     filePath: string
         Path to the file to format.
-    config: string, dict, or hiveqlformatter.src.config.Config() object
+    config: string, dict, or sparksqlformatter.src.config.Config() object
         Configurations for the query language.
-    inplace: bool
+    inPlace: bool
         If True, will format the file in place.
         Else, will write the formatted file to stdout.
     '''
@@ -63,7 +63,7 @@ def format_file(filePath, config=Config(), inplace=False):
             formatter = Formatter(config=_create_config_from_dict(config))
         else:
             raise Exception('Unsupported config type')
-    _format_file(filePath, formatter, inplace)
+    _format_file(filePath, formatter, inPlace)
 
 
 def format_query(query, config=Config()):
@@ -73,7 +73,7 @@ def format_query(query, config=Config()):
     Parameters
     query: string
         The query to be formatted.
-    config: string, dict, or hiveqlformatter.src.config.Config() object
+    config: string, dict, or sparksqlformatter.src.config.Config() object
         Configurations for the query language.
     
     Return: string
@@ -95,26 +95,26 @@ def format_query(query, config=Config()):
     return _format_query(query, formatter)
 
 
-def _format_file(filePath, formatter, inplace=False):
+def _format_file(filePath, formatter, inPlace=False):
     '''
     The I/O helper function for format_file(). Read from given file, format it, and write to specified output.
 
     Parameters
     filePath: string
         Path to the file to format.
-    formatter: hiveqlformatter.src.formatter.Formatter() object
+    formatter: sparksqlformatter.src.formatter.Formatter() object
         Formatter.
-    inplace: bool
+    inPlace: bool
         If True, will format the file in place.
         Else, will write the formatted file to stdout.
     '''
     query = _read_from_file(filePath)
-    reformattedQuery = _format_query(query, formatter)
-    if inplace:  # overwrite file
+    formattedQuery = _format_query(query, formatter)
+    if inPlace:  # overwrite file
         logger.info('Writing to ' + filePath + '...')
-        _write_to_file(reformattedQuery, filePath)
+        _write_to_file(formattedQuery, filePath)
     else:  # write to stdout
-        sys.stdout.write(reformattedQuery)
+        sys.stdout.write(formattedQuery)
 
 
 def _read_from_file(filePath):
@@ -156,7 +156,7 @@ def _format_query(query, formatter):
     Parameters
     query: string
         The query to format.
-    formatter: hiveqlformatter.src.formatter.Formatter object
+    formatter: sparksqlformatter.src.formatter.Formatter object
         Formatter.
     
     Return: string
@@ -173,9 +173,9 @@ def _create_config_from_dict(configDict, defaultConfigSection=DEFAULT_CONFIG_SEC
     configDict: dict
         A dictionary of configurations specified in key-value pairs.
     defaultConfigSection: string
-        The top-level config section that needs to be added on top of the configDict before feeding to configParser.read_dict(), default to 'hiveqlformatter'.
+        The top-level config section that needs to be added on top of the configDict before feeding to configParser.read_dict(), default to 'sparksqlformatter'.
     
-    Return: hiveqlformatter.src.config.Config() object
+    Return: sparksqlformatter.src.config.Config() object
         The Config() object created from configDict.
     '''
     configParser = configparser.ConfigParser()
@@ -196,9 +196,9 @@ def _create_config_from_file(configFilePath, defaultConfigSection=DEFAULT_CONFIG
     configFilePath: string
         Path to the config file.
     defaultConfigSection: string
-        The top-level config section that needs to be added on top of the configDict before feeding to configParser.read_dict(), default to 'hiveqlformatter'.
+        The top-level config section that needs to be added on top of the configDict before feeding to configParser.read_dict(), default to 'sparksqlformatter'.
     
-    Return: hiveqlformatter.src.config.Config() object
+    Return: sparksqlformatter.src.config.Config() object
         The Config() object created from the config file.
     '''
     configParser = configparser.ConfigParser()
@@ -219,7 +219,7 @@ def _parse_args_in_correct_type(configParser, defaultConfigSection=DEFAULT_CONFI
     configParser: a configParser.ConfigParser() object
         Parser for config files.
     defaultConfigSection: string
-        The top-level config section that needs to be added on top of the configDict before feeding to configParser.read_dict(), default to 'hiveqlformatter'.
+        The top-level config section that needs to be added on top of the configDict before feeding to configParser.read_dict(), default to 'sparksqlformatter'.
     
     Return: dict
         A dictionary of configuration key-value pairs where values are of correct type.

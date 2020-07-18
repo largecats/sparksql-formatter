@@ -24,9 +24,9 @@ import sys
 import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 import logging
-from hiveqlformatter.src import api
-from hiveqlformatter.src.formatter import Formatter
-from hiveqlformatter.src.config import Config
+from sparksqlformatter.src import api
+from sparksqlformatter.src.formatter import Formatter
+from sparksqlformatter.src.config import Config
 
 logger = logging.getLogger(__name__)
 log_formatter = '[%(asctime)s] %(levelname)s [%(filename)s:%(lineno)s:%(funcName)s] %(message)s'
@@ -37,31 +37,22 @@ class Test:
     def __init__(self):
         pass
 
-    def test_short_create_table(self):
-        msg = 'Testing short CREATE TABLE'
-        testQuery = 'CREATE TABLE t0 (a INT PRIMARY KEY, b STRING)'
-        key = 'CREATE TABLE t0 (a INT PRIMARY KEY, b STRING)'
-        return self.run(msg, testQuery, key)
 
-    def test_long_create_table(self):
-        msg = 'Testing long CREATE TABLE'
+    def test_create_table_using_data_source(self):
+        msg = 'Testing create table using data source'
         testQuery = '''
-CREATE TABLE t0 (a INT PRIMARY KEY, b STRING, c INT NOT NULL, d INT NOT NULL,
-e INT NOT NULL, f INT NOT NULL, g INT NOT NULL, h INT NOT NULL, i INT NOT NULL, j INT NOT NULL)
-'''
+CREATE TABLE xxx
+    (time string, amount double, country string, date date)
+    USING org.apache.spark.sql.parquet
+    OPTIONS ('serialization.format'='1', 'path'='/user/xxx', 'mergeSchema'='true')
+    PARTITIONED BY (country, date)
+        '''
         key = '''
-CREATE TABLE t0 (
-    a INT PRIMARY KEY,
-    b STRING,
-    c INT NOT NULL,
-    d INT NOT NULL,
-    e INT NOT NULL,
-    f INT NOT NULL,
-    g INT NOT NULL,
-    h INT NOT NULL,
-    i INT NOT NULL,
-    j INT NOT NULL
-)
+CREATE TABLE
+    xxx (time string, amount double, country string, date date)
+    USING org.apache.spark.sql.parquet
+    OPTIONS ('serialization.format' = '1', 'path' = '/user/xxx', 'mergeSchema' = 'true')
+    PARTITIONED BY (country, date)
         '''.strip()
         return self.run(msg, testQuery, key)
 
@@ -98,19 +89,6 @@ ALTER COLUMN
         '''.strip()
         return self.run(msg, testQuery, key)
 
-    def test_select_with_cross_join(self):
-        msg = 'Testing SELECT query with LEFT JOIN'
-        testQuery = '''SELECT a, b FROM t LEFT JOIN t2 ON t.id = t2.id_t'''
-        key = '''
-SELECT
-    a,
-    b
-FROM
-    t
-    LEFT JOIN t2 ON t.id = t2.id_t
-        '''.strip()
-        return self.run(msg, testQuery, key)
-
     def test_simple_select(self):
         msg = 'Testing simple SELECT'
         testQuery = '''SELECT c1, c2 FROM t0'''
@@ -122,6 +100,45 @@ FROM
     t0
         '''.strip()
         return self.run(msg, testQuery, key)
+
+    def test_select_with_left_join(self):
+        msg = 'Testing SELECT query with LEFT JOIN'
+        testQuery = '''SELECT a, b FROM t LEFT JOIN t2 ON t.id = t2.id_t'''
+        key = '''
+SELECT
+    a,
+    b
+FROM
+    t
+LEFT JOIN
+    t2
+    ON t.id = t2.id_t
+        '''.strip()
+        return self.run(msg, testQuery, key)
+
+    def test_select_with_function(self):
+        msg = 'Testing SELECT with udf'
+        testQuery = '''SELECT from_unixtime(time), c2 FROM t0'''
+        key = '''
+SELECT
+    from_unixtime(time),
+    c2
+FROM
+    t0
+        '''.strip()
+        return self.run(msg, testQuery, key)
+
+    def test_select_with_udf(self):
+        msg = 'Testing SELECT with udf'
+        testQuery = '''SELECT foo(c1), c2 FROM t0'''
+        key = '''
+SELECT
+    foo(c1),
+    c2
+FROM
+    t0
+        '''.strip()
+        return self.run(msg, testQuery, key, {'userDefinedFunctions': ['foo']})
 
     def test_case_when(self):
         msg = 'Testing CASE ... WHEN'
@@ -231,7 +248,7 @@ select
 SELECT
     *,
     CASE
-        WHEN (a > 0) AND (CAST(b AS INT) & {KEYWORD} = 0)
+        WHEN (a > 0) AND (CAST(b AS int) & {KEYWORD} = 0)
         THEN -c
         ELSE a - c
     END
@@ -326,7 +343,10 @@ SELECT
     c2
 FROM
     t0
-    LEFT JOIN t1 ON t0.c1 = t1.c1 AND t0.c3 = t1.c3
+LEFT JOIN
+    t1
+    ON t0.c1 = t1.c1
+    AND t0.c3 = t1.c3
         '''.strip()
         return self.run(msg, testQuery, key)
 
@@ -376,9 +396,15 @@ SELECT
     t3.d
 FROM
     t0_very_very_very_very_very_very_very_very_very_long_table_name t0
-    LEFT JOIN t1_very_very_very_very_very_very_very_very_very_long_table_name t1 ON t0.a = t1.z
-    LEFT JOIN t2 ON t0.a = t2.z
-    LEFT JOIN t3 ON t3.c = t0.a
+LEFT JOIN
+    t1_very_very_very_very_very_very_very_very_very_long_table_name t1
+    ON t0.a = t1.z
+LEFT JOIN
+    t2
+    ON t0.a = t2.z
+LEFT JOIN
+    t3
+    ON t3.c = t0.a
 WHERE
     t0.a BETWEEN '{date}' AND add_months('{date}', 1)
     AND t2.y < 0
@@ -476,8 +502,37 @@ SELECT
     *
 FROM
     t0
-    LEFT JOIN t1 ON t0.c1 = t1.c1
-    LEFT JOIN t2 ON t0.c1 = t2.c1
+LEFT JOIN
+    t1
+    ON t0.c1 = t1.c1
+LEFT JOIN
+    t2
+    ON t0.c1 = t2.c1
+        '''.strip()
+        return self.run(msg, testQuery, key)
+
+    def test_query_with_nested_subquery(self):
+        msg = 'Testing query with nested subquery'
+        testQuery = '''
+select
+    *,
+    from_unixtime(ctime)
+from
+    (
+        select * from t1
+    )
+        '''
+        key = '''
+SELECT
+    *,
+    from_unixtime(ctime)
+FROM
+    (
+        SELECT
+            *
+        FROM
+            t1
+    )
         '''.strip()
         return self.run(msg, testQuery, key)
 
@@ -553,8 +608,12 @@ SELECT
     *
 FROM
     t0
-    LEFT JOIN t1 ON t0.c1 = t1.c1
-    LEFT JOIN t2 ON t0.c1 = t2.c1
+LEFT JOIN
+    t1
+    ON t0.c1 = t1.c1
+LEFT JOIN
+    t2
+    ON t0.c1 = t2.c1
         '''.strip()
         return self.run(msg, testQuery, key, {'linesBetweenQueries': 2})
 
@@ -576,7 +635,6 @@ FROM
         tests = list(filter(lambda m: m.startswith('test_'), dir(self)))
         for test in tests:
             getattr(self, test)()
-
 
 if __name__ == "__main__":
     Test().run_all()

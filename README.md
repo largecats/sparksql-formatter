@@ -1,7 +1,7 @@
-# hiveqlformatter
-A [Hive Query Language](https://cwiki.apache.org/confluence/display/Hive/LanguageManual) formatter in Python based on [sql-formatter](https://github.com/zeroturnaround/sql-formatter) and its fork [sql-formatter-plus](https://github.com/kufii/sql-formatter-plus) (both are licensed under the MIT license), with customizations and extra features. The built-in formatter is for HiveQL queries, but can be easily extended to other query languages with similar structure by setting [language attributes](#language-attributes).
+# sparksqlformatter
+A [SparkSQL](http://spark.apache.org/docs/latest/sql-ref.html) formatter in Python based on [sql-formatter](https://github.com/zeroturnaround/sql-formatter) and its fork [sql-formatter-plus](https://github.com/kufii/sql-formatter-plus) (both are licensed under the MIT license), with customizations and extra features. The built-in formatter is for SparkSQL queries, but can be easily extended to other query languages with similar structure by setting [language attributes](#language-attributes).
 
-- [hiveqlformatter](#hiveqlformatter)
+- [sparksqlformatter](#sparksqlformatter)
 - [Installation](#installation)
   - [Install using pip](#install-using-pip)
   - [Install from source](#install-from-source)
@@ -14,13 +14,13 @@ A [Hive Query Language](https://cwiki.apache.org/confluence/display/Hive/Languag
 # Installation
 
 ## Install using pip
-View package at https://test.pypi.org/project/hiveqlformatter-largecats/.
+View package at https://test.pypi.org/project/sparksqlformatter-largecats/.
 ```
-python3 -m pip install --index-url https://test.pypi.org/simple/ --no-deps hiveqlformatter-largecats
+python3 -m pip install --index-url https://test.pypi.org/simple/ --no-deps sparksqlformatter-largecats
 ```
 TBD:
 ```
-pip install hiveqlformatter
+pip install sparksqlformatter
 ```
 
 ## Install from source
@@ -33,19 +33,19 @@ python setup.py install
 Supports Python 2.7 and 3.6+.
 
 # Usage
-`hiveqlformatter` can be used as either a command-line tool or a Python library.
+`sparksqlformatter` can be used as either a command-line tool or a Python library.
 
 ## Use as command-line tool
 ```
-usage: hiveqlformatter [-h] [-f FILES [FILES ...]] [-i] [--config CONFIG]
+usage: sparksqlformatter [-h] [-f FILES [FILES ...]] [-i] [--config CONFIG]
 
-Formatter for HiveQL queries.
+Formatter for SparkSQL queries.
 
 optional arguments:
   -h, --help            show this help message and exit
   -f FILES [FILES ...], --files FILES [FILES ...]
                         Paths to files to format.
-  -i, --inplace         Format the files in place.
+  -i, --in-place        Format the files in place.
   --config CONFIG       Configurations for the query language. Can be a path to a config file or a dictionary.
 ```
 
@@ -55,43 +55,43 @@ The `--config` argument specifies attributes of the query language, such as keyw
 It accepts the following inputs:   
 * Path to a config file. E.g.,
   ```
-$ hiveqlformatter --config="<path_to_config_file>" -f <path_to_file1> <path_to_file2>
+$ sparksqlformatter --config="<path_to_config_file>" -f <path_to_file1> <path_to_file2>
 ```
-The config file should have section `[hiveqlformatter]` and key-value pairs specifying attributes, if needed. E.g.,
+The config file should have section `[sparksqlformatter]` and key-value pairs specifying attributes, if needed. E.g.,
 ```
-[hiveqlformatter]
+[sparksqlformatter]
 reservedKeywordUppercase = False
 linesBetweenQueries = 2
 ```
 * Dictionary of configurations expressed as key-value pairs. E.g.,
 ```
-$ hiveqlformatter --config="{'reservedKeywordUppercase': False}" -f <path_to_file1> <path_to_file2>
+$ sparksqlformatter --config="{'reservedKeywordUppercase': False}" -f <path_to_file1> <path_to_file2>
 ```
 
 ## Use as Python library
 The module can also be used as a Python library.
 
-Call `hiveqlformatter.api.format_query()` to format query in string:
+Call `sparksqlformatter.api.format_query()` to format query in string:
 ```
->>> from hiveqlformatter import api
+>>> from sparksqlformatter import api
 >>> query = 'select c1 from t1'
 >>> api.format_query(query)
 'SELECT\n    c1\nFROM\n    t0'
 ```
 Call `hiveql.formatter.api.format_file()` to format query in file:
 ```W
->>> from hiveqlformatter import api
->>> api.format_file(<path_to_file>, inplace=False)
+>>> from sparksqlformatter import api
+>>> api.format_file(<path_to_file>, inPlace=False)
 ...
 ```
 
 **Configurations**   
 Configurations can be specified by passing a `config` parameter to the api format functions.
 
-Similar to the command-line tool, there are two ways to create configurations when using `hiveqlformatter` as a Python library:   
+Similar to the command-line tool, there are two ways to create configurations when using `sparksqlformatter` as a Python library:   
 * Path to a config file
 ```
->>> from hiveqlformatter import api
+>>> from sparksqlformatter import api
 >>> config = '<path_to_config_file>'
 >>> query = 'select c1 FROM t0'
 >>> api.format_query(query, config)
@@ -99,7 +99,7 @@ Similar to the command-line tool, there are two ways to create configurations wh
 ```
 * Dictionary
 ```
->>> from hiveqlformatter import api
+>>> from sparksqlformatter import api
 >>> config = {'reservedKeywordUppercase': False}
 >>> query = 'select c1 FROM t0'
 >>> api.format_query(query, config)
@@ -109,11 +109,11 @@ Similar to the command-line tool, there are two ways to create configurations wh
 # Language attributes
 **`keywords`**   
 
-A list of keywords in the query language. E.g., `SELECT`, `FROM`, `from_unixtime()`. Default to HiveQL's [keywords](https://cwiki.apache.org/confluence/display/Hive/LanguageManual+DDL) and [functions](https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF).
+A list of keywords in the query language. E.g., `SELECT`, `FROM`, `from_unixtime()`. Default to SparkSQL's [keywords](https://cwiki.apache.org/confluence/display/Hive/LanguageManual+DDL) and [functions](https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF).
 
 **`reservedKeywords`**   
 
-A list of reserved keywords in the query language. Default to HiveQL's [reserved keywords](https://cwiki.apache.org/confluence/display/Hive/LanguageManual+DDL).
+A list of reserved keywords in the query language. Default to SparkSQL's [reserved keywords](https://cwiki.apache.org/confluence/display/Hive/LanguageManual+DDL).
 
 **`topLevelKeywords`**   
 

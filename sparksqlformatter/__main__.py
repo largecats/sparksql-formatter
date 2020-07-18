@@ -23,6 +23,6 @@
 """
 Entry point for command-line tool.
 """
-import hiveqlformatter
+import sparksqlformatter
 
-hiveqlformatter.run_main()
+sparksqlformatter.run_main()

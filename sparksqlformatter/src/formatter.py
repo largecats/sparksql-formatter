@@ -25,13 +25,20 @@
 from __future__ import print_function  # for print() in Python 2
 import re
 
-from hiveqlformatter.src.tokenizer import TokenType, Tokenizer
-from hiveqlformatter.src.indentation import Indentation
-from hiveqlformatter.src.inline_block import InlineBlock
-from hiveqlformatter.src.subquery import SubQuery
-from hiveqlformatter.src.config import Config
+from sparksqlformatter.src.tokenizer import TokenType, Tokenizer
+from sparksqlformatter.src.indentation import Indentation
+from sparksqlformatter.src.inline_block import InlineBlock
+from sparksqlformatter.src.subquery import SubQuery
+from sparksqlformatter.src.config import Config
 
 trim_trailing_spaces = lambda s: re.sub(pattern='[ \t]+$', repl='', string=s)  # remove trailing spaces except \n
+
+
+class Flag:
+    '''
+    Class for flags, or anotations, that can be added to tokens when formatting.
+    '''
+    SUBQUERY_ENDING_PAREN = 'SUBQUERY_ENDING_PAREN'
 
 
 class Formatter:
@@ -41,7 +48,7 @@ class Formatter:
     def __init__(self, config=Config(), tokenOverride=None):
         '''
         Paramters
-        config: hiveqlformatter.src.config.Config() object
+        config: sparksqlformatter.src.config.Config() object
             Configurations for the query language.
         tokenOverride: function
             Function that takes token, previousKeyword and returns a token to overwrite given token (?).
@@ -130,11 +137,8 @@ class Formatter:
                     while self.previous_token(offset=offset).type == TokenType.WHITESPACE:
                         offset += 1  # find most immediate previous token that is not white space
                     if self.previous_token(offset=offset).type in [
-                            TokenType.KEYWORD,
-                            TokenType.RESERVED_KEYWORD,
-                            TokenType.NEWLINE_KEYWORD,
-                            TokenType.TOP_LEVEL_KEYWORD,
-                            TokenType.TOP_LEVEL_KEYWORD_NO_INDENT
+                            TokenType.KEYWORD, TokenType.RESERVED_KEYWORD, TokenType.NEWLINE_KEYWORD,
+                            TokenType.TOP_LEVEL_KEYWORD, TokenType.TOP_LEVEL_KEYWORD_NO_INDENT
                     ]:
                         formattedQuery = Formatter.format_without_spaces_after(token, formattedQuery)
                     else:
@@ -149,7 +153,7 @@ class Formatter:
         Format line comment.
 
         Parameters
-        token: hiveqlformatter.src.token.Token() object
+        token: sparksqlformatter.src.token.Token() object
             Identified token of type TOKEN.LINE_COMMENT.
         query: string
             The query formatted so far.
@@ -164,7 +168,7 @@ class Formatter:
         Format block comment.
 
         Parameters
-        token: hiveqlformatter.src.token.Token() object
+        token: sparksqlformatter.src.token.Token() object
             Identified token of type Token.BLOCK_COMMENT.
         query: string
             The query formatted so far.
@@ -192,7 +196,7 @@ class Formatter:
         Format top-level keywords that are not indented.
 
         Paramaters
-        token: hiveqlformatter.src.token.Token() object
+        token: sparksqlformatter.src.token.Token() object
             Identified token of type Token.TOP_LEVEL_KEYWORD_NO_INDENT.
         query: string
             The query formatted so far.
@@ -209,7 +213,7 @@ class Formatter:
         Format top-level keywords with indentation.
 
         Parameters
-        token: hiveqlformatter.src.token.Token() object
+        token: sparksqlformatter.src.token.Token() object
             Identified token of type Token.TOP_LEVEL_KEYWORD.
         query: string
             The query formatted so far.
@@ -250,7 +254,7 @@ class Formatter:
         Take out the preceding space unless there was whitespace there in the original query or another opening parens or line comment.
 
         Parameters
-        token: hiveqlformatter.src.token.Token() object
+        token: sparksqlformatter.src.token.Token() object
             Identified token of type Token.OPEN_PAREN.
         query: string
             The query formatted so far.
@@ -268,7 +272,6 @@ class Formatter:
             query = self.add_newline(query)
 
         if self.previous_token(offset=2).value.upper() == 'AS':  # start of subQuery, e.g., t0 AS (...)
-            self.subQuery.reset()  # reset so that occasional syntax error does not affect subsequent formatting
             self.subQuery.started = True  # mark that subquery has started
             # This is to differentiate from opening/closng parentheses inside subquery
             # and to distinguish the starting opening parenthesis of the subquery
@@ -281,7 +284,7 @@ class Formatter:
         Closing parentheses decrease the block indent level.
 
         Parameters
-        token: hiveqlformatter.src.token.Token() object
+        token: sparksqlformatter.src.token.Token() object
             Identified token of type Token.CLOSE_PAREN.
         query: string
             The query formatted so far.
@@ -289,7 +292,6 @@ class Formatter:
         Return: string
             The query formatted so far together with the newly formatted closing parentheses.
         '''
-
         token.value = token.value.upper() if self.config.reservedKeywordUppercase else token.value.lower()
         if (self.inlineBlock.is_active()):
             self.inlineBlock.end()
@@ -299,9 +301,10 @@ class Formatter:
             query = self.format_with_spaces(token, self.add_newline(query))
 
         self.subQuery.update(self, token)  # update subquery with the current token
-        if self.subQuery.started and self.subQuery.ended():  # if this is the subquery's ending closing parenthesis
+        if self.subQuery.started and self.subQuery.matched():  # if this is the subquery's ending closing parenthesis
+            token.flag = Flag.SUBQUERY_ENDING_PAREN  # add flag to mark this as subquery's ending parenthesis
             query = query.rstrip() + '\n' * (1 + self.config.linesBetweenQueries)  # add extra blank lines
-            self.subQuery.reset()  # mark subquery as ended to start again
+            self.subQuery.reset()  # reset to start again
         return query
 
     def format_comma(self, token, query):
@@ -309,7 +312,7 @@ class Formatter:
         Commas start a new line (unless within inline parentheses or SQL "LIMIT" clause).
 
         Parameters
-        token: hiveqlformatter.src.token.Token() object
+        token: sparksqlformatter.src.token.Token() object
             Identified token with value ','.
         query: string
             The query formatted so far.
@@ -317,10 +320,11 @@ class Formatter:
         Return: string
             The query formatted so far together with the newly formatted comma.
         '''
-        if not self.subQuery.started and self.subQuery.ended():  # add extra blank line after subquery
-            if self.previous_token().type == TokenType.CLOSE_PAREN:
-                query = query.strip()  # remove the \n added immediately after )
-                return query + token.value + '\n' * (1 + self.config.linesBetweenQueries)  # add \n after ),
+        # if this is the comma immediately after the closing parenthesis of a subquery, add extra blank line
+        if self.previous_token().flag == Flag.SUBQUERY_ENDING_PAREN:
+            query = query.strip()  # remove the \n added immediately after )
+            self.subQuery.reset()
+            return query + token.value + '\n' * (1 + self.config.linesBetweenQueries)  # add \n after ),
         query = trim_trailing_spaces(query) + token.value + ' '
         if (self.inlineBlock.is_active()):
             return query
@@ -335,7 +339,7 @@ class Formatter:
         Add token to formatted query, removing spaces before token and adding space after it.
 
         Parameters
-        token: hiveqlformatter.src.token.Token() object
+        token: sparksqlformatter.src.token.Token() object
             Current token to be formatted.
         query: string
             The query formatted so far.
@@ -351,7 +355,7 @@ class Formatter:
         Add token to formatted query, removing spaces before token without adding space after it.
 
         Parameters
-        token: hiveqlformatter.src.token.Token() object
+        token: sparksqlformatter.src.token.Token() object
             Current token to be formatted.
         query: string
             The query formatted so far.
@@ -367,7 +371,7 @@ class Formatter:
         Add token to formatted query with no space after it.
 
         Parameters
-        token: hiveqlformatter.src.token.Token() object
+        token: sparksqlformatter.src.token.Token() object
             Current token to be formatted.
         query: string
             The query formatted so far.
@@ -382,7 +386,7 @@ class Formatter:
         Add token to formatted query with space after it.
 
         Parameters
-        token: hiveqlformatter.src.token.Token() object
+        token: sparksqlformatter.src.token.Token() object
             Current token to be formatted.
         query: string
             The query formatted so far.
@@ -434,7 +438,7 @@ class Formatter:
         Format ';', which separates queries, including blank lines between queries.
 
         Parameters
-        token: hiveqlformatter.src.token.Token() object
+        token: sparksqlformatter.src.token.Token() object
             Identified token with value ';'.
         query: string
             The query formatted so far.
@@ -469,7 +473,7 @@ class Formatter:
         offset: int
             The number of tokens to trace back.
 
-        Return: hiveqlformatter.src.token.Token() object or None
+        Return: sparksqlformatter.src.token.Token() object or None
             The token obtained by stepping backwards by given offset, if it exists.
             Return None if there is no such token.
         '''

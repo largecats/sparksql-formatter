@@ -30,10 +30,9 @@ import codecs
 import json
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from hiveqlformatter.src import hiveql_config as hc
-from hiveqlformatter.src.config import Config
-from hiveqlformatter.src import api
-from hiveqlformatter.src.formatter import Formatter
+from sparksqlformatter.src.config import Config
+from sparksqlformatter.src import api
+from sparksqlformatter.src.formatter import Formatter
 
 logger = logging.getLogger(__name__)
 log_formatter = '[%(asctime)s] %(levelname)s [%(filename)s:%(lineno)s:%(funcName)s] %(message)s'
@@ -54,10 +53,10 @@ def main(argv):
     if filePaths:
         if configParam:
             for filePath in filePaths:
-                api.format_file(filePath=filePath, config=configParam, inplace=args.get('inplace'))
+                api.format_file(filePath=filePath, config=configParam, inPlace=args.get('in_place'))
         else:
             for filePath in filePaths:
-                api.format_file(filePath=filePath, inplace=args.get('inplace'))
+                api.format_file(filePath=filePath, inPlace=args.get('in_place'))
 
 
 def get_arguments(argv):
@@ -71,11 +70,11 @@ def get_arguments(argv):
     Returns: dict
         A dictionary containing arguments for the formatter.
     '''
-    parser = argparse.ArgumentParser(description='Formatter for HiveQL queries.')
+    parser = argparse.ArgumentParser(description='Formatter for SparkSQL queries.')
 
     parser.add_argument('-f', '--files', type=str, nargs='+', help='Paths to files to format.')
 
-    parser.add_argument('-i', '--inplace', action='store_true', help='Format the files in place.')
+    parser.add_argument('-i', '--in-place', action='store_true', help='Format the files in place.')
 
     parser.add_argument('--config',
                         type=str,

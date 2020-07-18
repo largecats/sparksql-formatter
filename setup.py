@@ -4,15 +4,15 @@ with open('README.md', 'r') as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name='hiveqlformatter-largecats',  # Replace with your own username
-    version='0.0.22',
+    name='sparksqlformatter-largecats',  # Replace with your own username
+    version='0.0.0',
     author='largecats',
     author_email='linfanxiaolinda@outlook.com',
     description=
-    'A HiveQL formatter in Python based on https://github.com/zeroturnaround/sql-formatter, with customizations and extra features.',
+    'A SparkSQL formatter in Python based on https://github.com/zeroturnaround/sql-formatter, with customizations and extra features.',
     long_description=long_description,
     long_description_content_type='text/markdown',
-    url='https://github.com/largecats/hiveql-formatter',
+    url='https://github.com/largecats/sparksql-formatter',
     packages=setuptools.find_packages(),
     classifiers=[
         'Programming Language :: Python',
@@ -24,5 +24,5 @@ setuptools.setup(
         'Operating System :: OS Independent',
     ],
     entry_points={
-        'console_scripts': ['hiveqlformatter=hiveqlformatter:run_main'],
+        'console_scripts': ['sparksqlformatter=sparksqlformatter:run_main'],
     })

@@ -34,3 +34,7 @@ Added test.
 1. Removed `\n` before line comment after comma so that the comment can be kept on the same line as the query.
 2. Made `inlineMaxLength` a customizable parameter in `Config()`.
 3. Added `JOIN` keywords to `TOP_LEVEL_KEYWORDS` and `ON` to `NEWLINE_KEYWORDS`.
+
+## 2020-07-14
+1. Added support for user-defined functions.
+2. Fixed bug in `subQuery`, where the closing parenthesis in `foo(c1)` in `select foo(c1), c2 from t0` is treated as the closing parenthesis of a `subQuery`.
