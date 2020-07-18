@@ -40,6 +40,7 @@ class Flag:
     '''
     SUBQUERY_ENDING_PAREN = 'SUBQUERY_ENDING_PAREN'
 
+
 class Formatter:
     '''
     Class for formatting queries.
@@ -136,11 +137,8 @@ class Formatter:
                     while self.previous_token(offset=offset).type == TokenType.WHITESPACE:
                         offset += 1  # find most immediate previous token that is not white space
                     if self.previous_token(offset=offset).type in [
-                            TokenType.KEYWORD,
-                            TokenType.RESERVED_KEYWORD,
-                            TokenType.NEWLINE_KEYWORD,
-                            TokenType.TOP_LEVEL_KEYWORD,
-                            TokenType.TOP_LEVEL_KEYWORD_NO_INDENT
+                            TokenType.KEYWORD, TokenType.RESERVED_KEYWORD, TokenType.NEWLINE_KEYWORD,
+                            TokenType.TOP_LEVEL_KEYWORD, TokenType.TOP_LEVEL_KEYWORD_NO_INDENT
                     ]:
                         formattedQuery = Formatter.format_without_spaces_after(token, formattedQuery)
                     else:
@@ -304,7 +302,7 @@ class Formatter:
 
         self.subQuery.update(self, token)  # update subquery with the current token
         if self.subQuery.started and self.subQuery.matched():  # if this is the subquery's ending closing parenthesis
-            token.flag = Flag.SUBQUERY_ENDING_PAREN # add flag to mark this as subquery's ending parenthesis
+            token.flag = Flag.SUBQUERY_ENDING_PAREN  # add flag to mark this as subquery's ending parenthesis
             query = query.rstrip() + '\n' * (1 + self.config.linesBetweenQueries)  # add extra blank lines
             self.subQuery.reset()  # reset to start again
         return query

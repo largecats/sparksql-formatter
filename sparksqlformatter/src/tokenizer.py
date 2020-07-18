@@ -54,7 +54,7 @@ class Token:
         __slots__ = 'type', 'value', 'flag'  # saves space since there would be many instances of Token
         self.type = type
         self.value = value
-        self.flag = flag # added by formatter.py when formatting
+        self.flag = flag  # added by formatter.py when formatting
 
 
 class Tokenizer:
@@ -109,9 +109,7 @@ class Tokenizer:
         '''
         keywordsString = ('|').join(keywords)
         keywordsPattern = re.sub(
-            pattern=' ',
-            repl='\\\s+',
-            string=keywordsString
+            pattern=' ', repl='\\\s+', string=keywordsString
         )  # https://stackoverflow.com/questions/58328587/python-3-7-4-re-error-bad-escape-s-at-position-0
         regexString = u'^({keywordsPattern})\\b'.format(keywordsPattern=keywordsPattern)
         return regexString
@@ -241,8 +239,7 @@ class Tokenizer:
         '''
         return (self.get_white_space_token(input) or self.get_comment_token(input) or self.get_string_token(input)
                 or self.get_open_paren_token(input) or self.get_close_paren_token(input) or self.get_number_token(input)
-                or self.get_keyword_token(input,
-                                          previousToken) or self.get_word_token(input)
+                or self.get_keyword_token(input, previousToken) or self.get_word_token(input)
                 or self.get_operator_token(input))
 
     def get_white_space_token(self, input):
@@ -491,13 +488,8 @@ class Tokenizer:
             The matched token.
         '''
         if type in [
-                TokenType.RESERVED_KEYWORD,
-                TokenType.TOP_LEVEL_KEYWORD,
-                TokenType.TOP_LEVEL_KEYWORD_NO_INDENT,
-                TokenType.NEWLINE_KEYWORD,
-                TokenType.KEYWORD,
-                TokenType.OPEN_PAREN,
-                TokenType.CLOSE_PAREN
+                TokenType.RESERVED_KEYWORD, TokenType.TOP_LEVEL_KEYWORD, TokenType.TOP_LEVEL_KEYWORD_NO_INDENT,
+                TokenType.NEWLINE_KEYWORD, TokenType.KEYWORD, TokenType.OPEN_PAREN, TokenType.CLOSE_PAREN
         ]:
             matches = re.search(pattern=regex, string=input, flags=re.IGNORECASE | re.UNICODE)
         else:

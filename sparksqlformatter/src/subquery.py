@@ -52,7 +52,6 @@ class SubQuery:
     def __init__(self):
         self.stack = []  # stack to hold unmatched opening and closing parentheses
         self.started = False  # whether a subquery has started, e.g., t0 AS (...)
-        self.ended = False  # whether a subquery has ended
 
     def matched(self):
         '''
@@ -98,4 +97,3 @@ class SubQuery:
         Reset the stack and started attributes of the class.
         '''
         self.started = False
-        self.ended = False
