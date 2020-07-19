@@ -28,70 +28,70 @@ import logging
 import configparser
 import ast
 
-from sparksqlformatter.src.config import Config
+from sparksqlformatter.src.style import Style
 from sparksqlformatter.src.formatter import Formatter
-from sparksqlformatter.src.sparksql_config import DEFAULT_CONFIG_SECTION
+from sparksqlformatter.src.style import DEFAULT_STYLE_SECTION
 
 logger = logging.getLogger(__name__)
 log_formatter = '[%(asctime)s] %(levelname)s [%(filename)s:%(lineno)s:%(funcName)s] %(message)s'
 logging.basicConfig(stream=sys.stdout, level=logging.INFO, format=log_formatter)
 
 
-def format_file(filePath, config=Config(), inPlace=False):
+def format_file(filePath, style=Style(), inPlace=False):
     '''
-    Format given file with given configurations.
+    Format given file with given styleurations.
 
     Parameters
     filePath: string
         Path to the file to format.
-    config: string, dict, or sparksqlformatter.src.config.Config() object
-        Configurations for the query language.
+    style: string, dict, or sparksqlformatter.src.style.Style() object
+        Styleurations for the query language.
     inPlace: bool
         If True, will format the file in place.
         Else, will write the formatted file to stdout.
     '''
-    if type(config) == type(Config()):  # config is a Config() object
-        formatter = Formatter(config=config)
-    else:  # create Config() object from config
-        if type(config) == str:
-            if config.startswith('{'):  # config is a dictionary in string
-                config = eval(config)
-                formatter = Formatter(config=_create_config_from_dict(config))
-            else:  # config is a file path
-                formatter = Formatter(config=_create_config_from_file(config))
-        elif type(config) == dict:  # config is a dictionary
-            formatter = Formatter(config=_create_config_from_dict(config))
+    if type(style) == type(Style()):  # style is a Style() object
+        formatter = Formatter(style=style)
+    else:  # create Style() object from style
+        if type(style) == str:
+            if style.startswith('{'):  # style is a dictionary in string
+                style = eval(style)
+                formatter = Formatter(style=_create_style_from_dict(style))
+            else:  # style is a file path
+                formatter = Formatter(style=_create_style_from_file(style))
+        elif type(style) == dict:  # style is a dictionary
+            formatter = Formatter(style=_create_style_from_dict(style))
         else:
-            raise Exception('Unsupported config type')
+            raise Exception('Unsupported style type')
     _format_file(filePath, formatter, inPlace)
 
 
-def format_query(query, config=Config()):
+def format_query(query, style=Style()):
     '''
-    Format query using given configurations.
+    Format query using given styleurations.
 
     Parameters
     query: string
         The query to be formatted.
-    config: string, dict, or sparksqlformatter.src.config.Config() object
-        Configurations for the query language.
+    style: string, dict, or sparksqlformatter.src.style.Style() object
+        Styleurations for the query language.
     
     Return: string
         The formatted query.
     '''
-    if type(config) == type(Config()):
-        formatter = Formatter(config=config)
+    if type(style) == type(Style()):
+        formatter = Formatter(style=style)
     else:
-        if type(config) == str:
-            if config.startswith('{'):
-                config = eval(config)
-                formatter = Formatter(config=_create_config_from_dict(config))
+        if type(style) == str:
+            if style.startswith('{'):
+                style = eval(style)
+                formatter = Formatter(style=_create_style_from_dict(style))
             else:
-                formatter = Formatter(config=_create_config_from_file(config))
-        elif type(config) == dict:
-            formatter = Formatter(config=_create_config_from_dict(config))
+                formatter = Formatter(style=_create_style_from_file(style))
+        elif type(style) == dict:
+            formatter = Formatter(style=_create_style_from_dict(style))
         else:
-            raise Exception('Unsupported config type')
+            raise Exception('Unsupported style type')
     return _format_query(query, formatter)
 
 
@@ -165,66 +165,66 @@ def _format_query(query, formatter):
     return formatter.format(query)
 
 
-def _create_config_from_dict(configDict, defaultConfigSection=DEFAULT_CONFIG_SECTION):
+def _create_style_from_dict(styleDict, defaultStyleSection=DEFAULT_STYLE_SECTION):
     '''
-    Create Config() object from dictionary.
+    Create Style() object from dictionary.
 
     Parameters
-    configDict: dict
-        A dictionary of configurations specified in key-value pairs.
-    defaultConfigSection: string
-        The top-level config section that needs to be added on top of the configDict before feeding to configParser.read_dict(), default to 'sparksqlformatter'.
+    styleDict: dict
+        A dictionary of styleurations specified in key-value pairs.
+    defaultStyleSection: string
+        The top-level style section that needs to be added on top of the styleDict before feeding to styleParser.read_dict(), default to 'sparksqlformatter'.
     
-    Return: sparksqlformatter.src.config.Config() object
-        The Config() object created from configDict.
+    Return: sparksqlformatter.src.style.Style() object
+        The Style() object created from styleDict.
     '''
-    configParser = configparser.ConfigParser()
-    configParser.optionxform = str  # makes the parser case-sensitive
-    if defaultConfigSection not in configDict:
-        configDict = {defaultConfigSection: configDict}  # add top-level section
-    configParser.read_dict(configDict)  # configParser assumes the existence of a top-level section
-    args = _parse_args_in_correct_type(configParser, defaultConfigSection)
-    config = Config(**args)
-    return config
+    styleParser = configparser.ConfigParser()
+    styleParser.optionxform = str  # makes the parser case-sensitive
+    if defaultStyleSection not in styleDict:
+        styleDict = {defaultStyleSection: styleDict}  # add top-level section
+    styleParser.read_dict(styleDict)  # styleParser assumes the existence of a top-level section
+    args = _parse_args_in_correct_type(styleParser, defaultStyleSection)
+    style = Style(**args)
+    return style
 
 
-def _create_config_from_file(configFilePath, defaultConfigSection=DEFAULT_CONFIG_SECTION):
+def _create_style_from_file(styleFilePath, defaultStyleSection=DEFAULT_STYLE_SECTION):
     '''
-    Create Config() object from config file.
+    Create Style() object from style file.
 
     Parameters
-    configFilePath: string
-        Path to the config file.
-    defaultConfigSection: string
-        The top-level config section that needs to be added on top of the configDict before feeding to configParser.read_dict(), default to 'sparksqlformatter'.
+    styleFilePath: string
+        Path to the style file.
+    defaultStyleSection: string
+        The top-level style section that needs to be added on top of the styleDict before feeding to styleParser.read_dict(), default to 'sparksqlformatter'.
     
-    Return: sparksqlformatter.src.config.Config() object
-        The Config() object created from the config file.
+    Return: sparksqlformatter.src.style.Style() object
+        The Style() object created from the style file.
     '''
-    configParser = configparser.ConfigParser()
-    configParser.optionxform = str  # makes the parser case-sensitive
-    configParser.read(configFilePath)
-    if defaultConfigSection in configParser:
-        configDict = _parse_args_in_correct_type(configParser, defaultConfigSection)
-        return Config(**configDict)
+    styleParser = configparser.ConfigParser()
+    styleParser.optionxform = str  # makes the parser case-sensitive
+    styleParser.read(styleFilePath)
+    if defaultStyleSection in styleParser:
+        styleDict = _parse_args_in_correct_type(styleParser, defaultStyleSection)
+        return Style(**styleDict)
     else:
-        raise Exception('Section ' + defaultConfigSection + 'not found in ' + configFilePath)
+        raise Exception('Section ' + defaultStyleSection + 'not found in ' + styleFilePath)
 
 
-def _parse_args_in_correct_type(configParser, defaultConfigSection=DEFAULT_CONFIG_SECTION):
+def _parse_args_in_correct_type(styleParser, defaultStyleSection=DEFAULT_STYLE_SECTION):
     '''
-    Parse paramters in config with special handling to convert boolean values converted from string back to boolean type.
+    Parse paramters in style with special handling to convert boolean values converted from string back to boolean type.
 
     Parameters
-    configParser: a configParser.ConfigParser() object
-        Parser for config files.
-    defaultConfigSection: string
-        The top-level config section that needs to be added on top of the configDict before feeding to configParser.read_dict(), default to 'sparksqlformatter'.
+    styleParser: a styleParser.ConfigParser() object
+        Parser for style files.
+    defaultStyleSection: string
+        The top-level style section that needs to be added on top of the styleDict before feeding to styleParser.read_dict(), default to 'sparksqlformatter'.
     
     Return: dict
-        A dictionary of configuration key-value pairs where values are of correct type.
+        A dictionary of styleuration key-value pairs where values are of correct type.
     '''
     args = {}
-    for key in configParser[defaultConfigSection]:
-        args[key] = ast.literal_eval(configParser[defaultConfigSection][key])
+    for key in styleParser[defaultStyleSection]:
+        args[key] = ast.literal_eval(styleParser[defaultStyleSection][key])
     return args
