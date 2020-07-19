@@ -38,3 +38,6 @@ Added test.
 ## 2020-07-14
 1. Added support for user-defined functions.
 2. Fixed bug in `subQuery`, where the closing parenthesis in `foo(c1)` in `select foo(c1), c2 from t0` is treated as the closing parenthesis of a `subQuery`.
+
+## 2020-07-19
+1. Separated config and style to hide keywords and functions in config from users. Only style is customizable.
