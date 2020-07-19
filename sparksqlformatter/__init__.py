@@ -75,11 +75,10 @@ def get_arguments(argv):
 
     parser.add_argument('-i', '--in-place', action='store_true', help='Format the files in place.')
 
-    parser.add_argument(
-        '--style',
-        type=str,
-        default=None,
-        help="Style configurations for the query language. Can be a path to a style config file or a dictionary.")
+    parser.add_argument('--style',
+                        type=str,
+                        default=None,
+                        help="Style configurations for SparkSQL. Can be a path to a style config file or a dictionary.")
 
     args = vars(parser.parse_args(argv[1:]))
 

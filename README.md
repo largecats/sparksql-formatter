@@ -1,5 +1,5 @@
 # sparksqlformatter
-A [SparkSQL](http://spark.apache.org/docs/latest/sql-ref.html) formatter in Python based on [sql-formatter](https://github.com/zeroturnaround/sql-formatter) and its fork [sql-formatter-plus](https://github.com/kufii/sql-formatter-plus) (both are licensed under the MIT license), with customizations and extra features. The built-in formatter is for SparkSQL queries, but can be easily extended to other query languages with similar structure by setting [language attributes](#language-attributes).
+A [SparkSQL](http://spark.apache.org/docs/latest/sql-ref.html) formatter in Python based on [sql-formatter](https://github.com/zeroturnaround/sql-formatter) and its fork [sql-formatter-plus](https://github.com/kufii/sql-formatter-plus) (both are licensed under the MIT license), with customizations and extra features.
 
 - [sparksqlformatter](#sparksqlformatter)
 - [Installation](#installation)
@@ -9,7 +9,7 @@ A [SparkSQL](http://spark.apache.org/docs/latest/sql-ref.html) formatter in Pyth
 - [Usage](#usage)
   - [Use as command-line tool](#use-as-command-line-tool)
   - [Use as Python library](#use-as-python-library)
-- [Language attributes](#language-attributes)
+- [Style configurations](#style-configurations)
 
 # Installation
 
@@ -37,7 +37,7 @@ Supports Python 2.7 and 3.6+.
 
 ## Use as command-line tool
 ```
-usage: sparksqlformatter [-h] [-f FILES [FILES ...]] [-i] [--config CONFIG]
+usage: sparksqlformatter [-h] [-f FILES [FILES ...]] [-i] [--style STYLE]
 
 Formatter for SparkSQL queries.
 
@@ -46,18 +46,18 @@ optional arguments:
   -f FILES [FILES ...], --files FILES [FILES ...]
                         Paths to files to format.
   -i, --in-place        Format the files in place.
-  --config CONFIG       Configurations for the query language. Can be a path to a config file or a dictionary.
+  --style STYLE         Style configurations for SparkSQL. Can be a path to a style config file or a dictionary.
 ```
 
-**Configurations**   
-The `--config` argument specifies attributes of the query language, such as keywords, comment prefix, and indent. Supported language attributes can be found [at the end of this document](#language-attributes).
+**Style**   
+The `--style` argument specifies foramtting style. Supported language attributes can be found in [style configurations](#style-configurations).
 
 It accepts the following inputs:   
-* Path to a config file. E.g.,
+* Path to a style config file. E.g.,
   ```
-$ sparksqlformatter --config="<path_to_config_file>" -f <path_to_file1> <path_to_file2>
+$ sparksqlformatter --style="<path_to_config_file>" -f <path_to_file1> <path_to_file2>
 ```
-The config file should have section `[sparksqlformatter]` and key-value pairs specifying attributes, if needed. E.g.,
+The style config file should have section `[sparksqlformatter]` and key-value pairs specifying attributes, if needed. E.g.,
 ```
 [sparksqlformatter]
 reservedKeywordUppercase = False
@@ -65,7 +65,7 @@ linesBetweenQueries = 2
 ```
 * Dictionary of configurations expressed as key-value pairs. E.g.,
 ```
-$ sparksqlformatter --config="{'reservedKeywordUppercase': False}" -f <path_to_file1> <path_to_file2>
+$ sparksqlformatter --style="{'reservedKeywordUppercase': False}" -f <path_to_file1> <path_to_file2>
 ```
 
 ## Use as Python library
@@ -86,34 +86,27 @@ Call `hiveql.formatter.api.format_file()` to format query in file:
 ```
 
 **Configurations**   
-Configurations can be specified by passing a `config` parameter to the api format functions.
+Configurations can be specified by passing a `style` parameter to the api format functions.
 
 Similar to the command-line tool, there are two ways to create configurations when using `sparksqlformatter` as a Python library:   
-* Path to a config file
+* Path to a style config file
 ```
 >>> from sparksqlformatter import api
->>> config = '<path_to_config_file>'
+>>> style = '<path_to_config_file>'
 >>> query = 'select c1 FROM t0'
->>> api.format_query(query, config)
+>>> api.format_query(query, style)
 ...
 ```
 * Dictionary
 ```
 >>> from sparksqlformatter import api
->>> config = {'reservedKeywordUppercase': False}
+>>> style = {'reservedKeywordUppercase': False}
 >>> query = 'select c1 FROM t0'
->>> api.format_query(query, config)
+>>> api.format_query(query, style)
 'select\n    c1\nfrom\n    t0'
 ```
 
-# Language attributes
-**`keywords`**   
-
-A list of keywords in the query language. E.g., `SELECT`, `FROM`, `from_unixtime()`. Default to SparkSQL's [keywords](https://cwiki.apache.org/confluence/display/Hive/LanguageManual+DDL) and [functions](https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF).
-
-**`reservedKeywords`**   
-
-A list of reserved keywords in the query language. Default to SparkSQL's [reserved keywords](https://cwiki.apache.org/confluence/display/Hive/LanguageManual+DDL).
+# Style configurations
 
 **`topLevelKeywords`**   
 
