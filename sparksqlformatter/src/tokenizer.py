@@ -25,6 +25,8 @@
 from __future__ import print_function  # for print() in Python 2
 import re
 
+import sparksqlformatter.src.config as config
+
 
 class TokenType:
     '''
@@ -58,25 +60,33 @@ class Token:
 
 
 class Tokenizer:
-    def __init__(self, config):
+    def __init__(self, style):
         self.WHITESPACE_REGEX = u'^(\s+)'
         self.NUMBER_REGEX = r'^((-\s*)?[0-9]+(\.[0-9]+)?|0x[0-9a-fA-F]+|0b[01]+)\b'
         self.OPERATOR_REGEX = u'^([^\{\}]!=|<>|==|<=|>=|!=|!<|!>|\|\||::|->>|->|~~\*|~~|!~~\*|!~~|~\*|!~\*|!~|:=|.)'
 
         self.BLOCK_COMMENT_REGEX = u'(\/\*(?s).*?\*\/)'  # (?s) is inline flag for re.DOTALL
-        self.LINE_COMMENT_REGEX = Tokenizer.create_line_comment_regex(config.lineCommentTypes)
+        self.LINE_COMMENT_REGEX = Tokenizer.create_line_comment_regex(style.lineCommentTypes)
 
-        self.TOP_LEVEL_KEYWORD_REGEX = Tokenizer.create_keyword_regex(config.topLevelKeywords)
-        self.TOP_LEVEL_KEYWORD_NO_INDENT_REGEX = Tokenizer.create_keyword_regex(config.topLevelKeywordsNoIndent)
-        self.NEWLINE_KEYWORD_REGEX = Tokenizer.create_keyword_regex(config.newlineKeywords)
-        self.RESERVED_KEYWORD_REGEX = Tokenizer.create_keyword_regex(config.reservedKeywords)
-        self.PLAIN_KEYWORD_REGEX = Tokenizer.create_keyword_regex(config.keywords)
+        self.TOP_LEVEL_KEYWORD_REGEX = Tokenizer.create_keyword_regex(style.topLevelKeywords)
+        self.TOP_LEVEL_KEYWORD_NO_INDENT_REGEX = Tokenizer.create_keyword_regex(style.topLevelKeywordsNoIndent)
+        self.NEWLINE_KEYWORD_REGEX = Tokenizer.create_keyword_regex(style.newlineKeywords)
+        self.RESERVED_KEYWORD_REGEX = Tokenizer.create_keyword_regex(config.Keyword.RESERVED_KEYWORDS)
+        self.PLAIN_KEYWORD_REGEX = Tokenizer.create_keyword_regex(
+            config.Keyword.RESERVED_KEYWORDS + config.Keyword.NON_RESERVED_KEYWORDS +
+            config.Function.AGGREGATE_FUNCTIONS + config.Function.ARRAY_FUNCTIONS +
+            config.Function.CONDITIONAL_FUNCTIONS + config.Function.DATE_TIME_FUNCTIONS +
+            config.Function.HASH_FUNCTIONS + config.Function.JSON_FUNCTIONS + config.Function.MAP_FUNCTIONS +
+            config.Function.MATHEMATICAL_FUNCTIONS + config.Function.MISC_FUNCTIONS +
+            config.Function.OPERATOR_FUNCTIONS + config.Function.STRING_FUNCTIONS + config.Function.STRUCT_FUNCTIONS +
+            config.Function.TABLE_GENERATING_FUNCTIONS + config.Function.TYPE_CONVERSION_FUNCTIONS +
+            config.Function.WINDOW_FUNCTIONS + config.Function.XPATH_FUNCTIONS + style.userDefinedFunctions)
 
-        self.WORD_REGEX = Tokenizer.create_word_regex(config.specialWordChars)
-        self.STRING_REGEX = Tokenizer.create_string_regex(config.stringTypes)
+        self.WORD_REGEX = Tokenizer.create_word_regex(style.specialWordChars)
+        self.STRING_REGEX = Tokenizer.create_string_regex(style.stringTypes)
 
-        self.OPEN_PAREN_REGEX = Tokenizer.create_paren_regex(config.openParens)
-        self.CLOSE_PAREN_REGEX = Tokenizer.create_paren_regex(config.closeParens)
+        self.OPEN_PAREN_REGEX = Tokenizer.create_paren_regex(style.openParens)
+        self.CLOSE_PAREN_REGEX = Tokenizer.create_paren_regex(style.closeParens)
 
     @staticmethod
     def create_line_comment_regex(lineCommentTypes):
@@ -85,7 +95,7 @@ class Tokenizer:
 
         Parameters
         lineCommentTypes: list
-            Attribute of hiveqlformatter.src.config.Config() object.
+            Attribute of hiveqlformatter.src.style.Style() object.
         
         Return: string
             Regex pattern that matches line comment.
@@ -102,7 +112,7 @@ class Tokenizer:
 
         Parameters
         keywords: list
-            Attribute of hiveqlformatter.src.config.Config() object.
+            Attribute of hiveqlformatter.src.style.Style() object.
         
         Return: string
             Regex pattern that matches keywords.
@@ -121,7 +131,7 @@ class Tokenizer:
 
         Parameters
         specialChars: list
-            Attribute of hiveqlformatter.src.config.Config() object.
+            Attribute of hiveqlformatter.src.style.Style() object.
         
         Return: string
             Regex pattern that matches word with special characters.     
@@ -137,7 +147,7 @@ class Tokenizer:
 
         Parameters
         stringTypes: list
-            Attribute of hiveqlformatter.src.config.Config() object.
+            Attribute of hiveqlformatter.src.style.Style() object.
         
         Return: string
             Regex pattern that matches strings.    
@@ -154,7 +164,7 @@ class Tokenizer:
 
         Parameters
         stringTypes: list
-            Attribute of hiveqlformatter.src.config.Config() object.
+            Attribute of hiveqlformatter.src.style.Style() object.
         
         Return: string
             Regex pattern that matches strings.    
@@ -173,7 +183,7 @@ class Tokenizer:
 
         Parameters
         parens: list
-            Attribute of hiveqlformatter.src.config.Config() object.
+            Attribute of hiveqlformatter.src.style.Style() object.
         
         Return: string
             Regex pattern that matches parentheses.

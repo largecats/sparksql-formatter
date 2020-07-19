@@ -24,13 +24,12 @@ from __future__ import print_function  # for print() in Python 2
 import os
 import sys
 import argparse
-import configparser
 import logging
 import codecs
 import json
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from sparksqlformatter.src.config import Config
+from sparksqlformatter.src.style import Style
 from sparksqlformatter.src import api
 from sparksqlformatter.src.formatter import Formatter
 
@@ -48,12 +47,12 @@ def main(argv):
         List of arguments in sys.argv, excluding the first argument which is the script itself.
     '''
     args = get_arguments(argv)
-    configParam = args['config']
+    style = args['style']
     filePaths = args['files']
     if filePaths:
-        if configParam:
+        if style:
             for filePath in filePaths:
-                api.format_file(filePath=filePath, config=configParam, inPlace=args.get('in_place'))
+                api.format_file(filePath=filePath, style=style, inPlace=args.get('in_place'))
         else:
             for filePath in filePaths:
                 api.format_file(filePath=filePath, inPlace=args.get('in_place'))
@@ -76,10 +75,11 @@ def get_arguments(argv):
 
     parser.add_argument('-i', '--in-place', action='store_true', help='Format the files in place.')
 
-    parser.add_argument('--config',
-                        type=str,
-                        default=None,
-                        help="Configurations for the query language. Can be a path to a config file or a dictionary.")
+    parser.add_argument(
+        '--style',
+        type=str,
+        default=None,
+        help="Style configurations for the query language. Can be a path to a style config file or a dictionary.")
 
     args = vars(parser.parse_args(argv[1:]))
 

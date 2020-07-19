@@ -79,8 +79,8 @@ class SubQuery:
         token: sparksqlformatter.src.tokenizer.Token() object
             The current token.
         '''
-        openParens = [p for p in formatter.config.openParens if p != 'CASE']
-        closeParens = [p for p in formatter.config.closeParens if p != 'END']
+        openParens = [p for p in formatter.style.openParens if p != 'CASE']
+        closeParens = [p for p in formatter.style.closeParens if p != 'END']
         if token.value in openParens:  # push opening parenthesis onto stack
             self.stack.append(token.value)
         elif token.value in closeParens:

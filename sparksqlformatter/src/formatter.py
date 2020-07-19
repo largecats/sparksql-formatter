@@ -29,7 +29,7 @@ from sparksqlformatter.src.tokenizer import TokenType, Tokenizer
 from sparksqlformatter.src.indentation import Indentation
 from sparksqlformatter.src.inline_block import InlineBlock
 from sparksqlformatter.src.subquery import SubQuery
-from sparksqlformatter.src.config import Config
+from sparksqlformatter.src.style import Style
 
 trim_trailing_spaces = lambda s: re.sub(pattern='[ \t]+$', repl='', string=s)  # remove trailing spaces except \n
 
@@ -45,19 +45,19 @@ class Formatter:
     '''
     Class for formatting queries.
     '''
-    def __init__(self, config=Config(), tokenOverride=None):
+    def __init__(self, style=Style(), tokenOverride=None):
         '''
         Paramters
-        config: sparksqlformatter.src.config.Config() object
-            Configurations for the query language.
+        style: sparksqlformatter.src.style.Style() object
+            Styleurations for the query language.
         tokenOverride: function
             Function that takes token, previousKeyword and returns a token to overwrite given token (?).
         '''
-        self.config = config
-        self.indentation = Indentation(config.indent)
-        self.inlineBlock = InlineBlock(config.inlineMaxLength)
+        self.style = style
+        self.indentation = Indentation(style.indent)
+        self.inlineBlock = InlineBlock(style.inlineMaxLength)
         self.subQuery = SubQuery()
-        self.tokenizer = Tokenizer(config=config)  # use the same configurations as Formatter()
+        self.tokenizer = Tokenizer(style=style)  # use the same styleurations as Formatter()
         self.tokenOverride = tokenOverride
         self.previousKeyword = None
         self.tokens = []
@@ -265,7 +265,7 @@ class Formatter:
         preserveWhiteSpaceFor = [TokenType.WHITESPACE, TokenType.OPEN_PAREN, TokenType.LINE_COMMENT]
         if not (any(t == self.previous_token().type for t in preserveWhiteSpaceFor)):
             query = trim_trailing_spaces(query)
-        query += token.value.upper() if self.config.reservedKeywordUppercase else token.value.lower()
+        query += token.value.upper() if self.style.reservedKeywordUppercase else token.value.lower()
         self.inlineBlock.begin_if_possible(self.tokens, self.index)
         if not self.inlineBlock.is_active():
             self.indentation.increase_block_level()
@@ -292,7 +292,7 @@ class Formatter:
         Return: string
             The query formatted so far together with the newly formatted closing parentheses.
         '''
-        token.value = token.value.upper() if self.config.reservedKeywordUppercase else token.value.lower()
+        token.value = token.value.upper() if self.style.reservedKeywordUppercase else token.value.lower()
         if (self.inlineBlock.is_active()):
             self.inlineBlock.end()
             query = Formatter.format_without_spaces_before_with_space_after(token, query)
@@ -303,7 +303,7 @@ class Formatter:
         self.subQuery.update(self, token)  # update subquery with the current token
         if self.subQuery.started and self.subQuery.matched():  # if this is the subquery's ending closing parenthesis
             token.flag = Flag.SUBQUERY_ENDING_PAREN  # add flag to mark this as subquery's ending parenthesis
-            query = query.rstrip() + '\n' * (1 + self.config.linesBetweenQueries)  # add extra blank lines
+            query = query.rstrip() + '\n' * (1 + self.style.linesBetweenQueries)  # add extra blank lines
             self.subQuery.reset()  # reset to start again
         return query
 
@@ -324,7 +324,7 @@ class Formatter:
         if self.previous_token().flag == Flag.SUBQUERY_ENDING_PAREN:
             query = query.strip()  # remove the \n added immediately after )
             self.subQuery.reset()
-            return query + token.value + '\n' * (1 + self.config.linesBetweenQueries)  # add \n after ),
+            return query + token.value + '\n' * (1 + self.style.linesBetweenQueries)  # add \n after ),
         query = trim_trailing_spaces(query) + token.value + ' '
         if (self.inlineBlock.is_active()):
             return query
@@ -404,7 +404,7 @@ class Formatter:
 
     def format_reserved_keyword(self, value):
         '''
-        Format reserved keyword, converting to uppercase of lowercase depending on self.config.reservedKeywordUppercase.
+        Format reserved keyword, converting to uppercase of lowercase depending on self.style.reservedKeywordUppercase.
 
         Parameters
         value: string
@@ -415,7 +415,7 @@ class Formatter:
         Return: string
             The query formatted so far together with the newly formatted reserved keyword.
         '''
-        return value.upper() if self.config.reservedKeywordUppercase else value.lower()
+        return value.upper() if self.style.reservedKeywordUppercase else value.lower()
 
     def format_keyword(self, value):
         '''
@@ -430,7 +430,7 @@ class Formatter:
         Return: string
             The query formatted so far together with the newly formatted keyword.
         '''
-        # return value.upper() if self.config.reservedKeywordUppercase else value.lower()
+        # return value.upper() if self.style.reservedKeywordUppercase else value.lower()
         return value
 
     def format_query_separator(self, token, query):
@@ -447,7 +447,7 @@ class Formatter:
             The query formatted so far together with the newly formatted ';'.
         '''
         self.indentation.reset_indentation()
-        return trim_trailing_spaces(query) + token.value + '\n' * (self.config.linesBetweenQueries or 1)
+        return trim_trailing_spaces(query) + token.value + '\n' * (self.style.linesBetweenQueries or 1)
 
     def add_newline(self, query):
         '''

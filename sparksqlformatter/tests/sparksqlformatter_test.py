@@ -26,7 +26,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspa
 import logging
 from sparksqlformatter.src import api
 from sparksqlformatter.src.formatter import Formatter
-from sparksqlformatter.src.config import Config
+from sparksqlformatter.src.style import Style
 
 logger = logging.getLogger(__name__)
 log_formatter = '[%(asctime)s] %(levelname)s [%(filename)s:%(lineno)s:%(funcName)s] %(message)s'
@@ -580,8 +580,8 @@ FROM
         '''.strip()
         return self.run(msg, testQuery, key)
 
-    def test_reservedKeywordUppercase_config(self):
-        msg = 'Testing reservedKeywordUppercase config'
+    def test_reservedKeywordUppercase_style(self):
+        msg = 'Testing reservedKeywordUppercase style'
         testQuery = '''select c1, c2 from t0'''
         key = '''
 select
@@ -592,8 +592,8 @@ from
         '''.strip()
         return self.run(msg, testQuery, key, {'reservedKeywordUppercase': False})
 
-    def test_linesBetweenQueries_config(self):
-        msg = 'Testing linesBetweenQueries config'
+    def test_linesBetweenQueries_style(self):
+        msg = 'Testing linesBetweenQueries style'
         testQuery = '''
 with t0 as (select c1, c2 from tab1),
 
@@ -645,11 +645,11 @@ LEFT JOIN
         '''.strip()
         return self.run(msg, testQuery, key, {'linesBetweenQueries': 2})
 
-    def run(self, msg, testQuery, key, config=Config()):
+    def run(self, msg, testQuery, key, style=Style()):
         logger.info(msg)
         logger.info('testQuery =')
         logger.info(testQuery)
-        formattedQuery = api.format_query(testQuery, config)
+        formattedQuery = api.format_query(testQuery, style)
         logger.info('formattedQuery =')
         logger.info(formattedQuery)
         logger.info(repr(formattedQuery))
