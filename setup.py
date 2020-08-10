@@ -4,7 +4,7 @@ with open('README.md', 'r') as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name='sparksqlformatter-largecats',  # Replace with your own username
+    name='sparksqlformatter',
     version='0.0.0',
     author='largecats',
     author_email='linfanxiaolinda@outlook.com',
