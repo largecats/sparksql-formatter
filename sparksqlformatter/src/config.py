@@ -52,25 +52,7 @@ class SparkSQL:
         TOP_LEVEL_KEYWORDS_NO_INDENT = ['INTERSECT', 'INTERSECT ALL', 'MINUS', 'UNION', 'UNION ALL']
 
         NEWLINE_KEYWORDS = [
-            'AND',
-            # 'CROSS JOIN',
-            'ELSE',
-            # 'INNER JOIN',
-            # 'JOIN',
-            'LATERAL',
-            # 'LEFT JOIN',
-            # 'LEFT OUTER JOIN',
-            'ON',
-            'OPTIONS',
-            'OR',
-            # 'OUTER JOIN',
-            'PARTITIONED BY',
-            # 'RIGHT JOIN',
-            # 'RIGHT OUTER JOIN',
-            'THEN',
-            'USING',
-            'WHEN',
-            'XOR'
+            'AND', 'ELSE', 'LATERAL', 'ON', 'OPTIONS', 'OR', 'PARTITIONED BY', 'THEN', 'USING', 'WHEN', 'XOR'
         ]
 
     class Function:

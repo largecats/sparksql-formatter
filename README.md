@@ -1,5 +1,5 @@
 # sparksqlformatter
-A [SparkSQL](http://spark.apache.org/docs/latest/sql-ref.html) formatter in Python based on [sql-formatter](https://github.com/zeroturnaround/sql-formatter) and its fork [sql-formatter-plus](https://github.com/kufii/sql-formatter-plus) (both are licensed under the MIT license), with customizations and extra features.
+A [SparkSQL](http://spark.apache.org/docs/latest/sql-ref.html) formatter in Python based on [sql-formatter](https://github.com/zeroturnaround/sql-formatter) and its fork [sql-formatter-plus](https://github.com/kufii/sql-formatter-plus), with customizations and extra features.
 
 - [sparksqlformatter](#sparksqlformatter)
 - [Installation](#installation)
@@ -14,19 +14,20 @@ A [SparkSQL](http://spark.apache.org/docs/latest/sql-ref.html) formatter in Pyth
 # Installation
 
 ## Install using pip
-View package at https://test.pypi.org/project/sparksqlformatter-largecats/.
-```
-python3 -m pip install --index-url https://test.pypi.org/simple/ --no-deps sparksqlformatter-largecats
-```
-TBD:
 ```
 pip install sparksqlformatter
 ```
 
 ## Install from source
-See [here](https://docs.python.org/2/install/index.html#splitting-the-job-up).
+1. Download source code.
+2. Navigate to the source code directory.
+3. Do
 ```
 python setup.py install
+```
+or
+```
+pip install .
 ```
 
 # Compatibility
@@ -54,7 +55,7 @@ The `--style` argument specifies foramtting style. Supported language attributes
 
 It accepts the following inputs:   
 * Path to a style config file. E.g.,
-  ```
+```
 $ sparksqlformatter --style="<path_to_config_file>" -f <path_to_file1> <path_to_file2>
 ```
 The style config file should have section `[sparksqlformatter]` and key-value pairs specifying attributes, if needed. E.g.,
@@ -120,29 +121,10 @@ FROM
 Default to
 ```python
 TOP_LEVEL_KEYWORDS = [
-        'ADD',
-        'AFTER',
-        'ALTER COLUMN',
-        'ALTER TABLE',
-        'DELETE FROM',
-        'EXCEPT',
-        'FETCH FIRST',
-        'FROM',
-        'GROUP BY',
-        'GO',
-        'HAVING',
-        'INSERT INTO',
-        'INSERT',
-        'LIMIT',
-        'MODIFY',
-        'ORDER BY',
-        'SELECT',
-        'SET CURRENT SCHEMA',
-        'SET SCHEMA',
-        'SET',
-        'UPDATE',
-        'VALUES',
-        'WHERE'
+        'ADD', 'AFTER', 'ALTER COLUMN', 'ALTER TABLE', 'CREATE TABLE', 'CROSS JOIN', 'DELETE FROM', 'EXCEPT',
+        'FETCH FIRST', 'FROM', 'GROUP BY', 'GO', 'HAVING', 'INNER JOIN', 'INSERT INTO', 'INSERT', 'JOIN',
+        'LEFT JOIN', 'LEFT OUTER JOIN', 'LIMIT', 'MODIFY', 'ORDER BY', 'OUTER JOIN', 'PARTITION BY', 'RIGHT JOIN',
+        'RIGHT OUTER JOIN', 'SELECT', 'SET CURRENT SCHEMA', 'SET SCHEMA', 'SET', 'UPDATE', 'VALUES', 'WHERE'
     ]
 ```
 
@@ -162,13 +144,7 @@ FROM
 ```
 Default to
 ```Python
-TOP_LEVEL_KEYWORDS_NO_INDENT = [
-        'INTERSECT',
-        'INTERSECT ALL',
-        'MINUS',
-        'UNION',
-        'UNION ALL'
-    ]
+TOP_LEVEL_KEYWORDS_NO_INDENT = ['INTERSECT', 'INTERSECT ALL', 'MINUS', 'UNION', 'UNION ALL']
 ```
 
 **`newlineKeywords`**   
@@ -186,20 +162,7 @@ Note that this is less restrictive than `topLevelKeywords`, since top-level keyw
 Default to
 ```python
 NEWLINE_KEYWORDS = [
-        'AND',
-        'CROSS JOIN',
-        'ELSE',
-        'INNER JOIN',
-        'JOIN',
-        'LEFT JOIN',
-        'LEFT OUTER JOIN',
-        'OR',
-        'OUTER JOIN',
-        'RIGHT JOIN',
-        'RIGHT OUTER JOIN',
-        'THEN',
-        'WHEN',
-        'XOR'
+        'AND', 'ELSE', 'LATERAL', 'ON', 'OPTIONS', 'OR', 'PARTITIONED BY', 'THEN', 'USING', 'WHEN', 'XOR'
     ]
 ```
 
@@ -207,7 +170,7 @@ NEWLINE_KEYWORDS = [
 
 A list of character pairs that enclose strings in the query language. Default to
 ```python
-['""', "N''", "''", '[]']
+['""', "''", '{}']
 ```
 
 **`openParens`**   
