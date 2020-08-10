@@ -47,12 +47,12 @@ optional arguments:
 
 The `--style` argument specifies foramtting style. Supported language attributes can be found in [style configurations](#style-configurations).
 
-It accepts the following inputs:   
+There are two ways to specify style:  
 * Path to a style config file. E.g.,
 ```
 $ sparksqlformatter --style="<path_to_config_file>" -f <path_to_file1> <path_to_file2>
 ```
-The style config file should have section `[sparksqlformatter]` and key-value pairs specifying attributes, if needed. E.g.,
+The style config file should have section `[sparksqlformatter]` and key-value pairs specifying attributes. E.g.,
 ```
 [sparksqlformatter]
 reservedKeywordUppercase = False
@@ -80,9 +80,9 @@ Call `hiveql.formatter.api.format_file()` to format query in file:
 ...
 ```
 
-**Configurations**   
+**Style**   
 
-Configurations can be specified by passing a `style` parameter to the api format functions.
+Formatting style can be specified via the `style` parameter in the api format functions.
 
 Similar to the command-line tool, there are two ways to create configurations when using `sparksqlformatter` as a Python library:   
 * Path to a style config file
