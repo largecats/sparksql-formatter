@@ -64,7 +64,6 @@ $ sparksqlformatter --style="{'reservedKeywordUppercase': False}" -f <path_to_fi
 ```
 
 ## Use as Python library
-The module can also be used as a Python library.
 
 Call `sparksqlformatter.api.format_query()` to format query in string:
 ```
