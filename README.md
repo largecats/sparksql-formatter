@@ -116,11 +116,11 @@ FROM
 Default to
 ```python
 TOP_LEVEL_KEYWORDS = [
-        'ADD', 'AFTER', 'ALTER COLUMN', 'ALTER TABLE', 'CREATE TABLE', 'CROSS JOIN', 'DELETE FROM', 'EXCEPT',
-        'FETCH FIRST', 'FROM', 'GROUP BY', 'GO', 'HAVING', 'INNER JOIN', 'INSERT INTO', 'INSERT', 'JOIN',
-        'LEFT JOIN', 'LEFT OUTER JOIN', 'LIMIT', 'MODIFY', 'ORDER BY', 'OUTER JOIN', 'PARTITION BY', 'RIGHT JOIN',
-        'RIGHT OUTER JOIN', 'SELECT', 'SET CURRENT SCHEMA', 'SET SCHEMA', 'SET', 'UPDATE', 'VALUES', 'WHERE'
-    ]
+    'ADD', 'AFTER', 'ALTER COLUMN', 'ALTER TABLE', 'CREATE TABLE', 'CROSS JOIN', 'DELETE FROM', 'EXCEPT',
+    'FETCH FIRST', 'FROM', 'GROUP BY', 'GO', 'HAVING', 'INNER JOIN', 'INSERT INTO', 'INSERT', 'JOIN',
+    'LEFT JOIN', 'LEFT OUTER JOIN', 'LIMIT', 'MODIFY', 'ORDER BY', 'OUTER JOIN', 'PARTITION BY', 'RIGHT JOIN',
+    'RIGHT OUTER JOIN', 'SELECT', 'SET CURRENT SCHEMA', 'SET SCHEMA', 'SET', 'UPDATE', 'VALUES', 'WHERE'
+]
 ```
 
 **`topLevelKeywordsNoIndent`**   
@@ -157,8 +157,8 @@ Note that this is less restrictive than `topLevelKeywords`, since top-level keyw
 Default to
 ```python
 NEWLINE_KEYWORDS = [
-        'AND', 'ELSE', 'LATERAL', 'ON', 'OPTIONS', 'OR', 'PARTITIONED BY', 'THEN', 'USING', 'WHEN', 'XOR'
-    ]
+    'AND', 'ELSE', 'LATERAL', 'ON', 'OPTIONS', 'OR', 'PARTITIONED BY', 'THEN', 'USING', 'WHEN', 'XOR'
+]
 ```
 
 **`stringTypes`**   
