@@ -21,14 +21,7 @@ pip install sparksqlformatter
 ## Install from source
 1. Download source code.
 2. Navigate to the source code directory.
-3. Do
-```
-python setup.py install
-```
-or
-```
-pip install .
-```
+3. Do `python setup.py install` or `pip install .`.
 
 # Compatibility
 Supports Python 2.7 and 3.6+.
