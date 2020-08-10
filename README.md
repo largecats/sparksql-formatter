@@ -44,6 +44,7 @@ optional arguments:
 ```
 
 **Style**   
+
 The `--style` argument specifies foramtting style. Supported language attributes can be found in [style configurations](#style-configurations).
 
 It accepts the following inputs:   
@@ -80,6 +81,7 @@ Call `hiveql.formatter.api.format_file()` to format query in file:
 ```
 
 **Configurations**   
+
 Configurations can be specified by passing a `style` parameter to the api format functions.
 
 Similar to the command-line tool, there are two ways to create configurations when using `sparksqlformatter` as a Python library:   
