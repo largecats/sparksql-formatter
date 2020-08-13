@@ -288,6 +288,20 @@ SELECT
         '''.strip()
         return self.run(msg, testQuery, key)
 
+    def test_parentheses(self):
+        msg = 'Testing parentheses'
+        testQuery = '''
+SELECT COALESCE(collect_list(time)[0], 0) AS time
+from t0
+        '''
+        key = '''
+SELECT
+    COALESCE(collect_list(time)[0], 0) AS time
+FROM
+    t0
+        '''.strip()
+        return self.run(msg, testQuery, key)
+
     def test_line_comment_followed_by_close_paren(self):
         msg = 'Testing line comment followed by closing parentheses'
         testQuery = '''

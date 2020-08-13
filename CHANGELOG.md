@@ -41,3 +41,6 @@ Added test.
 
 ## 2020-07-19
 1. Separated config and style to hide keywords and functions in config from users. Only style is customizable.
+
+## 2020-08-13
+1. Added `[]` to opening/closing parentheses. Added tests.

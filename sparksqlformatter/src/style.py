@@ -38,8 +38,8 @@ class Style:
             newlineKeywords=config.Keyword.NEWLINE_KEYWORDS,
             userDefinedFunctions=[],
             stringTypes=['""', "''", '{}'],
-            openParens=['(', 'CASE'],
-            closeParens=[')', 'END'],  # the order of the parentheses need to match with openParens
+            openParens=['(', '[', 'CASE'],
+            closeParens=[')', ']', 'END'],  # the order of the parentheses need to match with openParens
             lineCommentTypes=['--'],
             reservedKeywordUppercase=True,
             linesBetweenQueries=1,
