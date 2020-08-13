@@ -43,4 +43,4 @@ Added test.
 1. Separated config and style to hide keywords and functions in config from users. Only style is customizable.
 
 ## 2020-08-13
-1. Added `[]` to opening/closing parentheses. Added tests.
+1. Added `[]` to `openParens`, `closeParens` in `style.py`. Added tests.
