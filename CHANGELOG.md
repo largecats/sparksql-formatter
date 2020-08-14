@@ -44,3 +44,6 @@ Added test.
 
 ## 2020-08-13
 1. Added `[]` to `openParens`, `closeParens` in `style.py`. Added tests.
+
+## 2020-08-14
+1. Added `splitOnComma` parameter that decides whether to split on each comma in GROUP BY, ORDER BY clauses. Added tests for GROUP BY and ORDER BY.
