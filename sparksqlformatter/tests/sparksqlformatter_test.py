@@ -288,6 +288,20 @@ SELECT
         '''.strip()
         return self.run(msg, testQuery, key)
 
+    def test_parentheses(self):
+        msg = 'Testing parentheses'
+        testQuery = '''
+SELECT COALESCE(collect_list(time)[0], 0) AS time
+from t0
+        '''
+        key = '''
+SELECT
+    COALESCE(collect_list(time)[0], 0) AS time
+FROM
+    t0
+        '''.strip()
+        return self.run(msg, testQuery, key)
+
     def test_line_comment_followed_by_close_paren(self):
         msg = 'Testing line comment followed by closing parentheses'
         testQuery = '''
@@ -397,6 +411,79 @@ WHERE
     )
         '''.strip()
         return self.run(msg, testQuery, key)
+
+    def test_query_with_over_clause(self):
+        msg = 'Testing query with OVER clause'
+        testQuery = '''
+SELECT 
+    *, 
+    ROW_NUMBER() OVER(PARTITION BY a ORDER BY b) AS rank
+FROM 
+    t0
+        '''
+        key = '''
+SELECT
+    *,
+    ROW_NUMBER() OVER(
+        PARTITION BY
+            a
+        ORDER BY
+            b
+    ) AS rank
+FROM
+    t0
+        '''.strip()
+        return self.run(msg, testQuery, key)
+
+    def test_query_with_group_by(self):
+        msg = 'Testing query with GROUP BY'
+        testQuery = '''
+select * from t0 group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40
+        '''
+        key = '''
+SELECT
+    *
+FROM
+    t0
+GROUP BY
+    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
+    32, 33, 34, 35, 36, 37, 38, 39, 40
+        '''.strip()
+        return self.run(msg, testQuery, key, {'splitOnComma': False})
+
+    def test_query_with_group_by_split_on_comma(self):
+        msg = 'Testing query with GROUP BY'
+        testQuery = '''
+select * from t0 group by 1,2,3,4
+        '''
+        key = '''
+SELECT
+    *
+FROM
+    t0
+GROUP BY
+    1,
+    2,
+    3,
+    4
+        '''.strip()
+        return self.run(msg, testQuery, key, {'splitOnComma': True})
+
+    def test_query_with_order_by(self):
+        msg = 'Testing query with ORDER BY'
+        testQuery = '''
+select * from t0 order by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40
+        '''
+        key = '''
+SELECT
+    *
+FROM
+    t0
+ORDER BY
+    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
+    32, 33, 34, 35, 36, 37, 38, 39, 40
+        '''.strip()
+        return self.run(msg, testQuery, key, {'splitOnComma': False})
 
     def test_query_with_long_table_name(self):
         msg = 'Testing query with long table name'

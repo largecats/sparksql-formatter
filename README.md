@@ -225,3 +225,6 @@ A string that specifies one indent. Default to four blanks:
 
 Maximum length of an inline block. Default to `120`.
 
+**`splitOnComma`**    
+
+Whether items in top-level GROUP BY, ORDER BY clauses following SELECT ... FROM should be split on each comma or only split when exceeding `inlineMaxLength`. Default to `True`.

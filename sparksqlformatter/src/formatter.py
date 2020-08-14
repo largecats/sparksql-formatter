@@ -39,6 +39,7 @@ class Flag:
     Class for flags, or anotations, that can be added to tokens when formatting.
     '''
     SUBQUERY_ENDING_PAREN = 'SUBQUERY_ENDING_PAREN'
+    INLINE = 'INLINE'  # don't add \n after comma in GROUP BY, ORDER BY, IN, etc
 
 
 class Formatter:
@@ -96,6 +97,10 @@ class Formatter:
 
             if self.tokenOverride:
                 token = self.tokenOverride(token, self.previousKeyword) or token
+
+            if token.value.upper() == 'GROUP BY' or (token.value.upper() == 'ORDER BY'
+                                                     and self.previousKeyword.value.upper() != 'PARTITION BY'):
+                token.flag = Flag.INLINE
 
             if token.type == TokenType.WHITESPACE:
                 # ignore
@@ -328,8 +333,21 @@ class Formatter:
         query = trim_trailing_spaces(query) + token.value + ' '
         if (self.inlineBlock.is_active()):
             return query
-        elif re.search(pattern='^LIMIT$', string=self.previousKeyword.value):
+        if re.search(pattern='^LIMIT$', string=self.previousKeyword.value):
             return query
+        if self.previousKeyword.flag == Flag.INLINE:
+            if self.style.splitOnComma:
+                return self.add_newline(query)
+            else:
+                inlineLength = len(query) - query.rfind('\n') + 1
+                if inlineLength < self.style.inlineMaxLength:  # if fit in a line, don't split at comma
+                    return query
+                else:  # else, split at comma
+                    indent = self.indentation.get_indent()
+                    lastCommaIndex = query.rfind(',')
+                    query = query[:lastCommaIndex + 1] + '\n' + indent + query[lastCommaIndex +
+                                                                               2:len(query)]  # split at the last comma
+                    return query
         else:
             return self.add_newline(query)
 
