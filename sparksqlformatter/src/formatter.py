@@ -335,10 +335,10 @@ class Formatter:
             return query
         if re.search(pattern='^LIMIT$', string=self.previousKeyword.value):
             return query
-        if self.style.splitOnComma:
-            return self.add_newline(query)
-        else:
-            if self.previousKeyword.flag == Flag.INLINE:
+        if self.previousKeyword.flag == Flag.INLINE:
+            if self.style.splitOnComma:
+                return self.add_newline(query)
+            else:
                 inlineLength = len(query) - query.rfind('\n') + 1
                 if inlineLength < self.style.inlineMaxLength:  # if fit in a line, don't split at comma
                     return query
@@ -348,6 +348,8 @@ class Formatter:
                     query = query[:lastCommaIndex + 1] + '\n' + indent + query[lastCommaIndex +
                                                                                2:len(query)]  # split at the last comma
                     return query
+        else:
+            return self.add_newline(query)
 
     @staticmethod
     def format_without_spaces_before_with_space_after(token, query):

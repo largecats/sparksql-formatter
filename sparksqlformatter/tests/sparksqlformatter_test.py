@@ -451,6 +451,24 @@ GROUP BY
         '''.strip()
         return self.run(msg, testQuery, key, {'splitOnComma': False})
 
+    def test_query_with_group_by_split_on_comma(self):
+        msg = 'Testing query with GROUP BY'
+        testQuery = '''
+select * from t0 group by 1,2,3,4
+        '''
+        key = '''
+SELECT
+    *
+FROM
+    t0
+GROUP BY
+    1,
+    2,
+    3,
+    4
+        '''.strip()
+        return self.run(msg, testQuery, key, {'splitOnComma': True})
+
     def test_query_with_order_by(self):
         msg = 'Testing query with ORDER BY'
         testQuery = '''
