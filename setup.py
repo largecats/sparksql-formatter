@@ -5,7 +5,7 @@ with open('README.md', 'r') as fh:
 
 setuptools.setup(
     name='sparksqlformatter',
-    version='0.1.1',
+    version='0.1.2',
     author='largecats',
     author_email='linfanxiaolinda@outlook.com',
     description=
@@ -14,6 +14,7 @@ setuptools.setup(
     long_description_content_type='text/markdown',
     url='https://github.com/largecats/sparksql-formatter',
     packages=setuptools.find_packages(),
+    install_requires=['configparser'],
     classifiers=[
         'Programming Language :: Python',
         'Programming Language :: Python :: 2',
