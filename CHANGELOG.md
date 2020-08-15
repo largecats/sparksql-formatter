@@ -47,3 +47,6 @@ Added test.
 
 ## 2020-08-14
 1. Added `splitOnComma` parameter that decides whether to split on each comma in GROUP BY, ORDER BY clauses. Added tests for GROUP BY and ORDER BY.
+
+## 2020-08-15
+1. Changed from checking second last token to checking the last keyword when identifying the start of subquery. This is to make sure the subquery's opening parenthsis can be identified when there is comment between keyword `AS` and the opening parenthesis.

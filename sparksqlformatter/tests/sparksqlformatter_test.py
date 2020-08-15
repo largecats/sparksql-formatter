@@ -626,6 +626,32 @@ LEFT JOIN
         '''.strip()
         return self.run(msg, testQuery, key)
 
+    def test_query_with_subquery_inline_comment(self):
+        msg = 'Testing query with subquery and inline comment'
+        testQuery = '''
+with t0 as -- comment 
+(
+    select * from t1
+)
+
+select * from t0
+        '''
+        key = '''
+WITH t0 AS -- comment
+(
+    SELECT
+        *
+    FROM
+        t1
+)
+
+SELECT
+    *
+FROM
+    t0
+        '''.strip()
+        return self.run(msg, testQuery, key)
+
     def test_query_with_nested_subquery(self):
         msg = 'Testing query with nested subquery'
         testQuery = '''

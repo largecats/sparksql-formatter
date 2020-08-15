@@ -276,7 +276,7 @@ class Formatter:
             self.indentation.increase_block_level()
             query = self.add_newline(query)
 
-        if self.previous_token(offset=2).value.upper() == 'AS':  # start of subQuery, e.g., t0 AS (...)
+        if self.previousKeyword.value.upper() == 'AS':  # start of subQuery, e.g., t0 AS (...)
             self.subQuery.started = True  # mark that subquery has started
             # This is to differentiate from opening/closng parentheses inside subquery
             # and to distinguish the starting opening parenthesis of the subquery
