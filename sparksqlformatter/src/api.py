@@ -20,12 +20,15 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-from __future__ import print_function  # for print() in Python 2
+# from __future__ import print_function  # for print() in Python 2
 from io import open  # for open() in Python 2
 import sys
 import re
 import logging
-import configparser
+if sys.version_info[0] >= 3:
+    import configparser
+else:
+    from backports import configparser
 import ast
 
 from sparksqlformatter.src.style import Style

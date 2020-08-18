@@ -5,7 +5,7 @@ with open('README.md', 'r') as fh:
 
 setuptools.setup(
     name='sparksqlformatter',
-    version='0.1.4',
+    version='0.1.5',
     author='largecats',
     author_email='linfanxiaolinda@outlook.com',
     description=
