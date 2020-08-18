@@ -417,7 +417,7 @@ WHERE
         testQuery = '''
 SELECT 
     *, 
-    ROW_NUMBER() OVER(PARTITION BY a ORDER BY b) AS rank
+    ROW_NUMBER() OVER(PARTITION BY a, b ORDER BY b, c) AS rank
 FROM 
     t0
         '''
@@ -426,9 +426,11 @@ SELECT
     *,
     ROW_NUMBER() OVER(
         PARTITION BY
-            a
-        ORDER BY
+            a,
             b
+        ORDER BY
+            b,
+            c
     ) AS rank
 FROM
     t0
