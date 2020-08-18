@@ -50,3 +50,6 @@ Added test.
 
 ## 2020-08-15
 1. Changed from checking second last token to checking the last keyword when identifying the start of subquery. This is to make sure the subquery's opening parenthsis can be identified when there is comment between keyword `AS` and the opening parenthesis.
+
+## 2020-08-18
+1. Added `previousTopLevelKeyword` attribute to formatter to keep track of top-level keywords to use in formatting comma under `GROUP BY`, `ORDER BY` clauses.

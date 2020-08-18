@@ -61,6 +61,7 @@ class Formatter:
         self.tokenizer = Tokenizer(style=style)  # use the same styleurations as Formatter()
         self.tokenOverride = tokenOverride
         self.previousKeyword = None
+        self.previousTopLevelKeyword = None
         self.tokens = []
         self.index = 0
 
@@ -115,6 +116,7 @@ class Formatter:
             elif token.type == TokenType.TOP_LEVEL_KEYWORD:
                 formattedQuery = self.format_top_level_keyword(token, formattedQuery)
                 self.previousKeyword = token
+                self.previousTopLevelKeyword = token
             elif token.type == TokenType.NEWLINE_KEYWORD:
                 formattedQuery = self.format_newline_keyword(token, formattedQuery)
                 self.previousKeyword = token
@@ -335,7 +337,7 @@ class Formatter:
             return query
         if re.search(pattern='^LIMIT$', string=self.previousKeyword.value):
             return query
-        if self.previousKeyword.flag == Flag.INLINE:
+        if self.previousTopLevelKeyword.flag == Flag.INLINE:
             if self.style.splitOnComma:
                 return self.add_newline(query)
             else:
