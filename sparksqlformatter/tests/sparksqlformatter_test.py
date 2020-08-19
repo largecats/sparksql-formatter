@@ -453,6 +453,23 @@ GROUP BY
         '''.strip()
         return self.run(msg, testQuery, key, {'splitOnComma': False})
 
+    def test_query_with_order_by_with_desc(self):
+        msg = 'Testing query with ORDER BY with DESC'
+        testQuery = '''
+select * from t0 order by 1 desc, 2 desc, 3 desc, 4 desc, 5 desc, 6 asc, 7 asc, 8 desc, 9, 10, 11 desc, 12 desc, 13 desc, 14 desc, 15 desc, 16 desc, 
+17 desc
+        '''
+        key = '''
+SELECT
+    *
+FROM
+    t0
+ORDER BY
+    1 DESC, 2 DESC, 3 DESC, 4 DESC, 5 DESC, 6 ASC, 7 ASC, 8 DESC, 9, 10, 11 DESC, 12 DESC, 13 DESC, 14 DESC, 15 DESC,
+    16 DESC, 17 DESC
+        '''.strip()
+        return self.run(msg, testQuery, key, {'splitOnComma': False})
+
     def test_query_with_group_by_split_on_comma(self):
         msg = 'Testing query with GROUP BY'
         testQuery = '''
