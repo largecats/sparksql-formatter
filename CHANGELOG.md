@@ -53,4 +53,4 @@ Added test.
 
 ## 2020-08-18
 1. Added `previousTopLevelKeyword` attribute to formatter to keep track of top-level keywords to use in formatting comma under `GROUP BY`, `ORDER BY` clauses.
-2. Import `configparser` from `backports` if on Python 2.
+2. Import `configparser` from `backports` if on Python 2. See https://github.com/takluyver/entrypoints/issues/3.
