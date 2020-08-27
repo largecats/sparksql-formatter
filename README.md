@@ -169,16 +169,16 @@ A list of character pairs that enclose strings in the query language. Default to
 
 **`openParens`**   
 
-A list of strings that behave as opening parentheses in the query language. Default to
+A list of strings that behave as opening parentheses in the query language regarding block indent level. Default to
 ```python
-['(', 'CASE']
+['(', '[', 'CASE']
 ```
 
 **`closeParens`**   
 
-A list of strings that behave as closing parentheses in the query language. Default to
+A list of strings that behave as closing parentheses in the query language regarding block indent level. Default to
 ```python
-[')', 'END']
+[')', ']', 'END']
 ```
 
 **`lineCommentTypes`**   
@@ -227,4 +227,5 @@ Maximum length of an inline block. Default to `120`.
 
 **`splitOnComma`**    
 
-Whether items in top-level `GROUP BY`, `ORDER BY` clauses following `SELECT ... FROM` should be split on each comma or only split when exceeding `inlineMaxLength`. Default to `True`.
+If true, in cases where a comma separated list in `GROUP BY`, `ORDER BY` clauses is too long to fit in a line, split such that all elements are on a single line.
+Else, will only split at `inlineMaxLength`.

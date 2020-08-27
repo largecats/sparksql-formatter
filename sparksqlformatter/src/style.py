@@ -106,8 +106,9 @@ class Style:
             Maximum length of an inline block.
             Default to 120.
         splitOnComma: bool
-           If a comma separated list (e.g., in GROUP BY, ORDER BY) is too long to fit in a line, split such that all elements are on a single line.
+           If true, in cases where a comma separated list in GROUP BY, ORDER BY clauses is too long to fit in a line, split such that all elements are on a single line.
            Else, will only split at inlineMaxLength.
+           Default to True.
         # '''
         # self.keywords = (config.Keyword.RESERVED_KEYWORDS + config.Keyword.NON_RESERVED_KEYWORDS +
         #                  config.Function.AGGREGATE_FUNCTIONS + config.Function.ARRAY_FUNCTIONS +
