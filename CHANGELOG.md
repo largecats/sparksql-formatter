@@ -56,4 +56,4 @@ Added test.
 2. Import `configparser` from `backports` if on Python 2. See https://github.com/takluyver/entrypoints/issues/3.
 
 ## 2020-08-27
-1. Excluded `CASE`, `END` from being treated as opening/closing parentheses in subquery formatting.
+1. In subquery formatting, limit opening/closing parenthese to `(`, `)`; `CASE`, `END`, and `[`, `]` are not treated as opening/closing parentheses.

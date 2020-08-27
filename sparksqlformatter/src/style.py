@@ -80,12 +80,12 @@ class Style:
             Pairs of characters that enclose strings in the query.
             Default to ['""', "''", '{}'].
         openParens: list
-            Characters tbat behave as opening parentheses in the query.
-            Default to ['(', 'CASE']
+            Characters tbat behave as opening parentheses in the query regarding block indent level.
+            Default to ['(', '[', 'CASE']
         closdParens: list
-            Characters that behave as closing parentheses in the query. 
+            Characters that behave as closing parentheses in the query regarding block indent level. 
             The order of the closing parentheses need to match with that of the opening parentheses.
-            Default to [')', 'END']
+            Default to [')', ']', 'END']
         lineCommentTypes: list
             Strings that initiate comments in the query.
             Default to ['--']
@@ -106,8 +106,9 @@ class Style:
             Maximum length of an inline block.
             Default to 120.
         splitOnComma: bool
-           If a comma separated list (e.g., in GROUP BY, ORDER BY) is too long to fit in a line, split such that all elements are on a single line.
+           If true, in cases where a comma separated list in GROUP BY, ORDER BY clauses is too long to fit in a line, split such that all elements are on a single line.
            Else, will only split at inlineMaxLength.
+           Default to True.
         # '''
         # self.keywords = (config.Keyword.RESERVED_KEYWORDS + config.Keyword.NON_RESERVED_KEYWORDS +
         #                  config.Function.AGGREGATE_FUNCTIONS + config.Function.ARRAY_FUNCTIONS +

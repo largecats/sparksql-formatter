@@ -279,17 +279,21 @@ class Formatter:
         if not (any(t == self.previous_token().type for t in preserveWhiteSpaceFor)):
             query = trim_trailing_spaces(query)
         query += token.value.upper() if self.style.reservedKeywordUppercase else token.value.lower()
+
+        # take care of block indent level
         self.inlineBlock.begin_if_possible(self.tokens, self.index)
         if not self.inlineBlock.is_active():
             self.indentation.increase_block_level()
             query = self.add_newline(query)
 
-        if token.value != 'CASE' and self.previousKeyword.value.upper() == 'AS':  # start of subQuery, e.g., t0 AS (...)
-            # print("marking subquery start")
-            self.subQuery.started = True  # mark that subquery has started
-            # This is to differentiate from opening/closng parentheses inside subquery
-            # and to distinguish the starting opening parenthesis of the subquery
-        self.subQuery.update(self, token)  # update subquery with the current token
+        # take care of subquery
+        if token.value == '(':
+            if self.previousKeyword.value.upper() == 'AS':  # start of subQuery, e.g., t0 AS (...)
+                # print("marking subquery start")
+                self.subQuery.started = True  # mark that subquery has started
+                # This is to differentiate from opening/closng parentheses inside subquery
+                # and to distinguish the starting opening parenthesis of the subquery
+            self.subQuery.update(self, token)  # update subquery with the current token
 
         return query
 
@@ -307,6 +311,8 @@ class Formatter:
             The query formatted so far together with the newly formatted closing parentheses.
         '''
         token.value = token.value.upper() if self.style.reservedKeywordUppercase else token.value.lower()
+
+        # take care of block indent level
         if (self.inlineBlock.is_active()):
             self.inlineBlock.end()
             query = Formatter.format_without_spaces_before_with_space_after(token, query)
@@ -314,13 +320,14 @@ class Formatter:
             self.indentation.decrease_block_level()
             query = self.format_with_spaces(token, self.add_newline(query))
 
-        self.subQuery.update(self, token)  # update subquery with the current token
-        # if this is the subquery's ending closing parenthesis
-        if token.value != 'END' and self.subQuery.started and self.subQuery.matched():
-            token.flag = Flag.SUBQUERY_ENDING_PAREN  # add flag to mark this as subquery's ending parenthesis
-            # print("Adding extra blank lines after subquery")
-            query = query.rstrip() + '\n' * (1 + self.style.linesBetweenQueries)  # add extra blank lines
-            self.subQuery.reset()  # reset to start again
+        # take care of subquery
+        if token.value == ')':  # if this is the subquery's ending closing parenthesis
+            self.subQuery.update(self, token)  # update subquery with the current token
+            if self.subQuery.started and self.subQuery.matched():
+                token.flag = Flag.SUBQUERY_ENDING_PAREN  # add flag to mark this as subquery's ending parenthesis
+                # print("Adding extra blank lines after subquery")
+                query = query.rstrip() + '\n' * (1 + self.style.linesBetweenQueries)  # add extra blank lines
+                self.subQuery.reset()  # reset to start again
         return query
 
     def format_comma(self, token, query):
