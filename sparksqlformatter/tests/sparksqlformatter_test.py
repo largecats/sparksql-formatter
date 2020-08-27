@@ -233,6 +233,42 @@ FROM
         '''.strip()
         return self.run(msg, testQuery, key)
 
+    def test_case_when_with_parentheses(self):
+        msg = 'Testing CASE ... WHEN with parentheses'
+        testQuery = '''
+SELECT
+        COALESCE(a, 0) AS a,
+        CASE
+            WHEN option = 1 AND positive = TRUE
+            THEN 'yes'
+            WHEN option = 1 AND (
+                positive = FALSE
+                OR neutral IS NULL
+            )
+            THEN 'maybe'
+        END AS response
+    FROM
+        t0
+        '''
+        key = '''
+SELECT
+    COALESCE(a, 0) AS a,
+    CASE
+        WHEN OPTION = 1
+        AND positive = TRUE
+        THEN 'yes'
+        WHEN OPTION = 1
+        AND (
+            positive = FALSE
+            OR neutral IS NULL
+        )
+        THEN 'maybe'
+    END AS response
+FROM
+    t0
+        '''.strip()
+        return self.run(msg, testQuery, key)
+
     def test_operator_spacing(self):
         msg = 'Testing operator spacing, e.g., -, &, {, }'
         testQuery = '''
@@ -415,10 +451,10 @@ WHERE
     def test_query_with_over_clause(self):
         msg = 'Testing query with OVER clause'
         testQuery = '''
-SELECT 
-    *, 
+SELECT
+    *,
     ROW_NUMBER() OVER(PARTITION BY a, b ORDER BY b desc, c desc) AS rank
-FROM 
+FROM
     t0
         '''
         key = '''
@@ -456,7 +492,7 @@ GROUP BY
     def test_query_with_order_by_with_desc(self):
         msg = 'Testing query with ORDER BY with DESC'
         testQuery = '''
-select * from t0 order by 1 desc, 2 desc, 3 desc, 4 desc, 5 desc, 6 asc, 7 asc, 8 desc, 9, 10, 11 desc, 12 desc, 13 desc, 14 desc, 15 desc, 16 desc, 
+select * from t0 order by 1 desc, 2 desc, 3 desc, 4 desc, 5 desc, 6 asc, 7 asc, 8 desc, 9, 10, 11 desc, 12 desc, 13 desc, 14 desc, 15 desc, 16 desc,
 17 desc
         '''
         key = '''
@@ -648,7 +684,7 @@ LEFT JOIN
     def test_query_with_subquery_inline_comment(self):
         msg = 'Testing query with subquery and inline comment'
         testQuery = '''
-with t0 as -- comment 
+with t0 as -- comment
 (
     select * from t1
 )

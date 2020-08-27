@@ -103,6 +103,8 @@ class Formatter:
                                                      and self.previousKeyword.value.upper() != 'PARTITION BY'):
                 token.flag = Flag.INLINE
 
+            # print("token.value = {}, token.type = {}".format(token.value, token.type))
+
             if token.type == TokenType.WHITESPACE:
                 # ignore
                 continue
@@ -128,8 +130,12 @@ class Formatter:
                 self.previousKeyword = token
             elif token.type == TokenType.OPEN_PAREN:
                 formattedQuery = self.format_opening_parentheses(token, formattedQuery)
+                if token.value == 'CASE':
+                    self.previousKeyword = token
             elif token.type == TokenType.CLOSE_PAREN:
                 formattedQuery = self.format_closing_parentheses(token, formattedQuery)
+                if token.value == 'END':
+                    self.previousKeyword = token
             elif token.value == ',':
                 formattedQuery = self.format_comma(token, formattedQuery)
             elif token.value == ':':
@@ -278,7 +284,8 @@ class Formatter:
             self.indentation.increase_block_level()
             query = self.add_newline(query)
 
-        if self.previousKeyword.value.upper() == 'AS':  # start of subQuery, e.g., t0 AS (...)
+        if token.value != 'CASE' and self.previousKeyword.value.upper() == 'AS':  # start of subQuery, e.g., t0 AS (...)
+            # print("marking subquery start")
             self.subQuery.started = True  # mark that subquery has started
             # This is to differentiate from opening/closng parentheses inside subquery
             # and to distinguish the starting opening parenthesis of the subquery
@@ -308,8 +315,10 @@ class Formatter:
             query = self.format_with_spaces(token, self.add_newline(query))
 
         self.subQuery.update(self, token)  # update subquery with the current token
-        if self.subQuery.started and self.subQuery.matched():  # if this is the subquery's ending closing parenthesis
+        # if this is the subquery's ending closing parenthesis
+        if token.value != 'END' and self.subQuery.started and self.subQuery.matched():
             token.flag = Flag.SUBQUERY_ENDING_PAREN  # add flag to mark this as subquery's ending parenthesis
+            # print("Adding extra blank lines after subquery")
             query = query.rstrip() + '\n' * (1 + self.style.linesBetweenQueries)  # add extra blank lines
             self.subQuery.reset()  # reset to start again
         return query
