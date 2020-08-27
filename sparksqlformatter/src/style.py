@@ -80,12 +80,12 @@ class Style:
             Pairs of characters that enclose strings in the query.
             Default to ['""', "''", '{}'].
         openParens: list
-            Characters tbat behave as opening parentheses in the query.
-            Default to ['(', 'CASE']
+            Characters tbat behave as opening parentheses in the query regarding block indent level.
+            Default to ['(', '[', 'CASE']
         closdParens: list
-            Characters that behave as closing parentheses in the query. 
+            Characters that behave as closing parentheses in the query regarding block indent level. 
             The order of the closing parentheses need to match with that of the opening parentheses.
-            Default to [')', 'END']
+            Default to [')', ']', 'END']
         lineCommentTypes: list
             Strings that initiate comments in the query.
             Default to ['--']
