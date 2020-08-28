@@ -732,6 +732,24 @@ FROM
         '''.strip()
         return self.run(msg, testQuery, key)
 
+    def test_query_with_union_all(self):
+        msg = 'Testing query with UNION ALL'
+        testQuery = '''
+select * from t1 union all select * from t2
+        '''
+        key = '''
+SELECT
+    *
+FROM
+    t1
+UNION ALL
+SELECT
+    *
+FROM
+    t2
+        '''.strip()
+        return self.run(msg, testQuery, key)
+
     def test_query_with_lateral_view_explode(self):
         msg = 'Testing query with LATERAL VIEW EXPLODE'
         testQuery = '''

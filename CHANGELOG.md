@@ -57,3 +57,6 @@ Added test.
 
 ## 2020-08-27
 1. In subquery formatting, limit opening/closing parenthese to `(`, `)`; `CASE`, `END`, and `[`, `]` are not treated as opening/closing parentheses.
+
+## 2020-08-28
+1. Put `UNION ALL` and `INTERSECT ALL` in front of `UNION`, `INTERSECT` in `config.TOP_LEVEL_KEYWORDS_NO_INDENT` to make sure that `UNION ALL`, `INTERSECT ALL` are recognized as single keywords and thus formatted on the same line.
