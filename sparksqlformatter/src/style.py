@@ -37,7 +37,7 @@ class Style:
             topLevelKeywordsNoIndent=config.Keyword.TOP_LEVEL_KEYWORDS_NO_INDENT,
             newlineKeywords=config.Keyword.NEWLINE_KEYWORDS,
             userDefinedFunctions=[],
-            stringTypes=['""', "''", '{}'],
+            stringTypes=['""', "''", '{}', "``"],
             openParens=['(', '[', 'CASE'],
             closeParens=[')', ']', 'END'],  # the order of the parentheses need to match with openParens
             lineCommentTypes=['--'],
@@ -78,7 +78,7 @@ class Style:
             Default to [].
         stringTypes: list
             Pairs of characters that enclose strings in the query.
-            Default to ['""', "''", '{}'].
+            Default to ['""', "''", '{}', '``'].
         openParens: list
             Characters tbat behave as opening parentheses in the query regarding block indent level.
             Default to ['(', '[', 'CASE']

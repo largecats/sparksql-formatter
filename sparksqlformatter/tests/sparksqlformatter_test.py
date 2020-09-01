@@ -587,6 +587,20 @@ ORDER BY
         '''.strip()
         return self.run(msg, testQuery, key, {'splitOnComma': False})
 
+    def test_query_with_backquotes(self):
+        msg = 'Testing query with backquotes'
+        testQuery = '''
+        select '2020-07' as `month id`
+        from t0
+        '''
+        key = '''
+SELECT
+    '2020-07' AS `month id`
+FROM
+    t0
+        '''.strip()
+        return self.run(msg, testQuery, key)
+
     def test_query_with_long_table_name(self):
         msg = 'Testing query with long table name'
         testQuery = '''

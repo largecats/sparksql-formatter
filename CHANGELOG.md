@@ -65,3 +65,4 @@ Added test.
 1. Moved `MSCK`, `PARTITIONED` from non-reserved keywords to reserved keywords.
 2. Added `WHEN`, `THEN`, `ELSE` to `topLevelKeywords`.
 3. Updated `format_newline_keyword()` logic to put `AND`, `OR` in `CASE...WHEN` on newline.
+4. Added back ticks to `stringTypes`.

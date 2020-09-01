@@ -164,7 +164,7 @@ NEWLINE_KEYWORDS = [
 
 A list of character pairs that enclose strings in the query language. Default to
 ```python
-['""', "''", '{}']
+['""', "''", '{}', '``']
 ```
 
 **`openParens`**   
