@@ -241,7 +241,7 @@ class Formatter:
         return self.add_newline(query)
 
     def format_newline_keyword(self, token, query):
-        if (self.previousKeyword.value.upper() in ['BETWEEN', 'WHEN'] and token.value.upper() in ['AND', 'OR']):
+        if (self.previousKeyword.value.upper() in ['BETWEEN'] and token.value.upper() in ['AND']):
             return query + Formatter.equalize_white_space(self.format_reserved_keyword(token.value)) + ' '
         else:
             return self.add_newline(query) + Formatter.equalize_white_space(self.format_reserved_keyword(
