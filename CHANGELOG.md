@@ -60,3 +60,8 @@ Added test.
 
 ## 2020-08-28
 1. Put `UNION ALL` and `INTERSECT ALL` in front of `UNION`, `INTERSECT` in `config.TOP_LEVEL_KEYWORDS_NO_INDENT` to make sure that `UNION ALL`, `INTERSECT ALL` are recognized as single keywords and thus formatted on the same line.
+
+## 2020-09-01
+1. Moved `MSCK`, `PARTITIONED` from non-reserved keywords to reserved keywords.
+2. Added `WHEN`, `THEN`, `ELSE` to `topLevelKeywords`.
+3. Updated `format_newline_keyword()` logic to put `AND`, `OR` in `CASE...WHEN` on newline.

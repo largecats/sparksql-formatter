@@ -147,11 +147,16 @@ SELECT
     c1,
     c2,
     CASE
-        WHEN c3 = 'one'
-        THEN 1
-        WHEN c3 = 'two'
-        THEN 2
-        ELSE 3
+        WHEN
+            c3 = 'one'
+        THEN
+            1
+        WHEN
+            c3 = 'two'
+        THEN
+            2
+        ELSE
+            3
     END AS c4
 FROM
     t0
@@ -169,11 +174,16 @@ FROM t0
         key = '''
 SELECT
     CASE
-        WHEN toString(getNumber()) = 'one'
-        THEN 1
-        WHEN toString(getNumber()) = 'two'
-        THEN 2
-        ELSE 3
+        WHEN
+            toString(getNumber()) = 'one'
+        THEN
+            1
+        WHEN
+            toString(getNumber()) = 'two'
+        THEN
+            2
+        ELSE
+            3
     END AS c1
 FROM
     t0
@@ -186,9 +196,12 @@ FROM
         key = '''
 SELECT
     CASE
-        WHEN c1 = 'foo'
-        THEN 1
-        ELSE 2
+        WHEN
+            c1 = 'foo'
+        THEN
+            1
+        ELSE
+            2
     END
 FROM
     t0
@@ -221,12 +234,17 @@ select
         key = '''
 SELECT
     CASE
-        WHEN a > 0
-        THEN CASE
-            WHEN b > 0
-            THEN TRUE
-            ELSE FALSE
-        END
+        WHEN
+            a > 0
+        THEN
+            CASE
+                WHEN
+                    b > 0
+                THEN
+                    TRUE
+                ELSE
+                    FALSE
+            END
     END
 FROM
     t0
@@ -239,13 +257,19 @@ FROM
 SELECT
         COALESCE(a, 0) AS a,
         CASE
-            WHEN option = 1 AND positive = TRUE
-            THEN 'yes'
-            WHEN option = 1 AND (
-                positive = FALSE
-                OR neutral IS NULL
-            )
-            THEN 'maybe'
+            WHEN
+                option = 1
+                AND positive = TRUE
+            THEN
+                'yes'
+            WHEN
+                option = 1
+                AND (
+                    positive = FALSE
+                    OR neutral IS NULL
+                )
+            THEN
+                'maybe'
         END AS response
     FROM
         t0
@@ -254,15 +278,19 @@ SELECT
 SELECT
     COALESCE(a, 0) AS a,
     CASE
-        WHEN OPTION = 1
-        AND positive = TRUE
-        THEN 'yes'
-        WHEN OPTION = 1
-        AND (
-            positive = FALSE
-            OR neutral IS NULL
-        )
-        THEN 'maybe'
+        WHEN
+            OPTION = 1
+            AND positive = TRUE
+        THEN
+            'yes'
+        WHEN
+            OPTION = 1
+            AND (
+                positive = FALSE
+                OR neutral IS NULL
+            )
+        THEN
+            'maybe'
     END AS response
 FROM
     t0
@@ -284,9 +312,13 @@ select
 SELECT
     *,
     CASE
-        WHEN (a > 0) AND (CAST(b AS int) & {KEYWORD} = 0)
-        THEN -c
-        ELSE a - c
+        WHEN
+            (a > 0)
+            AND (CAST(b AS int) & {KEYWORD} = 0)
+        THEN
+            -c
+        ELSE
+            a - c
     END
 FROM
     t0
@@ -507,7 +539,7 @@ ORDER BY
         return self.run(msg, testQuery, key, {'splitOnComma': False})
 
     def test_query_with_group_by_split_on_comma(self):
-        msg = 'Testing query with GROUP BY'
+        msg = 'Testing query with GROUP BY, split on comma'
         testQuery = '''
 select * from t0 group by 1,2,3,4
         '''
@@ -523,6 +555,21 @@ GROUP BY
     4
         '''.strip()
         return self.run(msg, testQuery, key, {'splitOnComma': True})
+
+    def test_query_with_group_by_not_split_on_comma(self):
+        msg = 'Testing query with GROUP BY, not split on comma'
+        testQuery = '''
+select * from t0 group by 1,2,3,4
+        '''
+        key = '''
+SELECT
+    *
+FROM
+    t0
+GROUP BY
+    1, 2, 3, 4
+        '''.strip()
+        return self.run(msg, testQuery, key, {'splitOnComma': False})
 
     def test_query_with_order_by(self):
         msg = 'Testing query with ORDER BY'
