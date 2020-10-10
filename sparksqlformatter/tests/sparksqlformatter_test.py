@@ -297,6 +297,24 @@ FROM
         '''.strip()
         return self.run(msg, testQuery, key)
 
+    def test_operator_with_parentheses(self):
+        msg = 'Testing operator with parentheses'
+        testQuery = '''
+SELECT
+    a as col1,
+    (a-b-c) / d * e as col2
+FROM
+    base
+        '''
+        key = '''
+SELECT
+    a AS col1,
+    (a - b - c) / d * e AS col2
+FROM
+    base
+        '''.strip()
+        return self.run(msg, testQuery, key)
+
     def test_operator_spacing(self):
         msg = 'Testing operator spacing, e.g., -, &, {, }'
         testQuery = '''
@@ -745,20 +763,29 @@ LEFT JOIN
     def test_query_with_subquery_inline_comment(self):
         msg = 'Testing query with subquery and inline comment'
         testQuery = '''
-with t0 as -- comment
-(
+with t0 as ( -- comment
     select * from t1
+),
+
+t1 as (
+    select * from t2
 )
 
 select * from t0
         '''
         key = '''
-WITH t0 AS -- comment
-(
+WITH t0 AS ( -- comment
     SELECT
         *
     FROM
         t1
+),
+
+t1 AS (
+    SELECT
+        *
+    FROM
+        t2
 )
 
 SELECT
