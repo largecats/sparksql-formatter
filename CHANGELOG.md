@@ -66,3 +66,8 @@ Added test.
 2. Added `WHEN`, `THEN`, `ELSE` to `topLevelKeywords`.
 3. Updated `format_newline_keyword()` logic to put `AND`, `OR` in `CASE...WHEN` on newline.
 4. Added back ticks to `stringTypes`.
+
+## 2020-10-11
+1. Updated logic for finding the start of sub-queries.
+2. Added test `test_operator_with_parentheses`.
+3. Updated test `test_query_with_subquery_inline_comment` to put command after opening parenthesis of the sub-query.

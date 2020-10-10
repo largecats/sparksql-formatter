@@ -288,7 +288,11 @@ class Formatter:
 
         # take care of subquery
         if token.value == '(':
-            if self.previousKeyword.value.upper() == 'AS':  # start of subQuery, e.g., t0 AS (...)
+            if (self.previousKeyword.value.upper() == 'AS' and
+                (self.previous_token(offset=2).value.upper() == 'AS' or  # t0 AS (...)
+                 (
+                     self.previous_token(offset=1).type == TokenType.LINE_COMMENT  # t0 AS -- comment (...)
+                     and self.previous_token(offset=3).value.upper() == 'AS'))):  # start of subQuery, e.g., t0 AS (...)
                 # print("marking subquery start")
                 self.subQuery.started = True  # mark that subquery has started
                 # This is to differentiate from opening/closng parentheses inside subquery
