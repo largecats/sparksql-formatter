@@ -1,6 +1,8 @@
 # sparksqlformatter
 A [SparkSQL](http://spark.apache.org/docs/latest/sql-ref.html) formatter in Python based on [sql-formatter](https://github.com/zeroturnaround/sql-formatter) and its fork [sql-formatter-plus](https://github.com/kufii/sql-formatter-plus), with customizations and extra features.
 
+Used by: [pysqlformatter](https://github.com/largecats/pyspark-sql-formatter).
+
 - [sparksqlformatter](#sparksqlformatter)
 - [Installation](#installation)
   - [Install using pip](#install-using-pip)
