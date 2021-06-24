@@ -710,6 +710,19 @@ WHERE
         '''.strip()
         return self.run(msg, testQuery, key)
 
+    def test_query_with_string_regex_containing_operators(self):
+        msg = 'Testing query with string regex containing operators'  # should not add spaces before and after the operators inside the string regex
+        testQuery = '''
+select `(?!(principal|interest|admin_fee|buyer_txn_fee|late_charge|penalty_interest|dst_fee)$).+` from t0
+        '''
+        key = '''
+SELECT
+    `(?!(principal|interest|admin_fee|buyer_txn_fee|late_charge|penalty_interest|dst_fee)$).+`
+FROM
+    t0
+        '''.strip()
+        return self.run(msg, testQuery, key)
+
     def test_query_with_subquery(self):
         msg = 'Testing query with subquery'
         testQuery = '''

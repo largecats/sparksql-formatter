@@ -71,3 +71,6 @@ Added test.
 1. Updated logic for finding the start of sub-queries.
 2. Added test `test_operator_with_parentheses`.
 3. Updated test `test_query_with_subquery_inline_comment` to put command after opening parenthesis of the sub-query.
+
+## 2021-06-24
+1. Added test for query with string regex containing operators. Spaces should not be added before and after the operators inside string regex enclosed with backticks.
