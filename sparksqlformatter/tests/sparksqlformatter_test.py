@@ -20,6 +20,7 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
+import unittest
 import sys
 import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
@@ -33,12 +34,9 @@ log_formatter = '[%(asctime)s] %(levelname)s [%(filename)s:%(lineno)s:%(funcName
 logging.basicConfig(stream=sys.stdout, level=logging.INFO, format=log_formatter)
 
 
-class Test:
-    def __init__(self):
-        pass
-
+class Test(unittest.TestCase):
     def test_create_table_using_data_source(self):
-        msg = 'Testing create table using data source'
+        msg = 'Testing query: Create table using data source'
         testQuery = '''
 CREATE TABLE xxx
     (time string, amount double, country string, date date)
@@ -53,10 +51,11 @@ CREATE TABLE
     OPTIONS ('serialization.format' = '1', 'path' = '/user/xxx', 'mergeSchema' = 'true')
     PARTITIONED BY (country, date)
         '''.strip()
-        return self.run(msg, testQuery, key)
+        formattedQuery = api.format_query(testQuery)
+        self.assertEqual(formattedQuery, key)
 
     def test_insert_without_into(self):
-        msg = 'Testing INSERT without INTO'
+        msg = 'Testing query: INSERT without INTO'
         testQuery = '''INSERT Customers (ID, MoneyBalance, Address, City) VALUES (12, -123.4, 'Skagen 2111','Stv')'''
         key = '''
 INSERT
@@ -64,10 +63,11 @@ INSERT
 VALUES
     (12, -123.4, 'Skagen 2111', 'Stv')
         '''.strip()
-        return self.run(msg, testQuery, key)
+        formattedQuery = api.format_query(testQuery)
+        self.assertEqual(formattedQuery, key)
 
     def test_alter_table_modify(self):
-        msg = 'Testing ALTER TABLE ... MODIFY query'
+        msg = 'Testing query: ALTER TABLE ... MODIFY'
         testQuery = '''ALTER TABLE supplier MODIFY supplier_name STRING(100) NOT NULL'''
         key = '''
 ALTER TABLE
@@ -75,10 +75,11 @@ ALTER TABLE
 MODIFY
     supplier_name STRING(100) NOT NULL
         '''.strip()
-        return self.run(msg, testQuery, key)
+        formattedQuery = api.format_query(testQuery)
+        self.assertEqual(formattedQuery, key)
 
     def test_alter_table_alter_column(self):
-        msg = 'Testing ALTER TABLE ... ALTER COLUMN query'
+        msg = 'Testing query: ALTER TABLE ... ALTER COLUMN'
         testQuery = '''ALTER TABLE supplier ALTER COLUMN supplier_name STRING(100) NOT NULL'''
         key = '''
 ALTER TABLE
@@ -86,10 +87,11 @@ ALTER TABLE
 ALTER COLUMN
     supplier_name STRING(100) NOT NULL
         '''.strip()
-        return self.run(msg, testQuery, key)
+        formattedQuery = api.format_query(testQuery)
+        self.assertEqual(formattedQuery, key)
 
     def test_simple_select(self):
-        msg = 'Testing simple SELECT'
+        msg = 'Testing query: Testing simple SELECT'
         testQuery = '''SELECT c1, c2 FROM t0'''
         key = '''
 SELECT
@@ -98,10 +100,11 @@ SELECT
 FROM
     t0
         '''.strip()
-        return self.run(msg, testQuery, key)
+        formattedQuery = api.format_query(testQuery)
+        self.assertEqual(formattedQuery, key)
 
     def test_select_with_left_join(self):
-        msg = 'Testing SELECT query with LEFT JOIN'
+        msg = 'Testing query: SELECT with LEFT JOIN'
         testQuery = '''SELECT a, b FROM t LEFT JOIN t2 ON t.id = t2.id_t'''
         key = '''
 SELECT
@@ -113,10 +116,11 @@ LEFT JOIN
     t2
     ON t.id = t2.id_t
         '''.strip()
-        return self.run(msg, testQuery, key)
+        formattedQuery = api.format_query(testQuery)
+        self.assertEqual(formattedQuery, key)
 
     def test_select_with_function(self):
-        msg = 'Testing SELECT with udf'
+        msg = 'Testing query: SELECT with function'
         testQuery = '''SELECT from_unixtime(time), c2 FROM t0'''
         key = '''
 SELECT
@@ -125,10 +129,11 @@ SELECT
 FROM
     t0
         '''.strip()
-        return self.run(msg, testQuery, key)
+        formattedQuery = api.format_query(testQuery)
+        self.assertEqual(formattedQuery, key)
 
     def test_select_with_udf(self):
-        msg = 'Testing SELECT with udf'
+        msg = 'SELECT with udf'
         testQuery = '''SELECT foo(c1), c2 FROM t0'''
         key = '''
 SELECT
@@ -137,10 +142,11 @@ SELECT
 FROM
     t0
         '''.strip()
-        return self.run(msg, testQuery, key, {'userDefinedFunctions': ['foo']})
+        formattedQuery = api.format_query(testQuery, {'userDefinedFunctions': ['foo']})
+        self.assertEqual(formattedQuery, key)
 
     def test_case_when(self):
-        msg = 'Testing CASE ... WHEN'
+        msg = 'Testing query: CASE...WHEN'
         testQuery = '''SELECT c1, c2, CASE WHEN c3 = 'one' THEN 1 WHEN c3 = 'two' THEN 2 ELSE 3 END AS c4 FROM t0'''
         key = '''
 SELECT
@@ -161,10 +167,11 @@ SELECT
 FROM
     t0
         '''.strip()
-        return self.run(msg, testQuery, key)
+        formattedQuery = api.format_query(testQuery)
+        self.assertEqual(formattedQuery, key)
 
     def test_case_when_with_expression(self):
-        msg = 'Testing CASE ... WHEN with expression'
+        msg = 'Testing query: CASE...WHEN with expression'
         testQuery = '''
 SELECT
 CASE WHEN toString(getNumber()) = 'one' THEN 1
@@ -188,10 +195,11 @@ SELECT
 FROM
     t0
         '''.strip()
-        return self.run(msg, testQuery, key)
+        formattedQuery = api.format_query(testQuery)
+        self.assertEqual(formattedQuery, key)
 
     def test_lowercase_case_when(self):
-        msg = 'Testing lower-case CASE ... WHEN'
+        msg = 'Testing query: Lower-case CASE...WHEN'
         testQuery = '''select case when c1 = 'foo' then 1 else 2 end from t0'''
         key = '''
 SELECT
@@ -206,10 +214,11 @@ SELECT
 FROM
     t0
         '''.strip()
-        return self.run(msg, testQuery, key)
+        formattedQuery = api.format_query(testQuery)
+        self.assertEqual(formattedQuery, key)
 
     def test_ignore_case_when_in_other_string(self):
-        msg = 'Testing ignore CASE, WHEN in other strings'
+        msg = 'Testing query: Ignore CASE, WHEN in other strings'
         testQuery = '''SELECT CASEDATE, ENDDATE FROM table1'''
         key = '''
 SELECT
@@ -218,10 +227,11 @@ SELECT
 FROM
     table1
         '''.strip()
-        return self.run(msg, testQuery, key)
+        formattedQuery = api.format_query(testQuery)
+        self.assertEqual(formattedQuery, key)
 
     def test_nested_case_when(self):
-        msg = 'Testing nested CASE ... WHEN'
+        msg = 'Testing query: Nested CASE...WHEN'
         testQuery = '''
 select
     case when a > 0 then
@@ -249,10 +259,11 @@ SELECT
 FROM
     t0
         '''.strip()
-        return self.run(msg, testQuery, key)
+        formattedQuery = api.format_query(testQuery)
+        self.assertEqual(formattedQuery, key)
 
     def test_case_when_with_parentheses(self):
-        msg = 'Testing CASE ... WHEN with parentheses'
+        msg = 'Testing query: CASE...WHEN with parentheses'
         testQuery = '''
 SELECT
         COALESCE(a, 0) AS a,
@@ -295,10 +306,11 @@ SELECT
 FROM
     t0
         '''.strip()
-        return self.run(msg, testQuery, key)
+        formattedQuery = api.format_query(testQuery)
+        self.assertEqual(formattedQuery, key)
 
     def test_operator_with_parentheses(self):
-        msg = 'Testing operator with parentheses'
+        msg = 'Testing query: Operator with parentheses'
         testQuery = '''
 SELECT
     a as col1,
@@ -313,10 +325,11 @@ SELECT
 FROM
     base
         '''.strip()
-        return self.run(msg, testQuery, key)
+        formattedQuery = api.format_query(testQuery)
+        self.assertEqual(formattedQuery, key)
 
     def test_operator_spacing(self):
-        msg = 'Testing operator spacing, e.g., -, &, {, }'
+        msg = 'Testing query: Operator spacing, e.g., -, &, {, }'
         testQuery = '''
 select
     *,
@@ -344,10 +357,11 @@ WHERE
     id != 1
     OR amount >= 0
         '''.strip()
-        return self.run(msg, testQuery, key)
+        formattedQuery = api.format_query(testQuery)
+        self.assertEqual(formattedQuery, key)
 
     def test_line_comment(self):
-        msg = 'Testing line comment'
+        msg = 'Testing query: Line comment'
         testQuery = '''
 SELECT a,--comment, here
 b FROM t0--comment'''
@@ -358,10 +372,11 @@ SELECT
 FROM
     t0 --comment
         '''.strip()
-        return self.run(msg, testQuery, key)
+        formattedQuery = api.format_query(testQuery)
+        self.assertEqual(formattedQuery, key)
 
     def test_line_comment_followed_by_comma(self):
-        msg = 'Testing line comment followed by comma'
+        msg = 'Testing query: Line comment followed by comma'
         testQuery = '''
 SELECT a --comment
 , b
@@ -372,10 +387,11 @@ SELECT
 ,
     b
         '''.strip()
-        return self.run(msg, testQuery, key)
+        formattedQuery = api.format_query(testQuery)
+        self.assertEqual(formattedQuery, key)
 
     def test_parentheses(self):
-        msg = 'Testing parentheses'
+        msg = 'Testing query: Parentheses'
         testQuery = '''
 SELECT COALESCE(collect_list(time)[0], 0) AS time
 from t0
@@ -386,10 +402,11 @@ SELECT
 FROM
     t0
         '''.strip()
-        return self.run(msg, testQuery, key)
+        formattedQuery = api.format_query(testQuery)
+        self.assertEqual(formattedQuery, key)
 
     def test_line_comment_followed_by_close_paren(self):
-        msg = 'Testing line comment followed by closing parentheses'
+        msg = 'Testing query: Line comment followed by closing parentheses'
         testQuery = '''
 SELECT ( a --comment
  )
@@ -400,10 +417,11 @@ SELECT
         a --comment
     )
         '''.strip()
-        return self.run(msg, testQuery, key)
+        formattedQuery = api.format_query(testQuery)
+        self.assertEqual(formattedQuery, key)
 
     def test_line_comment_followed_by_open_paren(self):
-        msg = 'Testing line comment followed by opening parentheses'
+        msg = 'Testing query: Line comment followed by opening parentheses'
         testQuery = '''
 SELECT a --comment
 ()
@@ -413,10 +431,11 @@ SELECT
     a --comment
     ()
         '''.strip()
-        return self.run(msg, testQuery, key)
+        formattedQuery = api.format_query(testQuery)
+        self.assertEqual(formattedQuery, key)
 
     def test_block_comment(self):
-        msg = 'Testing block comment'
+        msg = 'Testing query: Block comment'
         testQuery = '''
 select
     a,
@@ -438,10 +457,11 @@ SELECT
 FROM
     t0
         '''.strip()
-        return self.run(msg, testQuery, key)
+        formattedQuery = api.format_query(testQuery)
+        self.assertEqual(formattedQuery, key)
 
-    def test_query_with_between_and(self):
-        msg = 'Testing query with BETWEEN ... AND'
+    def test_query_between_and(self):
+        msg = 'Testing query: BETWEEN ... AND'
         testQuery = '''
 select c1, c2 from t0
 where c1 between '{date}' and add_months('{date}', 1)
@@ -457,10 +477,11 @@ WHERE
     c1 BETWEEN '{date}' AND add_months('{date}', 1)
     AND c2 < 0
         '''.strip()
-        return self.run(msg, testQuery, key)
+        formattedQuery = api.format_query(testQuery)
+        self.assertEqual(formattedQuery, key)
 
-    def test_query_with_left_join_and(self):
-        msg = 'Testing query with LEFT JOIN ... AND'
+    def test_query_left_join_and(self):
+        msg = 'Testing query: LEFT JOIN ... AND'
         testQuery = '''
 select c1, c2 from t0
 left join t1 on t0.c1 = t1.c1 and t0.c3 = t1.c3
@@ -476,10 +497,11 @@ LEFT JOIN
     ON t0.c1 = t1.c1
     AND t0.c3 = t1.c3
         '''.strip()
-        return self.run(msg, testQuery, key)
+        formattedQuery = api.format_query(testQuery)
+        self.assertEqual(formattedQuery, key)
 
-    def test_query_with_nested_and_in_where(self):
-        msg = 'Testing query with nested AND in WHERE'
+    def test_query_nested_and_in_where(self):
+        msg = 'Testing query: Nested AND in WHERE'
         testQuery = '''
 SELECT c1, c2 FROM t0 WHERE type = 1 OR (c3 = 0 AND type = 2)
         '''
@@ -496,10 +518,11 @@ WHERE
         AND type = 2
     )
         '''.strip()
-        return self.run(msg, testQuery, key)
+        formattedQuery = api.format_query(testQuery)
+        self.assertEqual(formattedQuery, key)
 
-    def test_query_with_over_clause(self):
-        msg = 'Testing query with OVER clause'
+    def test_query_over_clause(self):
+        msg = 'Testing query: OVER clause'
         testQuery = '''
 SELECT
     *,
@@ -521,10 +544,11 @@ SELECT
 FROM
     t0
         '''.strip()
-        return self.run(msg, testQuery, key)
+        formattedQuery = api.format_query(testQuery)
+        self.assertEqual(formattedQuery, key)
 
-    def test_query_with_group_by(self):
-        msg = 'Testing query with GROUP BY'
+    def test_query_group_by(self):
+        msg = 'Testing query: GROUP BY'
         testQuery = '''
 select * from t0 group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40
         '''
@@ -537,10 +561,11 @@ GROUP BY
     1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
     32, 33, 34, 35, 36, 37, 38, 39, 40
         '''.strip()
-        return self.run(msg, testQuery, key, {'splitOnComma': False})
+        formattedQuery = api.format_query(testQuery, {'splitOnComma': False})
+        self.assertEqual(formattedQuery, key)
 
-    def test_query_with_order_by_with_desc(self):
-        msg = 'Testing query with ORDER BY with DESC'
+    def test_query_order_by_with_desc(self):
+        msg = 'Testing query: ORDER BY with DESC'
         testQuery = '''
 select * from t0 order by 1 desc, 2 desc, 3 desc, 4 desc, 5 desc, 6 asc, 7 asc, 8 desc, 9, 10, 11 desc, 12 desc, 13 desc, 14 desc, 15 desc, 16 desc,
 17 desc
@@ -554,10 +579,11 @@ ORDER BY
     1 DESC, 2 DESC, 3 DESC, 4 DESC, 5 DESC, 6 ASC, 7 ASC, 8 DESC, 9, 10, 11 DESC, 12 DESC, 13 DESC, 14 DESC, 15 DESC,
     16 DESC, 17 DESC
         '''.strip()
-        return self.run(msg, testQuery, key, {'splitOnComma': False})
+        formattedQuery = api.format_query(testQuery, {'splitOnComma': False})
+        self.assertEqual(formattedQuery, key)
 
-    def test_query_with_group_by_split_on_comma(self):
-        msg = 'Testing query with GROUP BY, split on comma'
+    def test_query_group_by_style_split_on_comma(self):
+        msg = 'Testing query: GROUP BY; style: split on comma'
         testQuery = '''
 select * from t0 group by 1,2,3,4
         '''
@@ -572,10 +598,11 @@ GROUP BY
     3,
     4
         '''.strip()
-        return self.run(msg, testQuery, key, {'splitOnComma': True})
+        formattedQuery = api.format_query(testQuery, {'splitOnComma': True})
+        self.assertEqual(formattedQuery, key)
 
-    def test_query_with_group_by_not_split_on_comma(self):
-        msg = 'Testing query with GROUP BY, not split on comma'
+    def test_query_group_by_style_not_split_on_comma(self):
+        msg = 'Testing query: GROUP BY; style: not split on comma'
         testQuery = '''
 select * from t0 group by 1,2,3,4
         '''
@@ -587,10 +614,11 @@ FROM
 GROUP BY
     1, 2, 3, 4
         '''.strip()
-        return self.run(msg, testQuery, key, {'splitOnComma': False})
+        formattedQuery = api.format_query(testQuery, {'splitOnComma': False})
+        self.assertEqual(formattedQuery, key)
 
-    def test_query_with_order_by(self):
-        msg = 'Testing query with ORDER BY'
+    def test_query_order_by(self):
+        msg = 'Testing query: ORDER BY'
         testQuery = '''
 select * from t0 order by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40
         '''
@@ -603,10 +631,11 @@ ORDER BY
     1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
     32, 33, 34, 35, 36, 37, 38, 39, 40
         '''.strip()
-        return self.run(msg, testQuery, key, {'splitOnComma': False})
+        formattedQuery = api.format_query(testQuery, {'splitOnComma': False})
+        self.assertEqual(formattedQuery, key)
 
-    def test_query_with_backquotes(self):
-        msg = 'Testing query with backquotes'
+    def test_query_backquotes(self):
+        msg = 'Testing query: Backquotes'
         testQuery = '''
         select '2020-07' as `month id`
         from t0
@@ -617,10 +646,11 @@ SELECT
 FROM
     t0
         '''.strip()
-        return self.run(msg, testQuery, key)
+        formattedQuery = api.format_query(testQuery)
+        self.assertEqual(formattedQuery, key)
 
-    def test_query_with_long_table_name(self):
-        msg = 'Testing query with long table name'
+    def test_query_long_table_name(self):
+        msg = 'Testing query: Long table name'
         testQuery = '''
 select t0.a, t0.b, t1.x, t2.y,
     t3.c, t3.d
@@ -662,10 +692,11 @@ ORDER BY
     2,
     3
         '''.strip()
-        return self.run(msg, testQuery, key)
+        formattedQuery = api.format_query(testQuery)
+        self.assertEqual(formattedQuery, key)
 
-    def test_query_with_unicode_char(self):
-        msg = 'Testing query with unicode character'
+    def test_query_unicode_char(self):
+        msg = 'Testing query: Unicode character'
         testQuery = '''
 select c1, c2 from t0
 where t1.c2 IN ('你好' 'ไหว้')
@@ -679,10 +710,11 @@ FROM
 WHERE
     t1.c2 IN ('你好' 'ไหว้')
         '''.strip()
-        return self.run(msg, testQuery, key)
+        formattedQuery = api.format_query(testQuery)
+        self.assertEqual(formattedQuery, key)
 
-    def test_query_with_string_formatting_with_keyword(self):
-        msg = 'Testing query with mutliple {} for Python string formatting that contain keywords in the query'
+    def test_query_string_formatting_with_keyword(self):
+        msg = 'Testing query: String formatting with keyword'
         testQuery = '''
 select * from t0 where t0.id in ({CREATE}, {UPDATE}, {UPDATE}, {UPDATE}, {UPDATE}, {UPDATE}, {UPDATE}, {UPDATE}, {UPDATE}, {UPDATE}, {UPDATE}, {UPDATE}, {UPDATE}) --CREATE or UPDATE
         '''
@@ -708,10 +740,11 @@ WHERE
         {UPDATE}
     ) --CREATE or UPDATE
         '''.strip()
-        return self.run(msg, testQuery, key)
+        formattedQuery = api.format_query(testQuery)
+        self.assertEqual(formattedQuery, key)
 
-    def test_query_with_string_regex_containing_operators(self):
-        msg = 'Testing query with string regex containing operators'  # should not add spaces before and after the operators inside the string regex
+    def test_query_string_regex_containing_operators(self):
+        msg = 'Testing query: String regex containing operators'  # should not add spaces before and after the operators inside the string regex
         testQuery = '''
 select `(?!(principal|interest|admin_fee|buyer_txn_fee|late_charge|penalty_interest|dst_fee)$).+` from t0
         '''
@@ -721,10 +754,11 @@ SELECT
 FROM
     t0
         '''.strip()
-        return self.run(msg, testQuery, key)
+        formattedQuery = api.format_query(testQuery)
+        self.assertEqual(formattedQuery, key)
 
-    def test_query_with_subquery(self):
-        msg = 'Testing query with subquery'
+    def test_query_subquery(self):
+        msg = 'Testing query: Subquery'
         testQuery = '''
 with t0 as (select c1, c2 from tab1),
 
@@ -771,10 +805,11 @@ LEFT JOIN
     t2
     ON t0.c1 = t2.c1
         '''.strip()
-        return self.run(msg, testQuery, key)
+        formattedQuery = api.format_query(testQuery)
+        self.assertEqual(formattedQuery, key)
 
-    def test_query_with_subquery_inline_comment(self):
-        msg = 'Testing query with subquery and inline comment'
+    def test_query_subquery_inline_comment(self):
+        msg = 'Testing query: Subquery and inline comment'
         testQuery = '''
 with t0 as ( -- comment
     select * from t1
@@ -806,10 +841,11 @@ SELECT
 FROM
     t0
         '''.strip()
-        return self.run(msg, testQuery, key)
+        formattedQuery = api.format_query(testQuery)
+        self.assertEqual(formattedQuery, key)
 
-    def test_query_with_nested_subquery(self):
-        msg = 'Testing query with nested subquery'
+    def test_query_nested_subquery(self):
+        msg = 'Testing query: Nested subquery'
         testQuery = '''
 select
     *,
@@ -831,10 +867,11 @@ FROM
             t1
     )
         '''.strip()
-        return self.run(msg, testQuery, key)
+        formattedQuery = api.format_query(testQuery)
+        self.assertEqual(formattedQuery, key)
 
-    def test_query_with_union_all(self):
-        msg = 'Testing query with UNION ALL'
+    def test_query_union_all(self):
+        msg = 'Testing query: UNION ALL'
         testQuery = '''
 select * from t1 union all select * from t2
         '''
@@ -849,10 +886,11 @@ SELECT
 FROM
     t2
         '''.strip()
-        return self.run(msg, testQuery, key)
+        formattedQuery = api.format_query(testQuery)
+        self.assertEqual(formattedQuery, key)
 
-    def test_query_with_lateral_view_explode(self):
-        msg = 'Testing query with LATERAL VIEW EXPLODE'
+    def test_query_lateral_view_explode(self):
+        msg = 'Testing query: LATERAL VIEW EXPLODE'
         testQuery = '''
 select * from
     t0
@@ -865,10 +903,11 @@ FROM
     t0
     LATERAL VIEW EXPLODE(t0.groupA.list) t AS groupA_list_explode
         '''.strip()
-        return self.run(msg, testQuery, key)
+        formattedQuery = api.format_query(testQuery)
+        self.assertEqual(formattedQuery, key)
 
-    def test_reservedKeywordUppercase_style(self):
-        msg = 'Testing reservedKeywordUppercase style'
+    def test_style_reserved_keyword_uppercase(self):
+        msg = 'Testing style: reserved_keyword_uppercase'
         testQuery = '''select c1, c2 from t0'''
         key = '''
 select
@@ -877,10 +916,11 @@ select
 from
     t0
         '''.strip()
-        return self.run(msg, testQuery, key, {'reservedKeywordUppercase': False})
+        formattedQuery = api.format_query(testQuery, {'reservedKeywordUppercase': False})
+        self.assertEqual(formattedQuery, key)
 
-    def test_linesBetweenQueries_style(self):
-        msg = 'Testing linesBetweenQueries style'
+    def test_style_lines_between_queries(self):
+        msg = 'Testing style: lines between queries'
         testQuery = '''
 with t0 as (select c1, c2 from tab1),
 
@@ -930,10 +970,11 @@ LEFT JOIN
     t2
     ON t0.c1 = t2.c1
         '''.strip()
-        return self.run(msg, testQuery, key, {'linesBetweenQueries': 2})
+        formattedQuery = api.format_query(testQuery, {'linesBetweenQueries': 2})
+        self.assertEqual(formattedQuery, key)
 
-    def test_indent_style(self):  # https://github.com/largecats/sparksql-formatter/issues/72
-        msg = 'Testing indent style'
+    def test_style_indent(self):  # https://github.com/largecats/sparksql-formatter/issues/72
+        msg = 'Testing style: indent'
         testQuery = '''select c1, c2 from t0'''
         key = '''
 SELECT
@@ -942,27 +983,9 @@ SELECT
 FROM
   t0
         '''.strip()
-        return self.run(msg, testQuery, key, {'indent': "  "})
-
-    def run(self, msg, testQuery, key, style=Style()):
-        logger.info(msg)
-        logger.info('testQuery =')
-        logger.info(testQuery)
-        formattedQuery = api.format_query(testQuery, style)
-        logger.info('formattedQuery =')
-        logger.info(formattedQuery)
-        logger.info(repr(formattedQuery))
-        logger.info('key =')
-        logger.info(key)
-        logger.info(repr(key))
-        assert formattedQuery == key
-        return True
-
-    def run_all(self):
-        tests = list(filter(lambda m: m.startswith('test_'), dir(self)))
-        for test in tests:
-            getattr(self, test)()
+        formattedQuery = api.format_query(testQuery, {'indent': "  "})
+        self.assertEqual(formattedQuery, key)
 
 
-if __name__ == "__main__":
-    Test().run_all()
+if __name__ == '__main__':
+    unittest.main()
