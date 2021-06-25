@@ -78,3 +78,4 @@ Added test.
 ## 2021-06-25
 1. Updated `_parse_args_in_correct_type()` logic to exclude parsing the value of `indent` key when defining style using a dictionary. See https://github.com/largecats/sparksql-formatter/issues/72.
 2. Added test for setting indent style via dictionary.
+3. Updated tests to use unittest library.
