@@ -74,3 +74,7 @@ Added test.
 
 ## 2021-06-24
 1. Added test for query with string regex containing operators. Spaces should not be added before and after the operators inside string regex enclosed with backticks.
+
+## 2021-06-25
+1. Updated `_parse_args_in_correct_type()` logic to exclude parsing the value of `indent` key when defining style using a dictionary. See https://github.com/largecats/sparksql-formatter/issues/72.
+2. Added test for setting indent style via dictionary.

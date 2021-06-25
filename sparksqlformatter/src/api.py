@@ -216,7 +216,7 @@ def _create_style_from_file(styleFilePath, defaultStyleSection=DEFAULT_STYLE_SEC
 
 def _parse_args_in_correct_type(styleParser, defaultStyleSection=DEFAULT_STYLE_SECTION):
     '''
-    Parse paramters in style with special handling to convert boolean values converted from string back to boolean type.
+    Parse paramters in style with special handling to convert boolean values in string back to boolean type.
 
     Parameters
     styleParser: a styleParser.ConfigParser() object
@@ -225,9 +225,13 @@ def _parse_args_in_correct_type(styleParser, defaultStyleSection=DEFAULT_STYLE_S
         The top-level style section that needs to be added on top of the styleDict before feeding to styleParser.read_dict(), default to 'sparksqlformatter'.
     
     Return: dict
-        A dictionary of styleuration key-value pairs where values are of correct type.
+        A dictionary of style key-value pairs where values are of correct type.
     '''
     args = {}
-    for key in styleParser[defaultStyleSection]:
-        args[key] = ast.literal_eval(styleParser[defaultStyleSection][key])
+    v = sys.version_info[0]
+    for key, value in styleParser[defaultStyleSection].items():
+        if key == 'indent':  # https://github.com/largecats/sparksql-formatter/issues/72
+            args[key] = value
+        else:
+            args[key] = ast.literal_eval(value)
     return args

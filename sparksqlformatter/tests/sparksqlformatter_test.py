@@ -932,6 +932,18 @@ LEFT JOIN
         '''.strip()
         return self.run(msg, testQuery, key, {'linesBetweenQueries': 2})
 
+    def test_indent_style(self):  # https://github.com/largecats/sparksql-formatter/issues/72
+        msg = 'Testing indent style'
+        testQuery = '''select c1, c2 from t0'''
+        key = '''
+SELECT
+  c1,
+  c2
+FROM
+  t0
+        '''.strip()
+        return self.run(msg, testQuery, key, {'indent': "  "})
+
     def run(self, msg, testQuery, key, style=Style()):
         logger.info(msg)
         logger.info('testQuery =')

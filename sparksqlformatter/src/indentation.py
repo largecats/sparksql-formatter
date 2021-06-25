@@ -36,7 +36,8 @@ class Indentation:
         indent: string
             One unit of indentation.
         '''
-        self.indent = indent or '   '
+        self.indent = indent
+        print("indentation = {}".format(len(indent)))
         self.indentTypes = []  # store each indentation that needs to be applied
 
     def get_indent(self):
