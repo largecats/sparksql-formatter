@@ -228,9 +228,9 @@ def _parse_args_in_correct_type(styleParser, defaultStyleSection=DEFAULT_STYLE_S
         A dictionary of style key-value pairs where values are of correct type.
     '''
     args = {}
-    v = sys.version_info[0]
+
     for key, value in styleParser[defaultStyleSection].items():
-        if key == 'indent':  # https://github.com/largecats/sparksql-formatter/issues/72
+        if key == 'indent' and sys.version_info < (3, 9):  # https://github.com/largecats/sparksql-formatter/issues/72
             args[key] = value
         else:
             args[key] = ast.literal_eval(value)
