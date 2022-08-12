@@ -161,6 +161,7 @@ class Tokenizer:
         1. curly bracket quoted python formatting keyword to be treated as string in hiveql formatting
         2. double quoted string using "" or \" to escape
         3. single quoted string using '' or \' to escape
+        4. double curly bracket quoted string for Jinja placeholders
 
         Parameters
         stringTypes: list
@@ -170,7 +171,7 @@ class Tokenizer:
             Regex pattern that matches strings.    
         '''
         patterns = {
-            '{}': '(({[^}\\\\]*(?:\\\\.[^{\\\\]*)*(}|$))+)',
+            '{}': '(({{1,2}[^}\\\\]*(?:\\\\.[^{\\\\]*)*(}{1,2|$))+)',
             '""': '(("[^"\\\\]*(?:\\\\.[^"\\\\]*)*("|$))+)',
             "''": "(('[^'\\\\]*(?:\\\\.[^'\\\\]*)*('|$))+)",
             '``': '((`[^`\\\\]*(?:\\\\.[^`\\\\]*)*(`|$))+)'
