@@ -65,7 +65,7 @@ class Tokenizer:
         self.NUMBER_REGEX = r'^((-\s*)?[0-9]+(\.[0-9]+)?|0x[0-9a-fA-F]+|0b[01]+)\b'
         self.OPERATOR_REGEX = u'^([^\{\}]!=|<>|==|<=|>=|!=|!<|!>|\|\||::|->>|->|~~\*|~~|!~~\*|!~~|~\*|!~\*|!~|:=|.)'
 
-        self.BLOCK_COMMENT_REGEX = u'(\/\*(?s).*?\*\/)'  # (?s) is inline flag for re.DOTALL
+        self.BLOCK_COMMENT_REGEX = u'(?s:(\/\*.*?\*\/))'  # (?s:...) applies flag for re.DOTALL over ...
         self.LINE_COMMENT_REGEX = Tokenizer.create_line_comment_regex(style.lineCommentTypes)
 
         self.TOP_LEVEL_KEYWORD_REGEX = Tokenizer.create_keyword_regex(style.topLevelKeywords)
